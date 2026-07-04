@@ -4,7 +4,7 @@ uvicorn[standard]==0.35.0
 sqlalchemy
 psycopg2-binary
 
-alembic==1.16.2
+alembic
 
 pydantic==2.11.7
 pydantic-settings==2.10.1
@@ -13,22 +13,22 @@ python-dotenv==1.1.1
 
 python-jose[cryptography]==3.5.0
 
-passlib[bcrypt]==1.7.4
+passlib[bcrypt]
 
-python-multipart==0.0.20
+python-multipart
 
-redis==6.2.0
+redis
 
-paramiko==3.5.1
+paramiko
 
-apscheduler==3.11.0
+apscheduler
 
-prometheus-client==0.22.1
+prometheus-client
 
-httpx==0.28.1
+httpx
 
-loguru==0.7.3
+loguru
 
-orjson==3.10.18
+orjson
 
-email-validator==2.2.0
+email-validator

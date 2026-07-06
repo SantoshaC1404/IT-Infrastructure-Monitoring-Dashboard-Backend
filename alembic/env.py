@@ -26,7 +26,7 @@ if config.config_file_name is not None:
 # Set the database URL from your application settings
 config.set_main_option(
     "sqlalchemy.url",
-    settings.DATABASE_URL,
+    settings.DATABASE_URL.replace("%", "%%"),
 )
 
 # target_metadata = None

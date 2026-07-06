@@ -27,16 +27,14 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     @property
-    def DATABASE_URL(self) -> str:
-        return str(
-            URL.create(
-                drivername=self.DRIVER_NAME,
-                username=self.DB_USER,
-                password=self.DB_PASSWORD,
-                host=self.DB_HOST,
-                port=self.DB_PORT,
-                database=self.DB_NAME,
-            )
+    def DATABASE_URL(self) -> URL:
+        return URL.create(
+            drivername=self.DRIVER_NAME,
+            username=self.DB_USER,
+            password=self.DB_PASSWORD,
+            host=self.DB_HOST,
+            port=self.DB_PORT,
+            database=self.DB_NAME,
         )
 
     model_config = SettingsConfigDict(

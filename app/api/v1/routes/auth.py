@@ -52,3 +52,13 @@ def login(login_request: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserResponse)
 def current_user(user: User = Depends(get_current_user)):
     return user
+
+
+@router.get("/dashboard")
+def dashboard(
+    current_user=Depends(get_current_user),
+):
+    return {
+        "message": "Dashboard Loaded",
+        "user": current_user.username,
+    }

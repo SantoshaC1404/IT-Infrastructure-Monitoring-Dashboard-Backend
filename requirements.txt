@@ -13,6 +13,8 @@ python-dotenv==1.1.1
 
 python-jose[cryptography]
 
+cryptography==45.0.5
+
 passlib[bcrypt]
 
 python-multipart

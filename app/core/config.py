@@ -15,6 +15,7 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ENCRYPTION_KEY: str
 
     # DATABASE_URL: str
     DRIVER_NAME: str

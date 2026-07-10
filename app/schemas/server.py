@@ -16,7 +16,7 @@ class ServerCreate(BaseModel):
     # status: ServerStatus = ServerStatus.UNKNOWN
 
 
-class ServerResponse(BaseModel):
+class ServerResponse(ServerCreate):
     id: int
     status: ServerStatus
     monitoring_enabled: bool

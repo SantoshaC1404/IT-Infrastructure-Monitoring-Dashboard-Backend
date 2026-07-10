@@ -41,7 +41,7 @@ class Server(Base):
         nullable=False,
     )
 
-    password: Mapped[str] = mapped_column(
+    encrypted_password: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
     )

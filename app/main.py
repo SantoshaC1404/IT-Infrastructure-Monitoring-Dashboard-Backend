@@ -1,16 +1,35 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
 from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.logger import logger, setup_logging
 
+from app.scheduler.scheduler import (
+    start_scheduler,
+    stop_scheduler,
+)
+
 setup_logging()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    start_scheduler()
+
+    yield
+
+    stop_scheduler()
+
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     debug=settings.DEBUG,
+    lifespan=lifespan,
 )
+
 
 app.include_router(
     api_router,

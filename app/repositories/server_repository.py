@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.server import Server
@@ -38,3 +39,9 @@ class ServerRepository:
         """Delete a server from the database."""
         self.db.delete(server)
         self.db.commit()
+
+    def get_monitoring_enabled(self):
+
+        stmt = select(Server).where(Server.monitoring_enabled == True)
+
+        return list(self.db.scalars(stmt).all())

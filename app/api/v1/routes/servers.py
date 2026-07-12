@@ -39,3 +39,41 @@ def create_server(
 )
 def get_all_servers(db: Session = Depends(get_db)):
     return ServerService(db).get_all_servers()
+
+
+@router.get(
+    "/{server_id}",
+    response_model=ServerResponse,
+)
+def get_server_by_id(server_id: int, db: Session = Depends(get_db)):
+    server_service = ServerService(db)
+
+    server = server_service.server_repository.get_by_id(server_id)
+
+    if server is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Server not found",
+        )
+
+    return server
+
+
+@router.delete(
+    "/{server_id}",
+    response_model=ServerResponse,
+)
+def delete_server_bby_id(server_id: int, db: Session = Depends(get_db)):
+    server_service = ServerService(db)
+
+    server = server_service.server_repository.get_by_id(server_id)
+
+    if server is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Server not found",
+        )
+
+    server_service.server_repository.delete(server_id)
+
+    return {"message": "Server deleted successfully"}

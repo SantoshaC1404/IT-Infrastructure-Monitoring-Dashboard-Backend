@@ -1,5 +1,5 @@
 from sqlalchemy import DateTime, Integer, String, Boolean, Enum as SQLEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
 from app.db.base import Base
@@ -63,4 +63,10 @@ class Server(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
+    )
+
+    snapshots = relationship(
+        "MonitoringSnapshot",
+        backref="server",
+        cascade="all, delete",
     )

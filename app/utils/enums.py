@@ -17,3 +17,15 @@ class ServerStatus(str, Enum):
     UNKNOWN = "UNKNOWN"
     ONLINE = "ONLINE"
     OFFLINE = "OFFLINE"
+
+
+class AlertSeverity(str, Enum):
+    INFO = "INFO"
+    WARNING = "WARNING"
+    CRITICAL = "CRITICAL"
+
+
+class AlertStatus(str, Enum):
+    OPEN = "OPEN"
+    ACKNOWLEDGED = "ACKNOWLEDGED"
+    RESOLVED = "RESOLVED"

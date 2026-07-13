@@ -1,15 +1,46 @@
-from app.services.ssh_service import SSHService
 from app.collectors.factory import CollectorFactory
+from app.core.encryption import encryption_service
+from app.models.monitoring_snapshot import MonitoringSnapshot
+from app.repositories.monitoring_snapshot_repository import (
+    MonitoringSnapshotRepository,
+)
+from app.services.ssh_service import SSHService
 
 
-def collect(self, server):
+class MonitoringService:
 
-    ssh = SSHService(server)
+    def __init__(self, db):
+        self.repository = MonitoringSnapshotRepository(db)
 
-    collector = CollectorFactory.create(server, ssh)
+    def collect(self, server):
 
-    metrics = collector.collect()
+        password = encryption_service.decrypt(server.encrypted_password)
 
-    self.repository.save_snapshot(server, metrics)
+        with SSHService(
+            hostname=server.hostname,
+            username=server.username,
+            password=password,
+            port=server.ssh_port,
+        ) as ssh:
 
-    return metrics
+            collector = CollectorFactory.create(
+                server,
+                ssh,
+            )
+
+            metrics = collector.collect()
+
+            snapshot = MonitoringSnapshot(
+                server_id=server.id,
+                cpu_usage=metrics.cpu.usage_percent,
+                memory_usage=metrics.memory.usage_percent,
+                disk_usage=metrics.disk.usage_percent,
+                load_average=metrics.load.load_1m,
+                network_rx=metrics.network.total_rx,
+                network_tx=metrics.network.total_tx,
+                uptime_seconds=metrics.uptime_seconds,
+            )
+
+            self.repository.create(snapshot)
+
+            return snapshot

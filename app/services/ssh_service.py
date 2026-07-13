@@ -8,10 +8,10 @@ class SSHService:
 
     def __init__(
         self,
-        hostname: str,
-        username: str,
-        password: str,
-        port: int = 22,
+        hostname,
+        username,
+        password,
+        port=22,
     ):
         self.hostname = hostname
         self.username = username
@@ -31,10 +31,35 @@ class SSHService:
             timeout=5,
         )
 
+    def __enter__(self):
+
+        self.client = paramiko.SSHClient()
+
+        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        self.client.connect(
+            hostname=self.hostname,
+            username=self.username,
+            password=self.password,
+            port=self.port,
+            timeout=10,
+        )
+
+        return self
+
     def execute(self, command: str) -> str:
         stdin, stdout, stderr = self.client.exec_command(command)
 
         return stdout.read().decode().strip()
+
+    def __exit__(
+        self,
+        exc_type,
+        exc,
+        tb,
+    ):
+        if self.client:
+            self.client.close()
 
     def close(self):
         if self.client:

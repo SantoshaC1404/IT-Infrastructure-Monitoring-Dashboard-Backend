@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, BigInteger
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -59,4 +59,9 @@ class MonitoringSnapshot(Base):
         DateTime,
         default=datetime.utcnow,
         index=True,
+    )
+
+    server = relationship(
+        "Server",
+        back_populates="snapshots",
     )

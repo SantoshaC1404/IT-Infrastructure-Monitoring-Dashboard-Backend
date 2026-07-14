@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
 from app.db.base import Base
+from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import ServerType, ServerStatus
 
 
@@ -65,8 +66,7 @@ class Server(Base):
         default=datetime.utcnow,
     )
 
-    snapshots = relationship(
-        "MonitoringSnapshot",
-        backref="server",
-        cascade="all, delete",
+    snapshots: Mapped[list["MonitoringSnapshot"]] = relationship(
+        back_populates="server",
+        cascade="all, delete-orphan",
     )

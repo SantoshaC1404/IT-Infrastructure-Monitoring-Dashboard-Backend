@@ -12,7 +12,7 @@ class ServerService:
         """Service for managing server-related operations."""
         self.db = db
         self.server_repository = ServerRepository(db)
-        self.ssh_service = SSHService()
+        # self.ssh_service = SSHService()
 
     def create_server(self, server_create: ServerCreate):
         """Create a new server after validating the input and testing SSH connection.
@@ -34,16 +34,17 @@ class ServerService:
                 f"A server with IP address {server_create.ip_address} already exists."
             )
 
-        # Test SSH connection to the server
-        ssh_connection_successful = self.ssh_service.test_connection(
-            hostname=server_create.hostname,
-            port=server_create.ssh_port,
-            username=server_create.username,
-            password=server_create.password,
-        )
-        if not ssh_connection_successful:
+        try:
+            with SSHService(
+                hostname=server_create.hostname,
+                username=server_create.username,
+                password=server_create.password,
+                port=server_create.ssh_port,
+            ) as ssh:
+                ssh.execute("echo 'SSH Connection Successful'")
+        except Exception as e:
             raise ConnectionError(
-                f"Failed to establish SSH connection to {server_create.hostname}."
+                f"Failed to establish SSH connection to {server_create.hostname}: {e}"
             )
 
         # Encrypt the password before storing it
@@ -56,9 +57,9 @@ class ServerService:
             ip_address=server_create.ip_address,
             ssh_port=server_create.ssh_port,
             username=server_create.username,
-            password=encrypted_password,
+            encrypted_password=encrypted_password,
             server_type=server_create.server_type,
-            status=ServerStatus.ACTIVE,  # Set the initial status to ACTIVE
+            status=ServerStatus.ONLINE,  # Set the initial status to ACTIVE
         )
         return self.server_repository.create(new_server)
 

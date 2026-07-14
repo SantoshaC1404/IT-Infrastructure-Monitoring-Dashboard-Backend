@@ -37,9 +37,9 @@ app.include_router(
 )
 
 
-@app.on_event("startup")
-async def startup():
-    logger.info("Application started")
+# @app.on_event("startup")
+# async def startup():
+#     logger.info("Application started")
 
 
 @app.on_event("shutdown")

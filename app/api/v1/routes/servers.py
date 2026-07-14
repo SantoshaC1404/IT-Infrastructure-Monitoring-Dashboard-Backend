@@ -61,12 +61,11 @@ def get_server_by_id(server_id: int, db: Session = Depends(get_db)):
 
 @router.delete(
     "/{server_id}",
-    response_model=ServerResponse,
 )
 def delete_server_bby_id(server_id: int, db: Session = Depends(get_db)):
     server_service = ServerService(db)
 
-    server = server_service.server_repository.get_by_id(server_id)
+    server = server_service.get_server_by_id(server_id)
 
     if server is None:
         raise HTTPException(
@@ -74,6 +73,6 @@ def delete_server_bby_id(server_id: int, db: Session = Depends(get_db)):
             detail="Server not found",
         )
 
-    server_service.server_repository.delete(server_id)
+    server_service.server_repository.delete(server)
 
     return {"message": "Server deleted successfully"}

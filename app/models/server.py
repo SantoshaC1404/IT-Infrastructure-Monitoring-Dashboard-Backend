@@ -1,10 +1,11 @@
-from sqlalchemy import DateTime, Integer, String, Boolean, Enum as SQLEnum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
-from app.db.base import Base
-from app.models.monitoring_snapshot import MonitoringSnapshot
-from app.utils.enums import ServerType, ServerStatus
+from sqlalchemy import Boolean, DateTime, Enum as SQLEnum, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.base_class import Base
+from app.models.server_inventory import ServerInventory
+from app.utils.enums import ServerStatus
 
 
 class Server(Base):
@@ -16,16 +17,13 @@ class Server(Base):
         index=True,
     )
 
+    # Friendly name shown in dashboard
     name: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
     )
 
-    hostname: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-    )
-
+    # Connection Details
     ip_address: Mapped[str] = mapped_column(
         String(50),
         unique=True,
@@ -47,10 +45,7 @@ class Server(Base):
         nullable=False,
     )
 
-    server_type: Mapped[ServerType] = mapped_column(
-        SQLEnum(ServerType),
-    )
-
+    # Monitoring
     monitoring_enabled: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
@@ -61,12 +56,51 @@ class Server(Base):
         default=ServerStatus.UNKNOWN,
     )
 
+    last_seen: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
     )
 
-    snapshots: Mapped[list["MonitoringSnapshot"]] = relationship(
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )
+
+    # Relationships
+
+    inventory = relationship(
+        "ServerInventory",
+        back_populates="server",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    snapshots = relationship(
+        "MonitoringSnapshot",
+        back_populates="server",
+        cascade="all, delete-orphan",
+    )
+
+    alerts = relationship(
+        "Alert",
+        back_populates="server",
+        cascade="all, delete-orphan",
+    )
+
+    network_interfaces = relationship(
+        "NetworkInterface",
+        back_populates="server",
+        cascade="all, delete-orphan",
+    )
+
+    disks = relationship(
+        "Disk",
         back_populates="server",
         cascade="all, delete-orphan",
     )

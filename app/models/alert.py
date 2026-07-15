@@ -2,9 +2,9 @@ from datetime import datetime
 from enum import Enum
 
 from sqlalchemy import DateTime, Enum as SQLEnum, Float, ForeignKey, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base
+from app.db.base_class import Base
 from app.utils.enums import AlertSeverity, AlertStatus
 
 
@@ -44,3 +44,5 @@ class Alert(Base):
         DateTime,
         nullable=True,
     )
+
+    server = relationship("Server", back_populates="alerts")

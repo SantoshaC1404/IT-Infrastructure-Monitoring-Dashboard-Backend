@@ -4,13 +4,14 @@ from contextlib import asynccontextmanager
 from app.api.v1.api import api_router
 from app.core.config import settings
 from app.core.logger import logger, setup_logging
+from app.core.exception_handlers import register_exception_handlers
 
 from app.scheduler.scheduler import (
     start_scheduler,
     stop_scheduler,
 )
 
-setup_logging()
+# setup_logging()
 
 
 @asynccontextmanager
@@ -30,6 +31,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+register_exception_handlers(app)
 
 app.include_router(
     api_router,

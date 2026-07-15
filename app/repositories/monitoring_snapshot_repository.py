@@ -13,8 +13,8 @@ class MonitoringSnapshotRepository:
 
     def create(self, snapshot: MonitoringSnapshot) -> MonitoringSnapshot:
         self.db.add(snapshot)
-        self.db.commit()
-        self.db.refresh(snapshot)
+        # self.db.commit()
+        # self.db.refresh(snapshot)
         return snapshot
 
     def bulk_create(

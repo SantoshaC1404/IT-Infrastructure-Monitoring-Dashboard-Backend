@@ -1,106 +1,161 @@
-import paramiko
+import socket
+from typing import Optional
 
-from app.core.encryption import encryption_service
-from app.models import Server
+import paramiko
+from paramiko.ssh_exception import (
+    AuthenticationException,
+    NoValidConnectionsError,
+    SSHException,
+    BadHostKeyException,
+)
+
+from app.core.logger import logger
+from app.core.exceptions import (
+    HostUnreachableException,
+    SSHConnectionException,
+    SSHTimeoutException,
+)
 
 
 class SSHService:
+    """
+    Handles SSH connections and command execution.
+
+    This service is responsible only for:
+
+    - Opening SSH connection
+    - Executing commands
+    - File transfer
+    - Closing SSH connection
+    """
 
     def __init__(
         self,
-        hostname,
-        username,
-        password,
-        port=22,
+        hostname: str,
+        username: str,
+        password: str,
+        port: int = 22,
+        timeout: int = 10,
     ):
         self.hostname = hostname
         self.username = username
         self.password = password
         self.port = port
-        self.client = None
+        self.timeout = timeout
 
-    def connect(self):
-        self.client = paramiko.SSHClient()
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.client: Optional[paramiko.SSHClient] = None
 
-        self.client.connect(
-            hostname=self.hostname,
-            username=self.username,
-            password=self.password,
-            port=self.port,
-            timeout=5,
-        )
-
+    # Context Manager
     def __enter__(self):
-
-        self.client = paramiko.SSHClient()
-
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-        self.client.connect(
-            hostname=self.hostname,
-            username=self.username,
-            password=self.password,
-            port=self.port,
-            timeout=10,
-        )
-
+        self.connect()
         return self
 
-    def execute(self, command: str) -> str:
-        stdin, stdout, stderr = self.client.exec_command(command)
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
 
-        return stdout.read().decode().strip()
-
-    def __exit__(
-        self,
-        exc_type,
-        exc,
-        tb,
-    ):
+    # Connection
+    def connect(self):
         if self.client:
-            self.client.close()
-
-    def close(self):
-        if self.client:
-            self.client.close()
-
-    @staticmethod
-    def test_connection(
-        hostname: str,
-        port: int,
-        username: str,
-        password: str,
-    ):
-        """Test the SSH connection to a server.
-        Args:
-            hostname (str): The hostname or IP address of the server.
-            port (int): The SSH port number.
-            username (str): The SSH username.
-            password (str): The SSH password.
-        Returns:
-            bool: True if the connection is successful, False otherwise.
-        """
-
-        ssh = paramiko.SSHClient()
-
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-        password = encryption_service.decrypt(Server.encrypted_password)
+            return
 
         try:
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-            ssh.connect(
-                hostname=Server.hostname,
-                port=Server.ssh_port,
-                username=Server.username,
-                password=password,
-                timeout=5,
+            client.connect(
+                hostname=self.hostname,
+                port=self.port,
+                username=self.username,
+                password=self.password,
+                timeout=self.timeout,
+                banner_timeout=self.timeout,
+                auth_timeout=self.timeout,
             )
 
-            ssh.close()
+            self.client = client
+            logger.info(f"SSH Connected -> {self.hostname}")
 
-            return True
+        except AuthenticationException:
+            logger.warning("SSH authentication failed.")
+            raise SSHConnectionException("Invalid SSH username or password.")
+
+        except socket.timeout:
+            logger.warning("SSH connection timed out.")
+            raise SSHTimeoutException()
+
+        except NoValidConnectionsError:
+            logger.warning("Unable to connect to SSH port.")
+            raise SSHConnectionException(
+                "Unable to connect to the server. Verify the IP address, SSH port, and ensure the SSH service is running."
+            )
+
+        except OSError:
+            logger.warning("Host unreachable.")
+            raise HostUnreachableException()
+
+        except SSHException:
+            logger.warning("SSH protocol error.")
+            raise SSHConnectionException("SSH protocol error.")
+
+        except BadHostKeyException:
+            logger.warning("SSH host-key error.")
+            raise SSHConnectionException("SSH host key verification failed.")
 
         except Exception:
-            return False
+            logger.exception("Unexpected SSH error")
+            raise SSHConnectionException()
+
+    # Command Execution
+    def execute(self, command: str) -> str:
+
+        if self.client is None:
+            self.connect()
+
+        stdin, stdout, stderr = self.client.exec_command(command)
+        output = stdout.read().decode().strip()
+        error = stderr.read().decode().strip()
+
+        if error:
+            logger.warning(error)
+
+        return output
+
+    # Execute With Exit Code
+    def execute_with_status(self, command: str):
+
+        if self.client is None:
+            self.connect()
+
+        stdin, stdout, stderr = self.client.exec_command(command)
+        exit_status = stdout.channel.recv_exit_status()
+        output = stdout.read().decode()
+        error = stderr.read().decode()
+
+        return exit_status, output, error
+
+    # SFTP
+    def upload_file(self, local_path: str, remote_path: str):
+
+        if self.client is None:
+            self.connect()
+
+        sftp = self.client.open_sftp()
+        sftp.put(local_path, remote_path)
+        sftp.close()
+
+    def download_file(self, remote_path: str, local_path: str):
+
+        if self.client is None:
+            self.connect()
+
+        sftp = self.client.open_sftp()
+        sftp.get(remote_path, local_path)
+        sftp.close()
+
+    # Close
+    def close(self):
+
+        if self.client:
+            self.client.close()
+            self.client = None
+            logger.info(f"SSH Closed -> {self.hostname}")

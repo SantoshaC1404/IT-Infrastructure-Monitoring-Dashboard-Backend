@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.api.deps import get_db
 from app.schemas.server import (
     ServerCreate,
     ServerResponse,
 )
-from app.services.server_service import ServerService
-from app.api.deps import get_db
+from app.services.server.server_service import ServerService
 
 router = APIRouter(
     prefix="/servers",
@@ -19,18 +19,19 @@ router = APIRouter(
     response_model=ServerResponse,
 )
 def create_server(
-    create_request: ServerCreate,
+    request: ServerCreate,
     db: Session = Depends(get_db),
 ):
-    # return ServerService(db).create_server(request)
-    return ServerService(db).create_server(create_request)
+    return ServerService(db).create_server(request)
 
 
 @router.get(
     "",
     response_model=list[ServerResponse],
 )
-def get_all_servers(db: Session = Depends(get_db)):
+def get_all_servers(
+    db: Session = Depends(get_db),
+):
     return ServerService(db).get_all_servers()
 
 
@@ -38,35 +39,22 @@ def get_all_servers(db: Session = Depends(get_db)):
     "/{server_id}",
     response_model=ServerResponse,
 )
-def get_server_by_id(server_id: int, db: Session = Depends(get_db)):
-    server_service = ServerService(db)
-
-    server = server_service.get_server_by_id(server_id)
-
-    if server is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Server not found",
-        )
-
-    return server
+def get_server_by_id(
+    server_id: int,
+    db: Session = Depends(get_db),
+):
+    return ServerService(db).get_server_by_id(server_id)
 
 
 @router.delete(
     "/{server_id}",
 )
-def delete_server_by_id(server_id: int, db: Session = Depends(get_db)):
-    server_service = ServerService(db)
+def delete_server(
+    server_id: int,
+    db: Session = Depends(get_db),
+):
+    ServerService(db).delete_server(server_id)
 
-    # server = server_service.server_repository.get_by_id(server_id)
-    server = server_service.get_server_by_id(server_id)
-
-    if server is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Server not found",
-        )
-
-    server_service.server_repository.delete(server)
-
-    return {"message": "Server deleted successfully"}
+    return {
+        "message": "Server deleted successfully",
+    }

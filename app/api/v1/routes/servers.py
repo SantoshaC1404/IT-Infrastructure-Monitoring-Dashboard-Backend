@@ -22,15 +22,8 @@ def create_server(
     create_request: ServerCreate,
     db: Session = Depends(get_db),
 ):
-    server_service = ServerService(db=db)
-
-    try:
-        return server_service.create_server(create_request)
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+    # return ServerService(db).create_server(request)
+    return ServerService(db).create_server(create_request)
 
 
 @router.get(
@@ -48,7 +41,7 @@ def get_all_servers(db: Session = Depends(get_db)):
 def get_server_by_id(server_id: int, db: Session = Depends(get_db)):
     server_service = ServerService(db)
 
-    server = server_service.server_repository.get_by_id(server_id)
+    server = server_service.get_server_by_id(server_id)
 
     if server is None:
         raise HTTPException(
@@ -62,9 +55,10 @@ def get_server_by_id(server_id: int, db: Session = Depends(get_db)):
 @router.delete(
     "/{server_id}",
 )
-def delete_server_bby_id(server_id: int, db: Session = Depends(get_db)):
+def delete_server_by_id(server_id: int, db: Session = Depends(get_db)):
     server_service = ServerService(db)
 
+    # server = server_service.server_repository.get_by_id(server_id)
     server = server_service.get_server_by_id(server_id)
 
     if server is None:

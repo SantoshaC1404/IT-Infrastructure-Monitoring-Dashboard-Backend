@@ -19,18 +19,28 @@ class ServerInventoryBase(BaseModel):
 
     architecture: str | None = None
 
+    # CPU
     cpu_vendor: str | None = None
 
     cpu_model: str | None = None
+
+    cpu_architecture: str | None = None
 
     physical_cores: int | None = None
 
     logical_cores: int | None = None
 
+    # Memory
     total_memory_bytes: int | None = None
 
+    available_memory_bytes: int | None = None
+
+    used_memory_bytes: int | None = None
+
+    # Disk
     total_disk_bytes: int | None = None
 
+    # Hardware
     virtualization: str | None = None
 
     manufacturer: str | None = None
@@ -50,4 +60,6 @@ class ServerInventoryResponse(ServerInventoryBase):
 
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True,
+    )

@@ -46,6 +46,17 @@ def get_server_by_id(
     return ServerService(db).get_server_by_id(server_id)
 
 
+@router.get(
+    "/ip/{ip_address}",
+    response_model=ServerResponse,
+)
+def get_server_by_ip(
+    ip_address: str,
+    db: Session = Depends(get_db),
+):
+    return ServerService(db).get_server_by_ip(ip_address)
+
+
 @router.delete(
     "/{server_id}",
 )

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.deps import get_db
 from app.schemas.user import UserCreate, UserResponse
-from app.services.auth_service import AuthService
+from app.services.auth.auth_service import AuthService
 from app.schemas.auth import Token, LoginRequest
 from app.models.user import User
 from app.api.deps import get_current_user

@@ -40,6 +40,15 @@ class ServerService:
     ) -> Server:
 
         return self.query_service.get_server_by_id(server_id)
+    
+    
+    def get_server_by_ip(
+        self,
+        ip_address: str,
+    ) -> Server:
+
+        return self.query_service.get_server_by_ip(ip_address)
+    
 
     # UPDATE
     def update_server(

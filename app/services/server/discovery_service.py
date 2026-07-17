@@ -2,7 +2,7 @@ from app.core import logger
 from app.core.exceptions import AppException, SSHConnectionException
 from app.dto.discovery_result import DiscoveryResult
 from app.schemas.server import ServerCreate
-from app.services.discovery_service import DiscoveryService
+from app.services.discovery.discovery_service import DiscoveryService
 from app.services.ssh_service import SSHService
 
 

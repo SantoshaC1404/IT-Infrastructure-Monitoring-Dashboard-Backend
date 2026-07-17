@@ -6,9 +6,11 @@ from app.core.exceptions import DatabaseException
 from app.models.server import Server
 from app.repositories.server_repository import ServerRepository
 from app.schemas.server import ServerCreate
-from app.services.disk_service import DiskService
-from app.services.inventory_service import InventoryService
-from app.services.network_interface_service import NetworkInterfaceService
+from app.services.disk.disk_service import DiskService
+from app.services.inventory.inventory_service import InventoryService
+from app.services.network_interface.network_interface_service import (
+    NetworkInterfaceService,
+)
 from app.services.server.discovery_service import ServerDiscoveryService
 from app.services.server.validation_service import ServerValidationService
 from app.services.server.server_factory import ServerFactory

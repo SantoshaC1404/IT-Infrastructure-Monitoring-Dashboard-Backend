@@ -19,6 +19,9 @@ class ServerValidationService:
         server = self.server_repository.get_by_id(server_id)
 
         if server is None:
-            raise ResourceNotFoundException(f"Server '{server_id}' not found.")
+            raise ResourceNotFoundException(
+                "Server",
+                server_id,
+            )
 
         return server

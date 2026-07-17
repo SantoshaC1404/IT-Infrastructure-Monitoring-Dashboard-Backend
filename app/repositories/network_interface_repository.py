@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.network_interface import NetworkInterface
@@ -38,3 +39,22 @@ class NetworkInterfaceRepository:
         self.db.query(NetworkInterface).filter(
             NetworkInterface.server_id == server_id
         ).delete()
+
+    def get_by_server(
+        self,
+        server_id: int,
+    ) -> list[NetworkInterface]:
+        stmt = (
+            select(NetworkInterface)
+            .where(NetworkInterface.server_id == server_id)
+            .order_by(NetworkInterface.mount_point)
+        )
+
+        return self.db.scalars(stmt).all()
+
+    def get_by_id(
+        self,
+        interface_id: int,
+    ) -> NetworkInterface | None:
+
+        return self.db.get(NetworkInterface, interface_id)

@@ -27,6 +27,10 @@ class ServerInventoryRepository(BaseRepository[ServerInventory]):
 
         return self.db.scalar(stmt)
 
+    def get_by_id(self, inventory_id: int) -> ServerInventory | None:
+
+        return self.db.get(ServerInventory, inventory_id)
+
     def update(
         self,
         inventory: ServerInventory,

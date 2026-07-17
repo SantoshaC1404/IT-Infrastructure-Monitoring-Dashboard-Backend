@@ -10,6 +10,8 @@ class ServerRepository(BaseRepository[Server]):
     def __init__(self, db: Session):
         super().__init__(db)
 
+    
+    # GET ALL 
     def get_all(self):
         stmt = (
             select(Server)
@@ -19,6 +21,8 @@ class ServerRepository(BaseRepository[Server]):
         
         return list(self.db.scalars(stmt).unique())
 
+
+    # GET BY ID
     def get_by_id(self, server_id: int):
         stmt = (
             select(Server)
@@ -28,6 +32,8 @@ class ServerRepository(BaseRepository[Server]):
 
         return self.db.scalar(stmt)
 
+
+    # GET BY IP
     def get_by_ip(self, ip_address: str):
 
         stmt = (
@@ -37,6 +43,8 @@ class ServerRepository(BaseRepository[Server]):
 
         return self.db.scalar(stmt)
 
+
+    # CREATE
     def create(
         self,
         server: Server,
@@ -49,11 +57,13 @@ class ServerRepository(BaseRepository[Server]):
         return server
 
 
+    # UPDATE
     def update(self, server: Server):
         self.db.flush()
         return server
 
 
+    # DELETE
     def delete(
         self,
         server: Server,
@@ -64,6 +74,7 @@ class ServerRepository(BaseRepository[Server]):
             self.db.commit()
 
 
+    # GET MONITORING STATUS
     def get_monitoring_enabled(self):
 
         stmt = (

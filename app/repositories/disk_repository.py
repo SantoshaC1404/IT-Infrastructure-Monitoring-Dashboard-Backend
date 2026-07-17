@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.disk import Disk
@@ -8,7 +9,8 @@ class DiskRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, server_id: int, disk):
+    # CREATE SINGLE
+    def create(self, server_id: int, disk) -> Disk:
 
         db_disk = Disk(
             server_id=server_id,
@@ -21,18 +23,42 @@ class DiskRepository:
         )
 
         self.db.add(db_disk)
-
         return db_disk
 
-    def create_many(self, server_id: int, disks):
+    # CREATE MULTIPLE
+    def create_many(self, server_id: int, disks) -> list[Disk]:
 
-        created = []
+        created_disks = []
 
         for disk in disks:
-            created.append(self.create(server_id, disk))
+            created_disks.append(self.create(server_id, disk))
 
-        return created
+        return created_disks
 
-    def delete_by_server(self, server_id: int):
+    # GET BY DISK ID
+    def get_by_id(self, disk_id: int) -> Disk | None:
 
-        self.db.query(Disk).filter(Disk.server_id == server_id).delete()
+        return self.db.get(Disk, disk_id)
+
+    # GET ALL DISKS OF A SERVER
+    def get_by_server_id(self, server_id: int) -> list[Disk]:
+
+        stmt = (
+            select(Disk).where(Disk.server_id == server_id).order_by(Disk.mount_point)
+        )
+
+        return self.db.scalars(stmt).all()
+
+    # GET ALL DISKS
+    def get_all(self) -> list[Disk]:
+
+        stmt = select(Disk).order_by(Disk.server_id, Disk.mount_point)
+
+        return self.db.scalars(stmt).all()
+
+    # DELETE ALL DISKS OF A SERVER
+    def delete_by_server(self, server_id: int) -> None:
+
+        self.db.query(Disk).filter(Disk.server_id == server_id).delete(
+            synchronize_session=False
+        )

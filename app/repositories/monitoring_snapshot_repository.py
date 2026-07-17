@@ -11,10 +11,18 @@ class MonitoringSnapshotRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, snapshot: MonitoringSnapshot) -> MonitoringSnapshot:
+    def create(
+        self,
+        snapshot: MonitoringSnapshot,
+        commit: bool = True,
+    ) -> MonitoringSnapshot:
+
         self.db.add(snapshot)
-        # self.db.commit()
-        # self.db.refresh(snapshot)
+
+        if commit:
+            self.db.commit()
+            self.db.flush(snapshot)
+
         return snapshot
 
     def bulk_create(

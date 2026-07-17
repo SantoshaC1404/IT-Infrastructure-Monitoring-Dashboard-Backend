@@ -1,6 +1,6 @@
 from app.collectors.linux_metrics_collector import LinuxMetricsCollector
 from app.collectors.windows_metrics_collector import WindowsMetricsCollector
-from app.commands.factory import CommandFactory
+from app.commands.monitoring.factory import CommandFactory
 from app.utils.enums import ServerType
 
 

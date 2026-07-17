@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.commands.base import BaseCommandSet
+from app.commands.monitoring.base import BaseCommandSet
 from app.dto.monitoring_result import MonitoringResult
 from app.parsers.cpu_parser import CpuParser
 from app.parsers.disk_parser import DiskParser

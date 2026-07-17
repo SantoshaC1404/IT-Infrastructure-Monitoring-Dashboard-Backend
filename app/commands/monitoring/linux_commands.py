@@ -1,4 +1,4 @@
-from app.commands.base import BaseCommandSet
+from app.commands.monitoring.base import BaseCommandSet
 
 
 class LinuxCommandSet(BaseCommandSet):

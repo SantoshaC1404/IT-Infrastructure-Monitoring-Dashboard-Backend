@@ -14,6 +14,7 @@ class ServerValidationService:
         if self.server_repository.get_by_ip(ip_address):
             raise ServerAlreadyExistsException(ip_address)
 
+    # Get By ID
     def get_server_by_id(self, server_id: int):
 
         server = self.server_repository.get_by_id(server_id)
@@ -22,6 +23,19 @@ class ServerValidationService:
             raise ResourceNotFoundException(
                 "Server",
                 server_id,
+            )
+
+        return server
+
+    # Get By IP
+    def get_server_by_ip(self, ip_address: int):
+
+        server = self.server_repository.get_by_ip(ip_address)
+
+        if server is None:
+            raise ResourceNotFoundException(
+                "Server",
+                ip_address,
             )
 
         return server

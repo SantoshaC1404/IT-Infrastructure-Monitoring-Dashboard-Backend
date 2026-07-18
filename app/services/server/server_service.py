@@ -40,15 +40,13 @@ class ServerService:
     ) -> Server:
 
         return self.query_service.get_server_by_id(server_id)
-    
-    
+
     def get_server_by_ip(
         self,
         ip_address: str,
     ) -> Server:
 
         return self.query_service.get_server_by_ip(ip_address)
-    
 
     # UPDATE
     def update_server(
@@ -62,13 +60,21 @@ class ServerService:
             request,
         )
 
-    # DELETE
+    # DELETE BY ID
     def delete_server(
         self,
         server_id: int,
     ):
 
-        self.delete_service.delete_server(server_id)
+        self.delete_service.delete_server_id(server_id)
+
+    # DELETE BY IP
+    def delete_server_by_ip(
+        self,
+        ip_address: str,
+    ):
+
+        self.delete_service.delete_server_ip(ip_address)
 
     # MONITORING
     def enable_monitoring(

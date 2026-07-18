@@ -11,9 +11,22 @@ class DeleteServerService:
         self.server_repository = ServerRepository(db)
         self.validation_service = ServerValidationService(db)
 
-    def delete_server(self, server_id: int):
+    # Delete by ID
+    def delete_server_id(self, server_id: int):
 
         server = self.validation_service.get_server_by_id(server_id)
+
+        self.server_repository.delete(
+            server,
+            commit=False,
+        )
+
+        self.db.commit()
+
+    # Delete by IP
+    def delete_server_ip(self, ip_address: str):
+
+        server = self.validation_service.get_server_by_ip(ip_address)
 
         self.server_repository.delete(
             server,

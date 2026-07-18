@@ -9,7 +9,7 @@ from app.services.discovery.network_interface_discovery_service import (
     NetworkInterfaceDiscoveryService,
 )
 from app.services.discovery.server_type_detector import (
-    ServerTypeDetector,
+    DeviceTypeDetector,
 )
 from app.services.ssh_service import SSHService
 

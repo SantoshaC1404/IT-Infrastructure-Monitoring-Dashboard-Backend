@@ -4,7 +4,7 @@ from sqlalchemy import DateTime, ForeignKey, Integer, String, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
 class ServerInventory(Base):
@@ -27,8 +27,8 @@ class ServerInventory(Base):
         nullable=False,
     )
 
-    server_type: Mapped[ServerType] = mapped_column(
-        SQLEnum(ServerType),
+    server_type: Mapped[DeviceType] = mapped_column(
+        SQLEnum(DeviceType),
         nullable=False,
     )
 

@@ -2,14 +2,14 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
 class ServerInventoryBase(BaseModel):
 
     hostname: str
 
-    server_type: ServerType
+    server_type: DeviceType
 
     operating_system: str | None = None
 

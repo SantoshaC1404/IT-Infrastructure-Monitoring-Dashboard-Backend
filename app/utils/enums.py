@@ -8,9 +8,37 @@ class UserRole(str, Enum):
     VIEWER = "VIEWER"
 
 
-class ServerType(str, Enum):
-    LINUX = "LINUX"
-    WINDOWS = "WINDOWS"
+class DeviceType(str, Enum):
+    LINUX_SERVER = "LINUX_SERVER"
+    WINDOWS_SERVER = "WINDOWS_SERVER"
+
+    ROUTER = "ROUTER"
+    SWITCH = "SWITCH"
+    FIREWALL = "FIREWALL"
+
+    STORAGE = "STORAGE"
+    NAS = "NAS"
+    SAN = "SAN"
+
+    VMWARE = "VMWARE"
+    HYPERV = "HYPERV"
+
+    PRINTER = "PRINTER"
+    UPS = "UPS"
+
+    DOCKER_HOST = "DOCKER_HOST"
+    KUBERNETES_NODE = "KUBERNETES_NODE"
+
+
+class ConnectionType(Enum):
+    SSH = "SSH"
+    WINRM = "WINRM"
+    SNMP = "SNMP"
+    WMI = "WMI"
+    REST = "REST"
+    HTTPS = "HTTPS"
+    REDFISH = "REDFISH"
+    TELNET = "TELNET"
 
 
 class ServerStatus(str, Enum):

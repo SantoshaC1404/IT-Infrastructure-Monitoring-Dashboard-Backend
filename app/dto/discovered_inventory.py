@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
 @dataclass(slots=True)
@@ -8,7 +8,7 @@ class DiscoveredInventory:
 
     hostname: str
 
-    server_type: ServerType
+    server_type: DeviceType
 
     operating_system: str | None
 

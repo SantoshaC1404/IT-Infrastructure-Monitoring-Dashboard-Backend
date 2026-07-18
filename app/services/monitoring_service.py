@@ -5,7 +5,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.collectors.collector_factory import CollectorFactory
+from app.monitoring.collectors.collector_factory import CollectorFactory
 from app.core.exceptions import SSHConnectionException
 from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.repositories.monitoring_snapshot_repository import (

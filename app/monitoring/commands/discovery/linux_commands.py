@@ -1,4 +1,4 @@
-from app.commands.discovery.base import BaseDiscoveryCommandSet
+from app.monitoring.commands.discovery.base import BaseDiscoveryCommandSet
 
 
 class LinuxDiscoveryCommands(BaseDiscoveryCommandSet):

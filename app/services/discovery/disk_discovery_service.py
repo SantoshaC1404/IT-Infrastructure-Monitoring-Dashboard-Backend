@@ -1,7 +1,7 @@
-from app.commands.discovery.factory import DiscoveryCommandFactory
+from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
 from app.schemas.disk import DiskBase
 from app.services.ssh_service import SSHService
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
 class DiskDiscoveryService:
@@ -9,7 +9,7 @@ class DiskDiscoveryService:
     def __init__(
         self,
         ssh: SSHService,
-        server_type: ServerType,
+        server_type: DeviceType,
     ):
         self.ssh = ssh
         self.commands = DiscoveryCommandFactory.get(server_type)
@@ -17,7 +17,7 @@ class DiskDiscoveryService:
 
     def discover(self) -> list[DiskBase]:
 
-        if self.server_type == ServerType.LINUX:
+        if self.server_type == DeviceType.LINUX:
             return self._discover_linux()
 
         return self._discover_windows()

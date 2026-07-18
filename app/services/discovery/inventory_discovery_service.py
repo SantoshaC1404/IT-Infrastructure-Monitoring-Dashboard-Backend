@@ -1,7 +1,7 @@
-from app.commands.discovery.factory import DiscoveryCommandFactory
+from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
 from app.schemas.server_inventory import ServerInventoryBase
 from app.services.ssh_service import SSHService
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
 class InventoryDiscoveryService:
@@ -9,7 +9,7 @@ class InventoryDiscoveryService:
     def __init__(
         self,
         ssh: SSHService,
-        server_type: ServerType,
+        server_type: DeviceType,
     ):
         self.ssh = ssh
         self.commands = DiscoveryCommandFactory.get(server_type)
@@ -35,7 +35,7 @@ class InventoryDiscoveryService:
 
         total_memory = int(self.ssh.execute(self.commands.total_memory()) or 0)
 
-        if self.server_type == ServerType.LINUX:
+        if self.server_type == DeviceType.LINUX:
             total_memory *= 1024
 
         virtualization = self.ssh.execute(self.commands.virtualization()).strip()

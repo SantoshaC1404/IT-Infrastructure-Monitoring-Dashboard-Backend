@@ -1,4 +1,4 @@
-from app.commands.monitoring.base import BaseCommandSet
+from app.monitoring.commands.monitoring.base import BaseCommandSet
 
 
 class WindowsCommands(BaseCommandSet):

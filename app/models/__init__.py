@@ -1,14 +1,9 @@
-# from app.models.user import User
-# from app.models.server import Server
-# from app.models.monitoring_snapshot import MonitoringSnapshot
-# from app.models.alert import Alert
-
 from .user import User
-from .device import Server
-from .device_inventory import ServerInventory
+from .device import Devices
+from .device_inventory import DeviceInventory
 from .monitoring_snapshot import MonitoringSnapshot
 from .device_alert import Alert
-from .device_health import ServerHealth
+from .device_health import DeviceHealth
 
 # from .monitored_service import MonitoredService
 from .network_interface import NetworkInterface
@@ -16,11 +11,11 @@ from .disk import Disk
 
 __all__ = [
     "User",
-    "Server",
-    "ServerInventory",
+    "Devices",
+    "DeviceInventory",
     "MonitoringSnapshot",
     "Alert",
     "NetworkInterface",
     "Disk",
-    "ServerHealth",
+    "DeviceHealth",
 ]

@@ -21,7 +21,7 @@ class DiscoveryService:
 
     def discover(self) -> DiscoveryResult:
 
-        server_type = ServerTypeDetector(
+        server_type = DeviceTypeDetector(
             self.ssh,
         ).detect()
 

@@ -41,7 +41,7 @@ class ConnectionType(Enum):
     TELNET = "TELNET"
 
 
-class ServerStatus(str, Enum):
+class DeviceStatus(str, Enum):
     UNKNOWN = "UNKNOWN"
     ONLINE = "ONLINE"
     OFFLINE = "OFFLINE"

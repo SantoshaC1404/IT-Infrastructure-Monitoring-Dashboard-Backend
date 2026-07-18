@@ -13,8 +13,8 @@ class Alert(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    server_id: Mapped[int] = mapped_column(
-        ForeignKey("servers.id", ondelete="CASCADE"),
+    device_id: Mapped[int] = mapped_column(
+        ForeignKey("devices.id", ondelete="CASCADE"),
         index=True,
     )
 
@@ -45,4 +45,4 @@ class Alert(Base):
         nullable=True,
     )
 
-    server = relationship("Server", back_populates="alerts")
+    device = relationship("Device", back_populates="alerts")

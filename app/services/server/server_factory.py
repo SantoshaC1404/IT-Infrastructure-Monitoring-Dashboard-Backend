@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app.core.encryption import encryption_service
-from app.models.server import Server
+from app.models.device import Server
 from app.schemas.server import ServerCreate
 from app.utils.enums import ServerStatus
 

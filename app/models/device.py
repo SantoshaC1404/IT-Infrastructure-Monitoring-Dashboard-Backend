@@ -4,12 +4,12 @@ from sqlalchemy import Boolean, DateTime, Enum as SQLEnum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.models.server_inventory import ServerInventory
-from app.utils.enums import ServerStatus
+from app.models.device_inventory import DeviceInventory
+from app.utils.enums import DeviceStatus
 
 
-class Server(Base):
-    __tablename__ = "servers"
+class Devices(Base):
+    __tablename__ = "devices"
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -51,9 +51,9 @@ class Server(Base):
         default=True,
     )
 
-    status: Mapped[ServerStatus] = mapped_column(
-        SQLEnum(ServerStatus),
-        default=ServerStatus.UNKNOWN,
+    status: Mapped[DeviceStatus] = mapped_column(
+        SQLEnum(DeviceStatus),
+        default=DeviceStatus.UNKNOWN,
     )
 
     last_seen: Mapped[datetime | None] = mapped_column(
@@ -75,32 +75,32 @@ class Server(Base):
     # Relationships
 
     inventory = relationship(
-        "ServerInventory",
-        back_populates="server",
+        "DeviceInventory",
+        back_populates="device",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
     snapshots = relationship(
         "MonitoringSnapshot",
-        back_populates="server",
+        back_populates="device",
         cascade="all, delete-orphan",
     )
 
     alerts = relationship(
         "Alert",
-        back_populates="server",
+        back_populates="device",
         cascade="all, delete-orphan",
     )
 
     network_interfaces = relationship(
         "NetworkInterface",
-        back_populates="server",
+        back_populates="device",
         cascade="all, delete-orphan",
     )
 
     disks = relationship(
         "Disk",
-        back_populates="server",
+        back_populates="device",
         cascade="all, delete-orphan",
     )

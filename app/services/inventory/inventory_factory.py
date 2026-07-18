@@ -1,4 +1,4 @@
-from app.models.server_inventory import ServerInventory
+from app.models.device_inventory import ServerInventory
 
 
 class InventoryFactory:

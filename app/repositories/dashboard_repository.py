@@ -1,6 +1,6 @@
 from sqlalchemy import func, select
 
-from app.models.server import Server
+from app.models.device import Server
 from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import ServerStatus
 

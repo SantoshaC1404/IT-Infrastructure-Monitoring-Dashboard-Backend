@@ -15,8 +15,8 @@ class MonitoringSnapshot(Base):
         primary_key=True,
     )
 
-    server_id: Mapped[int] = mapped_column(
-        ForeignKey("servers.id", ondelete="CASCADE"),
+    device_id: Mapped[int] = mapped_column(
+        ForeignKey("devices.id", ondelete="CASCADE"),
         index=True,
     )
 
@@ -61,7 +61,7 @@ class MonitoringSnapshot(Base):
         index=True,
     )
 
-    server = relationship(
-        "Server",
+    device = relationship(
+        "Device",
         back_populates="snapshots",
     )

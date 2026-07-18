@@ -7,17 +7,17 @@ from app.db.base_class import Base
 from app.utils.enums import DeviceType
 
 
-class ServerInventory(Base):
-    __tablename__ = "server_inventories"
+class DeviceInventory(Base):
+    __tablename__ = "device_inventories"
 
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
     )
 
-    server_id: Mapped[int] = mapped_column(
+    device_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("servers.id", ondelete="CASCADE"),
+        ForeignKey("devices.id", ondelete="CASCADE"),
         unique=True,
         nullable=False,
     )
@@ -27,7 +27,7 @@ class ServerInventory(Base):
         nullable=False,
     )
 
-    server_type: Mapped[DeviceType] = mapped_column(
+    device_type: Mapped[DeviceType] = mapped_column(
         SQLEnum(DeviceType),
         nullable=False,
     )
@@ -94,8 +94,8 @@ class ServerInventory(Base):
         String(100),
     )
 
-    server = relationship(
-        "Server",
+    device = relationship(
+        "Device",
         back_populates="inventory",
     )
 

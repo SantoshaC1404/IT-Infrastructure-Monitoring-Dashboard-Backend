@@ -4,11 +4,11 @@
 # from app.models.alert import Alert
 
 from .user import User
-from .server import Server
-from .server_inventory import ServerInventory
+from .device import Server
+from .device_inventory import ServerInventory
 from .monitoring_snapshot import MonitoringSnapshot
-from .alert import Alert
-from .server_health import ServerHealth
+from .device_alert import Alert
+from .device_health import ServerHealth
 
 # from .monitored_service import MonitoredService
 from .network_interface import NetworkInterface

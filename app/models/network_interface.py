@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.models.server import Server
+from app.models.device import Devices
 
 
 class NetworkInterface(Base):
@@ -15,8 +15,8 @@ class NetworkInterface(Base):
         primary_key=True,
     )
 
-    server_id: Mapped[int] = mapped_column(
-        ForeignKey("servers.id", ondelete="CASCADE"),
+    device_id: Mapped[int] = mapped_column(
+        ForeignKey("devices.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -55,7 +55,7 @@ class NetworkInterface(Base):
         onupdate=datetime.utcnow,
     )
 
-    server: Mapped["Server"] = relationship(
-        "Server",
+    device: Mapped["Devices"] = relationship(
+        "Device",
         back_populates="network_interfaces",
     )

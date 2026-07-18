@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.server_inventory import ServerInventory
+from app.models.device_inventory import ServerInventory
 from app.repositories.base_repository import BaseRepository
 
 

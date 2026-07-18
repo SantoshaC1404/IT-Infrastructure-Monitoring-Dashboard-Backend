@@ -1,21 +1,17 @@
 from datetime import datetime
 from sqlalchemy import (
-    Boolean,
     DateTime,
-    Enum as SQLEnum,
     Float,
     ForeignKey,
     Integer,
-    String,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base_class import Base
-from app.utils.enums import ServerStatus, DeviceType
 
 
-class ServerHealth(Base):
-    __tablename__ = "server_health"
+class DeviceHealth(Base):
+    __tablename__ = "device_health"
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -23,9 +19,9 @@ class ServerHealth(Base):
         index=True,
     )
 
-    server_id: Mapped[int] = mapped_column(
+    device_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("servers.id"),
+        ForeignKey("devices.id"),
     )
 
     cpu_usage: Mapped[float] = mapped_column(

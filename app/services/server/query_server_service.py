@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ResourceNotFoundException
-from app.models.server import Server
+from app.models.device import Server
 from app.repositories.server_repository import ServerRepository
 from app.core.logger import logger
 

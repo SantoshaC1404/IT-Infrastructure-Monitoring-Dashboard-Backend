@@ -11,9 +11,9 @@ from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.repositories.monitoring_snapshot_repository import (
     MonitoringSnapshotRepository,
 )
-from app.repositories.device_repository import ServerRepository
+from app.repositories.device_repository import DeviceRepository
 from app.services.connection_service import ConnectionService
-from app.utils.enums import ServerStatus
+from app.utils.enums import DeviceStatus
 
 logger = logging.getLogger(__name__)
 
@@ -24,71 +24,57 @@ class MonitoringService:
 
         self.db = db
 
-        self.server_repository = ServerRepository(db)
+        self.device_repository = DeviceRepository(db)
 
         self.snapshot_repository = MonitoringSnapshotRepository(db)
 
-    # ==========================================================
-    # Monitor All Servers
-    # ==========================================================
+    # Monitor All Devices
+    def monitor_all_devices(self):
 
-    def monitor_all_servers(self):
-
-        servers = self.server_repository.get_monitoring_enabled()
+        devices = self.device_repository.get_monitoring_enabled()
 
         logger.info(
-            "Starting monitoring for %d servers.",
-            len(servers),
+            "Starting monitoring for %d devices.",
+            len(devices),
         )
 
-        for server in servers:
+        for device in devices:
 
             try:
 
-                self.monitor_server(server.id)
+                self.monitor_device(device.id)
 
             except Exception:
 
                 logger.exception(
-                    "Monitoring failed for server %s",
-                    server.ip_address,
+                    "Monitoring failed for device %s",
+                    device.ip_address,
                 )
 
-    # ==========================================================
-    # Monitor Single Server
-    # ==========================================================
+    # Monitor Single Device
+    def monitor_device(self, device_id: int):
 
-    def monitor_server(self, server_id: int):
+        device = self.device_repository.get_by_id(device_id)
 
-        server = self.server_repository.get_by_id(server_id)
-
-        if server is None:
+        if device is None:
             return
 
         try:
 
-            with ConnectionService.connect(server) as ssh:
+            with ConnectionService.connect(device) as ssh:
 
                 # SQLAlchemy relationship
-                inventory = server.inventory
-
-                # One-to-Many safety
-                # if isinstance(inventory, list):
-
-                #     if not inventory:
-                #         raise Exception("Inventory not found.")
-
-                #     inventory = inventory[0]
+                inventory = device.inventory
 
                 collector = CollectorFactory.get(
-                    server_type=inventory.server_type,
+                    device_type=inventory.device_type,
                     ssh=ssh,
                 )
 
                 metrics = collector.collect()
 
             snapshot = MonitoringSnapshot(
-                server_id=server.id,
+                device_id=device.id,
                 cpu_usage=metrics.cpu_usage,
                 memory_usage=metrics.memory_usage,
                 disk_usage=metrics.disk_usage,
@@ -104,41 +90,38 @@ class MonitoringService:
                 commit=False,
             )
 
-            server.status = ServerStatus.ONLINE
+            device.status = DeviceStatus.ONLINE
 
-            server.last_seen = datetime.utcnow()
+            device.last_seen = datetime.utcnow()
 
             self.db.commit()
 
             logger.info(
                 "Monitoring completed for %s",
-                server.ip_address,
+                device.ip_address,
             )
 
         except SSHConnectionException:
 
-            self._mark_offline(server)
+            self._mark_offline(device)
 
         except Exception:
 
             logger.exception(
                 "Monitoring failed for %s",
-                server.ip_address,
+                device.ip_address,
             )
 
-            self._mark_offline(server)
+            self._mark_offline(device)
 
-    # ==========================================================
-    # Mark Server Offline
-    # ==========================================================
+    # Mark Device Offline
+    def _mark_offline(self, device):
 
-    def _mark_offline(self, server):
-
-        server.status = ServerStatus.OFFLINE
+        device.status = DeviceStatus.OFFLINE
 
         self.db.commit()
 
         logger.warning(
             "%s marked OFFLINE.",
-            server.ip_address,
+            device.ip_address,
         )

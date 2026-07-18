@@ -10,9 +10,9 @@ class DashboardService:
     def summary(self):
 
         return {
-            "total_servers": self.repo.total_servers(),
-            "online_servers": self.repo.online_servers(),
-            "offline_servers": self.repo.offline_servers(),
+            "total_devices": self.repo.total_devices(),
+            "online_devices": self.repo.online_devices(),
+            "offline_devices": self.repo.offline_devices(),
             "average_cpu": self.repo.average_cpu(),
             "average_memory": self.repo.average_memory(),
             "average_disk": self.repo.average_disk(),

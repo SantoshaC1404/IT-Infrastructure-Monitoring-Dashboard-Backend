@@ -1,15 +1,15 @@
 from app.services.ssh_service import SSHService
-from app.core.encryption import encryption_service 
+from app.core.encryption import encryption_service
 
 
 class ConnectionService:
 
     @staticmethod
-    def connect(server):
+    def connect(device):
 
         return SSHService(
-            hostname=server.ip_address,
-            username=server.username,
-            password=encryption_service.decrypt(server.encrypted_password),
-            port=server.ssh_port,
+            hostname=device.ip_address,
+            username=device.username,
+            password=encryption_service.decrypt(device.encrypted_password),
+            port=device.ssh_port,
         )

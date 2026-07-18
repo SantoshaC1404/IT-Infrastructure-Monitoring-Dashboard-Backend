@@ -86,7 +86,7 @@ class SSHService:
         except NoValidConnectionsError:
             logger.warning("Unable to connect to SSH port.")
             raise SSHConnectionException(
-                "Unable to connect to the server. Verify the IP address, SSH port, and ensure the SSH service is running."
+                "Unable to connect to the device. Verify the IP address, SSH port, and ensure the SSH service is running."
             )
 
         except OSError:

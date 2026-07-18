@@ -10,18 +10,18 @@ class QueryNetworkInterfaceService:
     def __init__(self, db: Session):
         self.repository = NetworkInterfaceRepository(db)
 
-    def get_by_server(
+    def get_by_device_id(
         self,
-        server_id: int,
+        device_id: int,
     ):
-        return self.repository.get_by_server(
-            server_id,
+        return self.repository.get_by_device_id(
+            device_id,
         )
 
-    def get_by_id(
+    def get_by_interface_id(
         self,
         interface_id: int,
     ):
-        return self.repository.get_by_id(
+        return self.repository.get_by_interface_id(
             interface_id,
         )

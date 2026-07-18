@@ -34,13 +34,13 @@ class NetworkInterfaceRepository:
 
         return created
 
-    def delete_by_device(self, device_id: int):
+    def delete_by_device_id(self, device_id: int):
 
         self.db.query(NetworkInterface).filter(
             NetworkInterface.device_id == device_id
         ).delete()
 
-    def get_by_device(
+    def get_by_device_id(
         self,
         device_id: int,
     ) -> list[NetworkInterface]:
@@ -52,7 +52,7 @@ class NetworkInterfaceRepository:
 
         return self.db.scalars(stmt).all()
 
-    def get_by_id(
+    def get_by_interface_id(
         self,
         interface_id: int,
     ) -> NetworkInterface | None:

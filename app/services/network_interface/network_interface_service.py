@@ -27,11 +27,11 @@ class NetworkInterfaceService:
 
     def create_interfaces(
         self,
-        server_id: int,
+        device_id: int,
         interfaces,
     ):
         return self.create_service.create_interfaces(
-            server_id,
+            device_id,
             interfaces,
         )
 
@@ -41,11 +41,11 @@ class NetworkInterfaceService:
 
     def replace_interfaces(
         self,
-        server_id: int,
+        device_id: int,
         interfaces,
     ):
         return self.replace_service.replace_interfaces(
-            server_id,
+            device_id,
             interfaces,
         )
 
@@ -53,18 +53,18 @@ class NetworkInterfaceService:
     # Query
     # -----------------------------------
 
-    def get_by_server(
+    def get_by_device_id(
         self,
-        server_id: int,
+        device_id: int,
     ):
-        return self.query_service.get_by_server(
-            server_id,
+        return self.query_service.get_by_device_id(
+            device_id,
         )
 
-    def get_by_id(
+    def get_by_interface_id(
         self,
         interface_id: int,
     ):
-        return self.query_service.get_by_id(
+        return self.query_service.get_by_interface_id(
             interface_id,
         )

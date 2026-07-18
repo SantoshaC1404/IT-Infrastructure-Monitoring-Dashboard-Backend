@@ -10,10 +10,10 @@ class CreateNetworkInterfaceService:
 
     def create_interfaces(
         self,
-        server_id: int,
+        device_id: int,
         interfaces,
     ):
         return self.repository.create_many(
-            server_id=server_id,
+            device_id=device_id,
             interfaces=interfaces,
         )

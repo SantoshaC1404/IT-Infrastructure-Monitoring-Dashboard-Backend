@@ -8,7 +8,7 @@ from app.services.discovery.inventory_discovery_service import (
 from app.services.discovery.network_interface_discovery_service import (
     NetworkInterfaceDiscoveryService,
 )
-from app.services.discovery.server_type_detector import (
+from app.services.discovery.device_type_detector import (
     DeviceTypeDetector,
 )
 from app.services.ssh_service import SSHService
@@ -21,23 +21,23 @@ class DiscoveryService:
 
     def discover(self) -> DiscoveryResult:
 
-        server_type = DeviceTypeDetector(
+        device_type = DeviceTypeDetector(
             self.ssh,
         ).detect()
 
         inventory = InventoryDiscoveryService(
             self.ssh,
-            server_type,
+            device_type,
         ).discover()
 
         disks = DiskDiscoveryService(
             self.ssh,
-            server_type,
+            device_type,
         ).discover()
 
         interfaces = NetworkInterfaceDiscoveryService(
             self.ssh,
-            server_type,
+            device_type,
         ).discover()
 
         return DiscoveryResult(

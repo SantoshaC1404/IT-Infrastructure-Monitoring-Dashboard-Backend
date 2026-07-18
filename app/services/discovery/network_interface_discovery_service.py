@@ -9,15 +9,15 @@ class NetworkInterfaceDiscoveryService:
     def __init__(
         self,
         ssh: SSHService,
-        server_type: DeviceType,
+        device_type: DeviceType,
     ):
         self.ssh = ssh
-        self.commands = DiscoveryCommandFactory.get(server_type)
-        self.server_type = server_type
+        self.commands = DiscoveryCommandFactory.get(device_type)
+        self.device_type = device_type
 
     def discover(self) -> list[NetworkInterfaceBase]:
 
-        if self.server_type == DeviceType.LINUX:
+        if self.device_type == DeviceType.LINUX:
             return self._discover_linux()
 
         return self._discover_windows()

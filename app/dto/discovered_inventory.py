@@ -8,7 +8,7 @@ class DiscoveredInventory:
 
     hostname: str
 
-    server_type: DeviceType
+    device_type: DeviceType
 
     operating_system: str | None
 

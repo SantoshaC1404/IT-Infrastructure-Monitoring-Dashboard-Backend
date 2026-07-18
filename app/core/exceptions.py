@@ -85,13 +85,22 @@ class DatabaseException(AppException):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             error_code="DATABASE_ERROR",
         )
-        
-        
+
+
+# class ResourceNotFoundException(AppException):
+#     def __init__(self, message: str = "Resource not found."):
+#         super().__init__(
+#             message=message,
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             error_code="RESOURCE_NOT_FOUND",
+#         )
 class ResourceNotFoundException(AppException):
-    def __init__(self, message: str = "Resource not found."):
+
+    def __init__(self, resource: str, resource_id: int | str):
+
         super().__init__(
-            message=message,
-            status_code=status.HTTP_404_NOT_FOUND,
+            message=f"{resource} '{resource_id}' not found.",
+            status_code=404,
             error_code="RESOURCE_NOT_FOUND",
         )
 

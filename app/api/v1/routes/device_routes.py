@@ -6,80 +6,80 @@ from app.schemas.device import (
     DeviceCreate,
     DeviceResponse,
 )
-from app.services.device.device_service import ServerService
+from app.services.device.device_service import DeviceService
 
 router = APIRouter(
-    prefix="/servers",
-    tags=["servers"],
+    prefix="/devices",
+    tags=["devices"],
 )
 
 
 @router.post(
     "",
-    response_model=ServerResponse,
+    response_model=DeviceResponse,
 )
-def create_server(
-    request: ServerCreate,
+def create_device(
+    request: DeviceCreate,
     db: Session = Depends(get_db),
 ):
-    return ServerService(db).create_server(request)
+    return DeviceService(db).create_device(request)
 
 
 @router.get(
     "",
-    response_model=list[ServerResponse],
+    response_model=list[DeviceResponse],
 )
-def get_all_servers(
+def get_all_devices(
     db: Session = Depends(get_db),
 ):
-    return ServerService(db).get_all_servers()
+    return DeviceService(db).get_all_devices()
 
 
 @router.get(
-    "/{server_id}",
-    response_model=ServerResponse,
+    "/{device_id}",
+    response_model=DeviceResponse,
 )
-def get_server_by_id(
-    server_id: int,
+def get_device_by_id(
+    device_id: int,
     db: Session = Depends(get_db),
 ):
-    return ServerService(db).get_server_by_id(server_id)
+    return DeviceService(db).get_device_by_id(device_id)
 
 
 @router.get(
     "/ip/{ip_address}",
-    response_model=ServerResponse,
+    response_model=DeviceResponse,
 )
-def get_server_by_ip(
+def get_device_by_ip(
     ip_address: str,
     db: Session = Depends(get_db),
 ):
-    return ServerService(db).get_server_by_ip(ip_address)
+    return DeviceService(db).get_device_by_ip(ip_address)
 
 
 @router.delete(
-    "/{server_id}",
+    "/{device_id}",
 )
-def delete_server_by_id(
-    server_id: int,
+def delete_device_by_id(
+    device_id: int,
     db: Session = Depends(get_db),
 ):
-    ServerService(db).delete_server_by_id(server_id)
+    DeviceService(db).delete_device_by_id(device_id)
 
     return {
-        "message": "Server deleted successfully",
+        "message": "Device deleted successfully",
     }
 
 
 @router.delete(
     "/{ip_address}",
 )
-def delete_server_by_ip(
+def delete_device_by_ip(
     ip_address: str,
     db: Session = Depends(get_db),
 ):
-    ServerService(db).delete_server_by_ip(ip_address)
+    DeviceService(db).delete_device_by_ip(ip_address)
 
     return {
-        "message": "Server deleted successfully",
+        "message": "Device deleted successfully",
     }

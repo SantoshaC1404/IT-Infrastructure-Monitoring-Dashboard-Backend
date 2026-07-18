@@ -1,23 +1,23 @@
 from sqlalchemy.orm import Session
 
 from app.repositories.inventory_repository import (
-    ServerInventoryRepository,
+    DeviceInventoryRepository,
 )
 
 
 class UpdateInventoryService:
 
     def __init__(self, db: Session):
-        self.repository = ServerInventoryRepository(db)
+        self.repository = DeviceInventoryRepository(db)
 
     def update_inventory(
         self,
-        server_id: int,
+        device_id: int,
         inventory,
     ):
 
-        existing = self.repository.get_by_server(
-            server_id,
+        existing = self.repository.get_by_device_id(
+            device_id,
         )
 
         if existing:
@@ -28,6 +28,6 @@ class UpdateInventoryService:
             )
 
         return self.repository.create(
-            server_id=server_id,
+            device_id=device_id,
             inventory=inventory,
         )

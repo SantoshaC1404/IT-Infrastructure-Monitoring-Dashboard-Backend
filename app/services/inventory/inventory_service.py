@@ -27,11 +27,11 @@ class InventoryService:
 
     def save_inventory(
         self,
-        server_id: int,
+        device_id: int,
         inventory,
     ):
         return self.create_service.create_inventory(
-            server_id,
+            device_id,
             inventory,
         )
 
@@ -41,11 +41,11 @@ class InventoryService:
 
     def update_inventory(
         self,
-        server_id: int,
+        device_id: int,
         inventory,
     ):
         return self.update_service.update_inventory(
-            server_id,
+            device_id,
             inventory,
         )
 
@@ -53,12 +53,12 @@ class InventoryService:
     # Query
     # -----------------------------------------
 
-    def get_by_server(
+    def get_by_device(
         self,
-        server_id: int,
+        device_id: int,
     ):
-        return self.query_service.get_by_server(
-            server_id,
+        return self.query_service.get_by_device(
+            device_id,
         )
 
     def get_by_id(

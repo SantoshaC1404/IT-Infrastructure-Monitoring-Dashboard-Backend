@@ -1,15 +1,15 @@
-from app.models.device_inventory import ServerInventory
+from app.models.device_inventory import DeviceInventory
 
 
 class InventoryFactory:
 
     @staticmethod
-    def build(server_id: int, inventory):
+    def build(device_id: int, inventory):
 
-        return ServerInventory(
-            server_id=server_id,
+        return DeviceInventory(
+            device_id=device_id,
             hostname=inventory.hostname,
-            server_type=inventory.server_type,
+            device_type=inventory.device_type,
             operating_system=inventory.operating_system,
             os_version=inventory.os_version,
             kernel_version=inventory.kernel_version,

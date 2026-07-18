@@ -1,21 +1,21 @@
 from sqlalchemy.orm import Session
 
 from app.repositories.inventory_repository import (
-    ServerInventoryRepository,
+    DeviceInventoryRepository,
 )
 
 
 class QueryInventoryService:
 
     def __init__(self, db: Session):
-        self.repository = ServerInventoryRepository(db)
+        self.repository = DeviceInventoryRepository(db)
 
-    def get_by_server(
+    def get_by_device(
         self,
-        server_id: int,
+        device_id: int,
     ):
-        return self.repository.get_by_server_id(
-            server_id,
+        return self.repository.get_by_device_id(
+            device_id,
         )
 
     def get_by_id(

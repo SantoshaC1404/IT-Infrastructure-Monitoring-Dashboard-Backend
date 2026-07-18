@@ -15,23 +15,23 @@ class AppException(Exception):
         self.error_code = error_code
 
 
-class ServerAlreadyExistsException(AppException):
+class DeviceAlreadyExistsException(AppException):
 
     def __init__(self, ip_address: str):
         super().__init__(
-            message=f"Server with IP '{ip_address}' already exists.",
+            message=f"Device with IP '{ip_address}' already exists.",
             status_code=status.HTTP_409_CONFLICT,
-            error_code="SERVER_ALREADY_EXISTS",
+            error_code="DEVICE_ALREADY_EXISTS",
         )
 
 
-class ServerNotFoundException(AppException):
+class DeviceNotFoundException(AppException):
 
-    def __init__(self, server_id: int):
+    def __init__(self, device_id: int):
         super().__init__(
-            message=f"Server '{server_id}' not found.",
+            message=f"Device '{device_id}' not found.",
             status_code=status.HTTP_404_NOT_FOUND,
-            error_code="SERVER_NOT_FOUND",
+            error_code="DEVICE_NOT_FOUND",
         )
 
 
@@ -72,7 +72,7 @@ class HostUnreachableException(AppException):
 
     def __init__(self):
         super().__init__(
-            message="Host is unreachable. Verify the IP address and ensure the server is powered on.",
+            message="Host is unreachable. Verify the IP address and ensure the device is powered on.",
             status_code=503,
             error_code="HOST_UNREACHABLE",
         )
@@ -82,7 +82,7 @@ class DatabaseException(AppException):
     def __init__(self, message: str = "A database error occurred."):
         super().__init__(
             message=message,
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=status.HTTP_500_INTERNAL_DEVICE_ERROR,
             error_code="DATABASE_ERROR",
         )
 
@@ -109,6 +109,6 @@ class InventoryDiscoveryException(AppException):
     def __init__(self, message: str = "Inventory Discovery Error."):
         super().__init__(
             message=message,
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=status.HTTP_500_INTERNAL_DEVICE_ERROR,
             error_code="INVENTORY_DISCOVERY_ERROR",
         )

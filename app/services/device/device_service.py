@@ -2,13 +2,13 @@ from sqlalchemy.orm import Session
 
 from app.models.device import Server
 from app.schemas.device import ServerCreate, ServerUpdate
-from app.services.server.create_server_service import CreateServerService
-from app.services.server.delete_server_service import DeleteServerService
-from app.services.server.monitoring_server_service import (
+from app.services.device.create_device_service import CreateServerService
+from app.services.device.delete_device_service import DeleteServerService
+from app.services.device.monitoring_device_service import (
     MonitoringServerService,
 )
-from app.services.server.query_server_service import QueryServerService
-from app.services.server.update_server_service import UpdateServerService
+from app.services.device.query_device_service import QueryServerService
+from app.services.device.update_device_service import UpdateServerService
 
 
 class ServerService:

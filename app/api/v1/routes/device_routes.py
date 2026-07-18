@@ -6,7 +6,7 @@ from app.schemas.device import (
     ServerCreate,
     ServerResponse,
 )
-from app.services.server.server_service import ServerService
+from app.services.device.device_service import ServerService
 
 router = APIRouter(
     prefix="/servers",

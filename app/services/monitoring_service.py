@@ -11,7 +11,7 @@ from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.repositories.monitoring_snapshot_repository import (
     MonitoringSnapshotRepository,
 )
-from app.repositories.server_repository import ServerRepository
+from app.repositories.device_repository import ServerRepository
 from app.services.connection_service import ConnectionService
 from app.utils.enums import ServerStatus
 

@@ -1,17 +1,17 @@
 from datetime import datetime
 
 from app.core.encryption import encryption_service
-from app.models.device import Server
-from app.schemas.device import ServerCreate
-from app.utils.enums import ServerStatus
+from app.models.device import Devices
+from app.schemas.device import DeviceCreate
+from app.utils.enums import DeviceStatus
 
 
-class ServerFactory:
+class DeviceFactory:
 
     @staticmethod
-    def build(request: ServerCreate) -> Server:
+    def build(request: DeviceCreate) -> Devices:
 
-        return Server(
+        return Devices(
             name=request.name,
             ip_address=request.ip_address,
             ssh_port=request.ssh_port,
@@ -20,6 +20,6 @@ class ServerFactory:
                 request.password,
             ),
             monitoring_enabled=True,
-            status=ServerStatus.ONLINE,
+            status=DeviceStatus.ONLINE,
             last_seen=datetime.utcnow(),
         )

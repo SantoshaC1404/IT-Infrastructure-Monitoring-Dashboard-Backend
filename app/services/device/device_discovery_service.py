@@ -1,15 +1,15 @@
 from app.core import logger
 from app.core.exceptions import AppException, SSHConnectionException
 from app.dto.discovery_result import DiscoveryResult
-from app.schemas.device import ServerCreate
+from app.schemas.device import DeviceCreate
 from app.services.discovery.discovery_service import DiscoveryService
 from app.services.ssh_service import SSHService
 
 
-class ServerDiscoveryService:
+class DeviceDiscoveryService:
 
     @staticmethod
-    def discover_server(request: ServerCreate) -> DiscoveryResult:
+    def discover_device(request: DeviceCreate) -> DiscoveryResult:
 
         try:
             with SSHService(
@@ -28,4 +28,4 @@ class ServerDiscoveryService:
 
         except Exception:
             logger.exception("Unexpected discovery error")
-            raise SSHConnectionException("Failed to discover server inventory.")
+            raise SSHConnectionException("Failed to discover device inventory.")

@@ -1,23 +1,27 @@
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import ResourceNotFoundException, ServerAlreadyExistsException
-from app.repositories.server_repository import ServerRepository
+from app.core.exceptions import ResourceNotFoundException
+from app.models.device import Server
+from app.repositories.device_repository import ServerRepository
+from app.core.logger import logger
 
 
-class ServerValidationService:
+class QueryServerService:
 
     def __init__(self, db: Session):
         self.server_repository = ServerRepository(db)
 
-    def validate_duplicate_ip(self, ip_address: str):
+    # GET ALL SERVER
+    def get_all_servers(self) -> list[Server]:
 
-        if self.server_repository.get_by_ip(ip_address):
-            raise ServerAlreadyExistsException(ip_address)
+        return self.server_repository.get_all()
 
-    # Get By ID
-    def get_server_by_id(self, server_id: int):
+    # GET BY ID
+    def get_server_by_id(self, server_id: int) -> Server:
 
         server = self.server_repository.get_by_id(server_id)
+        # logger.info(f"Server by ip: ${server}")
+        logger.info(server)
 
         if server is None:
             raise ResourceNotFoundException(
@@ -27,8 +31,8 @@ class ServerValidationService:
 
         return server
 
-    # Get By IP
-    def get_server_by_ip(self, ip_address: int):
+    # GET BY IP
+    def get_server_by_ip(self, ip_address: str) -> Server:
 
         server = self.server_repository.get_by_ip(ip_address)
 

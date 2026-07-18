@@ -2,9 +2,9 @@ from sqlalchemy.orm import Session
 
 from app.core.encryption import encryption_service
 from app.models.device import Server
-from app.repositories.server_repository import ServerRepository
+from app.repositories.device_repository import ServerRepository
 from app.schemas.device import ServerUpdate
-from app.services.server.validation_service import ServerValidationService
+from app.services.device.validation_service import ServerValidationService
 
 
 class UpdateServerService:

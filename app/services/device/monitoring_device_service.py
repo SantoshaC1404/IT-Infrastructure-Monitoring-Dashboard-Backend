@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.repositories.server_repository import ServerRepository
-from app.services.server.validation_service import ServerValidationService
+from app.repositories.device_repository import ServerRepository
+from app.services.device.validation_service import ServerValidationService
 
 
 class MonitoringServerService:

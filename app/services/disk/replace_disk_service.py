@@ -10,13 +10,13 @@ class ReplaceDiskService:
 
     def replace_disks(
         self,
-        server_id: int,
+        device_id: int,
         disks,
     ):
 
-        self.repository.delete_by_server(server_id=server_id)
+        self.repository.delete_by_device(device_id=device_id)
 
         return self.repository.create_many(
-            server_id=server_id,
+            device_id=device_id,
             disks=disks,
         )

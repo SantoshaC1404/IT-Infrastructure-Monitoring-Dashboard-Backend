@@ -10,10 +10,10 @@ class CreateDiskService:
 
     def create_disks(
         self,
-        server_id: int,
+        device_id: int,
         disks,
     ):
         return self.disk_repository.create_many(
-            server_id=server_id,
+            device_id=device_id,
             disks=disks,
         )

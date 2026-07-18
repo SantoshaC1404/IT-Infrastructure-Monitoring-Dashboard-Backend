@@ -15,32 +15,32 @@ class DiskService:
     # Create Disks
     def create_disks(
         self,
-        server_id: int,
+        device_id: int,
         disks,
     ):
 
         return self.create_service.create_disks(
-            server_id,
+            device_id,
             disks,
         )
 
     # Replace Disks
     def replace_disks(
         self,
-        server_id: int,
+        device_id: int,
         disks,
     ):
         return self.replace_service.replace_disks(
-            server_id=server_id,
+            device_id=device_id,
             disks=disks,
         )
 
     # Get by server id
-    def get_by_server_id(
+    def get_by_device_id(
         self,
-        server_id: int,
+        device_id: int,
     ):
-        return self.query_service.get_disks_by_server_id(server_id)
+        return self.query_service.get_disks_by_device_id(device_id)
 
     # Get by disk id
     def get_by_disk_id(

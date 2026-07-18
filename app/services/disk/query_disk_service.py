@@ -8,12 +8,12 @@ class QueryDiskService:
     def __init__(self, db: Session):
         self.repository = DiskRepository(db=db)
 
-    def get_disks_by_server_id(
+    def get_disks_by_device_id(
         self,
-        server_id: int,
+        device_id: int,
     ):
 
-        return self.repository.get_by_server_id(server_id=server_id)
+        return self.repository.get_by_device_id(device_id=device_id)
 
     def get_disk_by_id(
         self,

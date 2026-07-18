@@ -1,5 +1,5 @@
 from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
-from app.schemas.server_inventory import ServerInventoryBase
+from app.schemas.device_inventory import ServerInventoryBase
 from app.services.ssh_service import SSHService
 from app.utils.enums import DeviceType
 

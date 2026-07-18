@@ -2,10 +2,10 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.utils.enums import ServerStatus
+from app.utils.enums import DeviceStatus
 
 
-class ServerBase(BaseModel):
+class DeviceBase(BaseModel):
 
     name: str = Field(
         ...,
@@ -32,7 +32,7 @@ class ServerBase(BaseModel):
     )
 
 
-class ServerCreate(ServerBase):
+class DeviceCreate(DeviceStatus):
 
     password: str = Field(
         ...,
@@ -41,7 +41,7 @@ class ServerCreate(ServerBase):
     )
 
 
-class ServerUpdate(BaseModel):
+class DeviceUpdate(BaseModel):
 
     name: str | None = None
 
@@ -56,13 +56,13 @@ class ServerUpdate(BaseModel):
     monitoring_enabled: bool | None = None
 
 
-class ServerResponse(ServerBase):
+class DeviceResponse(DeviceBase):
 
     id: int
 
     monitoring_enabled: bool
 
-    status: ServerStatus
+    status: DeviceStatus
 
     last_seen: datetime | None
 

@@ -33,7 +33,7 @@ class NetworkInterfaceUpdate(BaseModel):
 
 class NetworkInterfaceResponse(NetworkInterfaceBase):
     id: int
-    server_id: int
+    device_id: int
 
     created_at: datetime
     updated_at: datetime

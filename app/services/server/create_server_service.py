@@ -5,7 +5,7 @@ from app.core import logger
 from app.core.exceptions import DatabaseException
 from app.models.device import Server
 from app.repositories.server_repository import ServerRepository
-from app.schemas.server import ServerCreate
+from app.schemas.device import ServerCreate
 from app.services.disk.disk_service import DiskService
 from app.services.inventory.inventory_service import InventoryService
 from app.services.network_interface.network_interface_service import (

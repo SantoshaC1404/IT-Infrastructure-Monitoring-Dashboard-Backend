@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.device import Server
-from app.schemas.server import ServerCreate, ServerUpdate
+from app.schemas.device import ServerCreate, ServerUpdate
 from app.services.server.create_server_service import CreateServerService
 from app.services.server.delete_server_service import DeleteServerService
 from app.services.server.monitoring_server_service import (

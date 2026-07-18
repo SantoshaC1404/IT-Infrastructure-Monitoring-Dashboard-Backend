@@ -2,15 +2,15 @@ from pydantic import BaseModel
 
 from app.schemas.disk import DiskResponse
 from app.schemas.network_interface import NetworkInterfaceResponse
-from app.schemas.server import ServerResponse
-from app.schemas.server_inventory import ServerInventoryResponse
+from app.schemas.device import DeviceResponse
+from app.schemas.device_inventory import DeviceInventoryResponse
 
 
-class ServerDetailResponse(BaseModel):
+class DeviceDetailResponse(BaseModel):
 
-    server: ServerResponse
+    device: DeviceResponse
 
-    inventory: ServerInventoryResponse | None
+    inventory: DeviceInventoryResponse | None
 
     disks: list[DiskResponse] = []
 

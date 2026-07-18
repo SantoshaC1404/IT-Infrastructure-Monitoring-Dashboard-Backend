@@ -5,11 +5,11 @@ from pydantic import BaseModel, ConfigDict
 from app.utils.enums import DeviceType
 
 
-class ServerInventoryBase(BaseModel):
+class DeviceInventoryBase(BaseModel):
 
     hostname: str
 
-    server_type: DeviceType
+    device_type: DeviceType
 
     operating_system: str | None = None
 
@@ -50,11 +50,11 @@ class ServerInventoryBase(BaseModel):
     serial_number: str | None = None
 
 
-class ServerInventoryResponse(ServerInventoryBase):
+class DeviceInventoryResponse(DeviceInventoryBase):
 
     id: int
 
-    server_id: int
+    device_id: int
 
     created_at: datetime
 

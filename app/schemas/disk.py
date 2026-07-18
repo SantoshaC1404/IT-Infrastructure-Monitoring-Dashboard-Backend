@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from app.schemas.network_interface import NetworkInterfaceBase
-from app.schemas.server_inventory import ServerInventoryBase
+from app.schemas.device_inventory import DeviceInventoryBase
 
 
 class DiskBase(BaseModel):
@@ -31,7 +31,7 @@ class DiskUpdate(BaseModel):
 
 class DiskResponse(DiskBase):
     id: int
-    server_id: int
+    device_id: int
 
     created_at: datetime
     updated_at: datetime
@@ -40,6 +40,6 @@ class DiskResponse(DiskBase):
 
 
 class DiscoveryResult(BaseModel):
-    inventory: ServerInventoryBase
+    inventory: DeviceInventoryBase
     disks: list[DiskBase]
     interfaces: list[NetworkInterfaceBase]

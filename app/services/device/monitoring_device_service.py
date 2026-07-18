@@ -1,36 +1,36 @@
 from sqlalchemy.orm import Session
 
-from app.repositories.device_repository import ServerRepository
-from app.services.device.validation_service import ServerValidationService
+from app.repositories.device_repository import DeviceRepository
+from app.services.device.validation_service import DeviceValidationService
 
 
-class MonitoringServerService:
+class MonitoringDeviceService:
 
     def __init__(self, db: Session):
         self.db = db
-        self.server_repository = ServerRepository(db)
-        self.validation_service = ServerValidationService(db)
+        self.device_repository = DeviceRepository(db)
+        self.validation_service = DeviceValidationService(db)
 
-    def enable_monitoring(self, server_id: int):
+    def enable_monitoring(self, device_id: int):
 
-        return self._set_monitoring(server_id, True)
+        return self._set_monitoring(device_id, True)
 
-    def disable_monitoring(self, server_id: int):
+    def disable_monitoring(self, device_id: int):
 
-        return self._set_monitoring(server_id, False)
+        return self._set_monitoring(device_id, False)
 
     def _set_monitoring(
         self,
-        server_id: int,
+        device_id: int,
         enabled: bool,
     ):
 
-        server = self.validation_service.get_server_by_id(server_id)
+        device = self.validation_service.get_device_by_id(device_id)
 
-        server.monitoring_enabled = enabled
+        device.monitoring_enabled = enabled
 
         self.db.commit()
 
-        self.db.refresh(server)
+        self.db.refresh(device)
 
-        return server
+        return device

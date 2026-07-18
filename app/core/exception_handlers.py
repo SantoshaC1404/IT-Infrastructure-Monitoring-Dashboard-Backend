@@ -32,7 +32,7 @@ def register_exception_handlers(app: FastAPI):
             content={
                 "success": False,
                 "error": {
-                    "code": "INTERNAL_SERVER_ERROR",
+                    "code": "INTERNAL_DEVICE_ERROR",
                     "message": "An unexpected error occurred.",
                 },
             },

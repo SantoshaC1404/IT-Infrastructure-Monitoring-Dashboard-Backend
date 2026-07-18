@@ -1,35 +1,35 @@
 from sqlalchemy.orm import Session
 
-from app.repositories.device_repository import ServerRepository
-from app.services.device.validation_service import ServerValidationService
+from app.repositories.device_repository import DeviceRepository
+from app.services.device.validation_service import DeviceValidationService
 
 
-class DeleteServerService:
+class DeleteDeviceService:
 
     def __init__(self, db: Session):
         self.db = db
-        self.server_repository = ServerRepository(db)
-        self.validation_service = ServerValidationService(db)
+        self.device_repository = DeviceRepository(db)
+        self.validation_service = DeviceValidationService(db)
 
     # Delete by ID
-    def delete_server_id(self, server_id: int):
+    def delete_device_id(self, device_id: int):
 
-        server = self.validation_service.get_server_by_id(server_id)
+        device = self.validation_service.get_device_by_id(device_id)
 
-        self.server_repository.delete(
-            server,
+        self.device_repository.delete(
+            device,
             commit=False,
         )
 
         self.db.commit()
 
     # Delete by IP
-    def delete_server_ip(self, ip_address: str):
+    def delete_device_ip(self, ip_address: str):
 
-        server = self.validation_service.get_server_by_ip(ip_address)
+        device = self.validation_service.get_device_by_ip(ip_address)
 
-        self.server_repository.delete(
-            server,
+        self.device_repository.delete(
+            device,
             commit=False,
         )
 

@@ -1,45 +1,45 @@
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ResourceNotFoundException
-from app.models.device import Server
-from app.repositories.device_repository import ServerRepository
+from app.models.device import Devices
+from app.repositories.device_repository import DeviceRepository
 from app.core.logger import logger
 
 
-class QueryServerService:
+class QueryDeviceService:
 
     def __init__(self, db: Session):
-        self.server_repository = ServerRepository(db)
+        self.device_repository = DeviceRepository(db)
 
-    # GET ALL SERVER
-    def get_all_servers(self) -> list[Server]:
+    # GET ALL DEVICES
+    def get_all_devices(self) -> list[Devices]:
 
-        return self.server_repository.get_all()
+        return self.device_repository.get_all()
 
     # GET BY ID
-    def get_server_by_id(self, server_id: int) -> Server:
+    def get_device_by_id(self, device_id: int) -> Devices:
 
-        server = self.server_repository.get_by_id(server_id)
-        # logger.info(f"Server by ip: ${server}")
-        logger.info(server)
+        device = self.device_repository.get_by_id(device_id)
+        # logger.info(f"Device by ip: ${device}")
+        logger.info(device)
 
-        if server is None:
+        if device is None:
             raise ResourceNotFoundException(
-                "Server",
-                server_id,
+                "Device",
+                device_id,
             )
 
-        return server
+        return device
 
     # GET BY IP
-    def get_server_by_ip(self, ip_address: str) -> Server:
+    def get_device_by_ip(self, ip_address: str) -> Devices:
 
-        server = self.server_repository.get_by_ip(ip_address)
+        device = self.device_repository.get_by_ip(ip_address)
 
-        if server is None:
+        if device is None:
             raise ResourceNotFoundException(
-                "Server",
+                "Device",
                 ip_address,
             )
 
-        return server
+        return device

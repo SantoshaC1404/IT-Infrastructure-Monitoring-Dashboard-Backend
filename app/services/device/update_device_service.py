@@ -1,27 +1,27 @@
 from sqlalchemy.orm import Session
 
 from app.core.encryption import encryption_service
-from app.models.device import Server
-from app.repositories.device_repository import ServerRepository
-from app.schemas.device import ServerUpdate
-from app.services.device.validation_service import ServerValidationService
+from app.models.device import Devices
+from app.repositories.device_repository import DeviceRepository
+from app.schemas.device import DeviceUpdate
+from app.services.device.validation_service import DeviceValidationService
 
 
-class UpdateServerService:
+class UpdateDeviceService:
 
     def __init__(self, db: Session):
 
         self.db = db
-        self.server_repository = ServerRepository(db)
-        self.validation_service = ServerValidationService(db)
+        self.device_repository = DeviceRepository(db)
+        self.validation_service = DeviceValidationService(db)
 
-    def update_server(
+    def update_device(
         self,
-        server_id: int,
-        request: ServerUpdate,
-    ) -> Server:
+        device_id: int,
+        request: DeviceUpdate,
+    ) -> Devices:
 
-        server = self.validation_service.get_server_by_id(server_id)
+        device = self.validation_service.get_device_by_id(device_id)
 
         update_data = request.model_dump(
             exclude_unset=True,
@@ -36,13 +36,13 @@ class UpdateServerService:
         for field, value in update_data.items():
 
             setattr(
-                server,
+                device,
                 field,
                 value,
             )
 
         self.db.commit()
 
-        self.db.refresh(server)
+        self.db.refresh(device)
 
-        return server
+        return device

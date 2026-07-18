@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
 from app.schemas.device import (
-    ServerCreate,
-    ServerResponse,
+    DeviceCreate,
+    DeviceResponse,
 )
 from app.services.device.device_service import ServerService
 

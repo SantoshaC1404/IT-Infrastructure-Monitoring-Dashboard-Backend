@@ -60,11 +60,25 @@ def get_server_by_ip(
 @router.delete(
     "/{server_id}",
 )
-def delete_server(
+def delete_server_by_id(
     server_id: int,
     db: Session = Depends(get_db),
 ):
-    ServerService(db).delete_server(server_id)
+    ServerService(db).delete_server_by_id(server_id)
+
+    return {
+        "message": "Server deleted successfully",
+    }
+
+
+@router.delete(
+    "/{ip_address}",
+)
+def delete_server_by_ip(
+    ip_address: str,
+    db: Session = Depends(get_db),
+):
+    ServerService(db).delete_server_by_ip(ip_address)
 
     return {
         "message": "Server deleted successfully",

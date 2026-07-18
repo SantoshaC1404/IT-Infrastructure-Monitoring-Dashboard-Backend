@@ -61,7 +61,7 @@ class ServerService:
         )
 
     # DELETE BY ID
-    def delete_server(
+    def delete_server_by_id(
         self,
         server_id: int,
     ):

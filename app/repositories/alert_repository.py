@@ -4,7 +4,7 @@ class AlertRepository:
 
     def get_open_alert(
         self,
-        server_id,
+        device_id,
         metric,
     ): ...
 

@@ -1,11 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
-from app.models.device import Server
+from app.models.device import Devices
 from app.repositories.base_repository import BaseRepository
 
 
-class ServerRepository(BaseRepository[Server]):
+class DeviceRepository(BaseRepository[Devices]):
 
     def __init__(self, db: Session):
         super().__init__(db)
@@ -13,17 +13,19 @@ class ServerRepository(BaseRepository[Server]):
     # GET ALL
     def get_all(self):
         stmt = (
-            select(Server).options(joinedload(Server.inventory)).order_by(Server.name)
+            select(Devices)
+            .options(joinedload(Devices.inventory))
+            .order_by(Devices.name)
         )
 
         return list(self.db.scalars(stmt).unique())
 
     # GET BY ID
-    def get_by_id(self, server_id: int):
+    def get_by_id(self, device_id: int):
         stmt = (
-            select(Server)
-            .options(joinedload(Server.inventory))
-            .where(Server.id == server_id)
+            select(Devices)
+            .options(joinedload(Devices.inventory))
+            .where(Devices.id == device_id)
         )
 
         return self.db.scalar(stmt)
@@ -31,40 +33,40 @@ class ServerRepository(BaseRepository[Server]):
     # GET BY IP
     def get_by_ip(self, ip_address: str):
 
-        stmt = select(Server).where(Server.ip_address == ip_address)
+        stmt = select(Devices).where(Devices.ip_address == ip_address)
 
         return self.db.scalar(stmt)
 
     # CREATE
     def create(
         self,
-        server: Server,
+        device: Devices,
         commit: bool = True,
     ):
-        self.db.add(server)
+        self.db.add(device)
         if commit:
             self.db.commit()
-            self.db.refresh(server)
-        return server
+            self.db.refresh(device)
+        return device
 
     # UPDATE
-    def update(self, server: Server):
+    def update(self, device: Devices):
         self.db.flush()
-        return server
+        return device
 
     # DELETE
     def delete(
         self,
-        server: Server,
+        device: Devices,
         commit: bool = True,
     ):
-        self.db.delete(server)
+        self.db.delete(device)
         if commit:
             self.db.commit()
 
     # GET MONITORING STATUS
     def get_monitoring_enabled(self):
 
-        stmt = select(Server).where(Server.monitoring_enabled.is_(True))
+        stmt = select(Devices).where(Devices.monitoring_enabled.is_(True))
 
         return list(self.db.scalars(stmt).all())

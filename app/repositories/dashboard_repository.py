@@ -1,8 +1,8 @@
 from sqlalchemy import func, select
 
-from app.models.device import Server
+from app.models.device import Devices
 from app.models.monitoring_snapshot import MonitoringSnapshot
-from app.utils.enums import ServerStatus
+from app.utils.enums import DeviceStatus
 
 
 class DashboardRepository:
@@ -10,22 +10,24 @@ class DashboardRepository:
     def __init__(self, db):
         self.db = db
 
-    def total_servers(self):
+    def total_devices(self):
 
-        stmt = select(func.count(Server.id))
-
-        return self.db.scalar(stmt)
-
-    def online_servers(self):
-
-        stmt = select(func.count(Server.id)).where(Server.status == ServerStatus.ONLINE)
+        stmt = select(func.count(Devices.id))
 
         return self.db.scalar(stmt)
 
-    def offline_servers(self):
+    def online_devices(self):
 
-        stmt = select(func.count(Server.id)).where(
-            Server.status == ServerStatus.OFFLINE
+        stmt = select(func.count(Devices.id)).where(
+            Devices.status == DeviceStatus.ONLINE
+        )
+
+        return self.db.scalar(stmt)
+
+    def offline_devices(self):
+
+        stmt = select(func.count(Devices.id)).where(
+            Devices.status == DeviceStatus.OFFLINE
         )
 
         return self.db.scalar(stmt)

@@ -10,10 +10,10 @@ class DiskRepository:
         self.db = db
 
     # CREATE SINGLE
-    def create(self, server_id: int, disk) -> Disk:
+    def create(self, device_id: int, disk) -> Disk:
 
         db_disk = Disk(
-            server_id=server_id,
+            device_id=device_id,
             device_name=disk.device_name,
             filesystem=disk.filesystem,
             mount_point=disk.mount_point,
@@ -26,12 +26,12 @@ class DiskRepository:
         return db_disk
 
     # CREATE MULTIPLE
-    def create_many(self, server_id: int, disks) -> list[Disk]:
+    def create_many(self, device_id: int, disks) -> list[Disk]:
 
         created_disks = []
 
         for disk in disks:
-            created_disks.append(self.create(server_id, disk))
+            created_disks.append(self.create(device_id, disk))
 
         return created_disks
 
@@ -40,11 +40,11 @@ class DiskRepository:
 
         return self.db.get(Disk, disk_id)
 
-    # GET ALL DISKS OF A SERVER
-    def get_by_server_id(self, server_id: int) -> list[Disk]:
+    # GET ALL DISKS OF A Devices
+    def get_by_device_id(self, device_id: int) -> list[Disk]:
 
         stmt = (
-            select(Disk).where(Disk.server_id == server_id).order_by(Disk.mount_point)
+            select(Disk).where(Disk.device_id == device_id).order_by(Disk.mount_point)
         )
 
         return self.db.scalars(stmt).all()
@@ -52,13 +52,13 @@ class DiskRepository:
     # GET ALL DISKS
     def get_all(self) -> list[Disk]:
 
-        stmt = select(Disk).order_by(Disk.server_id, Disk.mount_point)
+        stmt = select(Disk).order_by(Disk.device_id, Disk.mount_point)
 
         return self.db.scalars(stmt).all()
 
-    # DELETE ALL DISKS OF A SERVER
-    def delete_by_server(self, server_id: int) -> None:
+    # DELETE ALL DISKS OF A DEVICE
+    def delete_by_device(self, device_id: int) -> None:
 
-        self.db.query(Disk).filter(Disk.server_id == server_id).delete(
+        self.db.query(Disk).filter(Disk.device_id == device_id).delete(
             synchronize_session=False
         )

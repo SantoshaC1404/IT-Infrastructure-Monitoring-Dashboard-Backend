@@ -34,12 +34,12 @@ class MonitoringSnapshotRepository:
 
     def latest(
         self,
-        server_id: int,
+        device_id: int,
     ) -> MonitoringSnapshot | None:
 
         stmt = (
             select(MonitoringSnapshot)
-            .where(MonitoringSnapshot.server_id == server_id)
+            .where(MonitoringSnapshot.device_id == device_id)
             .order_by(desc(MonitoringSnapshot.collected_at))
             .limit(1)
         )
@@ -48,7 +48,7 @@ class MonitoringSnapshotRepository:
 
     def history(
         self,
-        server_id: int,
+        device_id: int,
         hours: int = 24,
     ) -> list[MonitoringSnapshot]:
 
@@ -57,7 +57,7 @@ class MonitoringSnapshotRepository:
         stmt = (
             select(MonitoringSnapshot)
             .where(
-                MonitoringSnapshot.server_id == server_id,
+                MonitoringSnapshot.device_id == device_id,
                 MonitoringSnapshot.collected_at >= since,
             )
             .order_by(MonitoringSnapshot.collected_at.asc())
@@ -65,20 +65,20 @@ class MonitoringSnapshotRepository:
 
         return list(self.db.scalars(stmt).all())
 
-    def latest_for_all_servers(self):
+    def latest_for_all_devices(self):
 
         subquery = (
             select(
-                MonitoringSnapshot.server_id,
+                MonitoringSnapshot.device_id,
                 func.max(MonitoringSnapshot.collected_at).label("latest"),
             )
-            .group_by(MonitoringSnapshot.server_id)
+            .group_by(MonitoringSnapshot.device_id)
             .subquery()
         )
 
         stmt = select(MonitoringSnapshot).join(
             subquery,
-            (MonitoringSnapshot.server_id == subquery.c.server_id)
+            (MonitoringSnapshot.device_id == subquery.c.device_id)
             & (MonitoringSnapshot.collected_at == subquery.c.latest),
         )
 
@@ -99,14 +99,14 @@ class MonitoringSnapshotRepository:
 
     def average_cpu(
         self,
-        server_id: int,
+        device_id: int,
         hours: int = 24,
     ):
 
         since = datetime.utcnow() - timedelta(hours=hours)
 
         stmt = select(func.avg(MonitoringSnapshot.cpu_usage)).where(
-            MonitoringSnapshot.server_id == server_id,
+            MonitoringSnapshot.device_id == device_id,
             MonitoringSnapshot.collected_at >= since,
         )
 
@@ -114,14 +114,14 @@ class MonitoringSnapshotRepository:
 
     def average_memory(
         self,
-        server_id: int,
+        device_id: int,
         hours: int = 24,
     ):
 
         since = datetime.utcnow() - timedelta(hours=hours)
 
         stmt = select(func.avg(MonitoringSnapshot.memory_usage)).where(
-            MonitoringSnapshot.server_id == server_id,
+            MonitoringSnapshot.device_id == device_id,
             MonitoringSnapshot.collected_at >= since,
         )
 
@@ -129,14 +129,14 @@ class MonitoringSnapshotRepository:
 
     def average_disk(
         self,
-        server_id: int,
+        device_id: int,
         hours: int = 24,
     ):
 
         since = datetime.utcnow() - timedelta(hours=hours)
 
         stmt = select(func.avg(MonitoringSnapshot.disk_usage)).where(
-            MonitoringSnapshot.server_id == server_id,
+            MonitoringSnapshot.device_id == device_id,
             MonitoringSnapshot.collected_at >= since,
         )
 

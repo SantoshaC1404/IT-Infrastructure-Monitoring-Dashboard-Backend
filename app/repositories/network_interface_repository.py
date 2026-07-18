@@ -9,10 +9,10 @@ class NetworkInterfaceRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, server_id: int, interface):
+    def create(self, device_id: int, interface):
 
         db_interface = NetworkInterface(
-            server_id=server_id,
+            device_id=device_id,
             interface_name=interface.interface_name,
             ipv4_address=interface.ipv4_address,
             ipv6_address=interface.ipv6_address,
@@ -25,28 +25,28 @@ class NetworkInterfaceRepository:
 
         return db_interface
 
-    def create_many(self, server_id: int, interfaces):
+    def create_many(self, device_id: int, interfaces):
 
         created = []
 
         for interface in interfaces:
-            created.append(self.create(server_id, interface))
+            created.append(self.create(device_id, interface))
 
         return created
 
-    def delete_by_server(self, server_id: int):
+    def delete_by_device(self, device_id: int):
 
         self.db.query(NetworkInterface).filter(
-            NetworkInterface.server_id == server_id
+            NetworkInterface.device_id == device_id
         ).delete()
 
-    def get_by_server(
+    def get_by_device(
         self,
-        server_id: int,
+        device_id: int,
     ) -> list[NetworkInterface]:
         stmt = (
             select(NetworkInterface)
-            .where(NetworkInterface.server_id == server_id)
+            .where(NetworkInterface.device_id == device_id)
             .order_by(NetworkInterface.mount_point)
         )
 

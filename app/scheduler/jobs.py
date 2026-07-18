@@ -16,7 +16,7 @@ def collect_metrics_job():
 
         monitoring = MonitoringService(db)
 
-        monitoring.monitor_all_servers()
+        monitoring.monitor_all_devices()
 
     finally:
 

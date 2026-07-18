@@ -32,7 +32,7 @@ class DeviceBase(BaseModel):
     )
 
 
-class DeviceCreate(DeviceStatus):
+class DeviceCreate(DeviceBase):
 
     password: str = Field(
         ...,

@@ -72,7 +72,7 @@ def delete_device_by_id(
 
 
 @router.delete(
-    "/{ip_address}",
+    "/ip/{ip_address}",
 )
 def delete_device_by_ip(
     ip_address: str,

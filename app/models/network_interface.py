@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.models.device import Devices
+from app.models.device import Device
 
 
 class NetworkInterface(Base):
@@ -55,7 +55,7 @@ class NetworkInterface(Base):
         onupdate=datetime.utcnow,
     )
 
-    device: Mapped["Devices"] = relationship(
+    device: Mapped["Device"] = relationship(
         "Device",
         back_populates="network_interfaces",
     )

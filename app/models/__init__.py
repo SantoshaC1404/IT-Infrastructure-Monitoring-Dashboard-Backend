@@ -1,5 +1,5 @@
 from .user import User
-from .device import Devices
+from .device import Device
 from .device_inventory import DeviceInventory
 from .monitoring_snapshot import MonitoringSnapshot
 from .device_alert import Alert
@@ -11,7 +11,7 @@ from .disk import Disk
 
 __all__ = [
     "User",
-    "Devices",
+    "Device",
     "DeviceInventory",
     "MonitoringSnapshot",
     "Alert",

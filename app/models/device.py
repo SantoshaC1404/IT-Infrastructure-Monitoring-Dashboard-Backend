@@ -4,11 +4,10 @@ from sqlalchemy import Boolean, DateTime, Enum as SQLEnum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.models.device_inventory import DeviceInventory
 from app.utils.enums import DeviceStatus
 
 
-class Devices(Base):
+class Device(Base):
     __tablename__ = "devices"
 
     id: Mapped[int] = mapped_column(

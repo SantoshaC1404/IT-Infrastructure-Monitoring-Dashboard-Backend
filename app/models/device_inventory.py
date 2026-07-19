@@ -55,24 +55,35 @@ class DeviceInventory(Base):
     # cpu_cores: Mapped[int | None]
 
     # logical_processors: Mapped[int | None]
-    cpu_vendor: Mapped[int | None]
 
-    cpu_model: Mapped[str | None]
+    cpu_vendor: Mapped[str | None] = mapped_column(
+        String(100),
+    )
 
-    cpu_architecture: Mapped[str | None]
+    cpu_architecture: Mapped[str | None] = mapped_column(
+        String(100),
+    )
 
-    physical_cores: Mapped[int | None]
+    physical_cores: Mapped[int | None] = mapped_column(
+        Integer,
+    )
 
     # logical_cores: Mapped[int | None]
 
     # total_memory: Mapped[int | None]
     # total_memory_bytes: Mapped[int | None]
-    available_memory_bytes: Mapped[int | None]
+    available_memory_bytes: Mapped[int | None] = mapped_column(
+        Integer,
+    )
 
-    used_memory_bytes: Mapped[int | None]
+    used_memory_bytes: Mapped[int | None] = mapped_column(
+        Integer,
+    )
 
     # total_disk: Mapped[int | None]
-    total_disk_bytes: Mapped[int | None]
+    total_disk_bytes: Mapped[int | None] = mapped_column(
+        Integer,
+    )
 
     # mac_address: Mapped[str | None] = mapped_column(
     #     String(50),

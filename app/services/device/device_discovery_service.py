@@ -1,31 +1,49 @@
+from app.connectors.connector_factory import ConnectorFactory
 from app.core import logger
-from app.core.exceptions import AppException, SSHConnectionException
+from app.discovery.factory import DiscoveryFactory
 from app.dto.discovery_result import DiscoveryResult
+from app.models.device import Device
 from app.schemas.device import DeviceCreate
-from app.services.discovery.discovery_service import DiscoveryService
-from app.services.ssh_service import SSHService
+
+from app.core.exceptions import (
+    AppException,
+    DeviceConnectionException,
+)
 
 
 class DeviceDiscoveryService:
+    """
+    Orchestrates device discovery.
+
+    Responsibilities
+    ----------------
+    - Create the correct connector
+    - Create the correct discovery implementation
+    - Execute discovery
+    """
 
     @staticmethod
-    def discover_device(request: DeviceCreate) -> DiscoveryResult:
+    def discover_device(
+        request: DeviceCreate,
+    ) -> DiscoveryResult:
 
         try:
-            with SSHService(
-                hostname=request.ip_address,
-                username=request.username,
-                password=request.password,
-                port=request.ssh_port,
-            ) as ssh:
 
-                discovery_service = DiscoveryService(ssh)
+            connection = ConnectorFactory.create(request)
 
-                return discovery_service.discover()
+            with connection:
+
+                discovery = DiscoveryFactory.create(
+                    request,
+                    connection,
+                )
+
+                return discovery.discover()
 
         except AppException:
             raise
 
         except Exception:
             logger.exception("Unexpected discovery error")
-            raise SSHConnectionException("Failed to discover device inventory.")
+
+            raise DeviceConnectionException("Failed to discover device.")

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app.dto.monitoring_result import MonitoringResult
-from app.services.ssh_service import SSHService
+from app.connections.ssh.ssh_connection import SSHService
 
 
 class MetricsCollectorService:

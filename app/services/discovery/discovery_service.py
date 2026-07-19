@@ -11,32 +11,32 @@ from app.services.discovery.network_interface_discovery_service import (
 from app.services.discovery.device_type_detector import (
     DeviceTypeDetector,
 )
-from app.services.ssh_service import SSHService
+from app.connections.ssh.ssh_connection import SSHService
 
 
 class DiscoveryService:
 
-    def __init__(self, ssh: SSHService):
-        self.ssh = ssh
+    def __init__(self, connection):
+        self.connection = connection
 
     def discover(self) -> DiscoveryResult:
 
         device_type = DeviceTypeDetector(
-            self.ssh,
+            self.connection,
         ).detect()
 
         inventory = InventoryDiscoveryService(
-            self.ssh,
+            self.connection,
             device_type,
         ).discover()
 
         disks = DiskDiscoveryService(
-            self.ssh,
+            self.connection,
             device_type,
         ).discover()
 
         interfaces = NetworkInterfaceDiscoveryService(
-            self.ssh,
+            self.connection,
             device_type,
         ).discover()
 

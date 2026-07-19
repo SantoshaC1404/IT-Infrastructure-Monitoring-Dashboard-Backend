@@ -44,7 +44,7 @@ class Device(Base):
         nullable=False,
     )
 
-    connection_protocol = mapped_column(
+    device_type = mapped_column(
         SQLEnum(ConnectionProtocol),
         nullable=False,
     )

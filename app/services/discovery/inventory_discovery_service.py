@@ -1,6 +1,6 @@
 from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
 from app.schemas.device_inventory import DeviceInventoryBase
-from app.services.ssh_service import SSHService
+from app.connections.ssh.ssh_connection import SSHService
 from app.utils.enums import DeviceType
 
 

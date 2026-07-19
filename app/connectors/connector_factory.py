@@ -1,52 +1,32 @@
-from app.connectors.rest.rest_connector import RESTConnector
-from app.connectors.snmp.snmp_connector import SNMPConnector
 from app.connectors.ssh.ssh_connector import SSHConnector
 from app.connectors.winrm.winrm_connector import WinRMConnector
-from app.models.device import Device
-from app.utils.enums import (
-    ConnectionProtocol,
-)
+from app.utils.enums import DeviceType
 
 
 class ConnectorFactory:
 
     @staticmethod
-    def create(device: Device):
+    def create(
+        device_type: DeviceType,
+        hostname: str,
+        username: str,
+        password: str,
+        port: int,
+    ):
 
-        if device.device_type == ConnectionProtocol.SSH:
-
+        if device_type == DeviceType.LINUX:
             return SSHConnector(
-                hostname=device.ip_address,
-                username=device.username,
-                password=device.password,
-                port=device.port,
+                hostname=hostname,
+                username=username,
+                password=password,
+                port=port,
             )
 
-        if device.device_type == ConnectionProtocol.WINRM:
-
+        if device_type == DeviceType.WINDOWS:
             return WinRMConnector(
-                hostname=device.ip_address,
-                username=device.username,
-                password=device.password,
-                port=device.port,
+                hostname=hostname,
+                username=username,
+                password=password,
             )
 
-        if device.device_type == ConnectionProtocol.REST:
-
-            return RESTConnector(
-                hostname=device.ip_address,
-                username=device.username,
-                password=device.password,
-                port=device.port,
-            )
-
-        if device.device_type == ConnectionProtocol.SNMP:
-
-            return SNMPConnector(
-                hostname=device.ip_address,
-                username=device.username,
-                password=device.password,
-                port=device.port,
-            )
-
-        raise ValueError(f"Unsupported connection protocol: {device.device_type}")
+        raise ValueError(f"Unsupported device type: {device_type}")

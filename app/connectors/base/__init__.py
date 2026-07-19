@@ -1,3 +1,3 @@
-from .base_connector import BaseConnection
+from .base_connector import BaseConnector
 
-__all__ = ["BaseConnection"]
+__all__ = ["BaseConnector"]

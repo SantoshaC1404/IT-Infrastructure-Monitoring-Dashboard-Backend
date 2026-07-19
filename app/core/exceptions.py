@@ -68,6 +68,19 @@ class SSHConnectionException(AppException):
         )
 
 
+class ConnectionException(AppException):
+
+    def __init__(
+        self,
+        message: str = "Unable to establish connection.",
+    ):
+        super().__init__(
+            message=message,
+            status_code=503,
+            error_code="CONNECTION_FAILED",
+        )
+
+
 class DeviceConnectionException(AppException):
 
     def __init__(

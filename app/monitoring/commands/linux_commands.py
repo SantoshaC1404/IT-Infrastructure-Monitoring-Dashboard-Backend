@@ -1,7 +1,7 @@
-from app.monitoring.commands.monitoring.base import BaseCommandSet
+from app.monitoring.commands.base import BaseMonitoringCommandSet
 
 
-class LinuxCommandSet(BaseCommandSet):
+class LinuxMonitoringCommandSet(BaseMonitoringCommandSet):
 
     def cpu_usage(self):
         return "top -bn1 | grep 'Cpu(s)' | awk '{print 100-$8}'"

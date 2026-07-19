@@ -1,8 +1,8 @@
-from app.discovery.commands.discovery.base import BaseDiscoveryCommandSet
-from app.discovery.commands.discovery.linux_commands import (
+from app.discovery.commands.base import BaseDiscoveryCommandSet
+from app.discovery.commands.linux_commands import (
     LinuxDiscoveryCommands,
 )
-from app.discovery.commands.discovery.windows_commands import (
+from app.discovery.commands.windows_commands import (
     WindowsDiscoveryCommands,
 )
 from app.utils.enums import DeviceType

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import paramiko
 
-from app.connections.base import BaseConnection
+from app.connectors import BaseConnector
 
 
-class SSHConnection(BaseConnection):
+class SSHConnection(BaseConnector):
 
     def __init__(
         self,

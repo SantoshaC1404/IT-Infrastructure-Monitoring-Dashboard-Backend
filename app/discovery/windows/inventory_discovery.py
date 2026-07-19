@@ -1,4 +1,4 @@
-from app.discovery.commands.discovery.windows_commands import WindowsDiscoveryCommands
+from app.discovery.commands.windows_commands import WindowsDiscoveryCommands
 from app.dto.discovered_inventory import DiscoveredInventory
 from app.utils.enums import DeviceType
 

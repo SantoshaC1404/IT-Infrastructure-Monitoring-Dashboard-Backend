@@ -1,4 +1,4 @@
-from app.discovery.commands.discovery.factory import DiscoveryCommandsFactory
+from app.discovery.commands.factory import DiscoveryCommandsFactory
 from app.dto.discovered_network import (
     DiscoveredNetworkInterface,
 )

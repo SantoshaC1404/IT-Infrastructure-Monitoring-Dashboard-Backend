@@ -1,5 +1,5 @@
-from .winrm_connector import WinRMConnection
+from .winrm_connector import WinRMConnector
 
 __all__ = [
-    "WinRMConnection",
+    "WinRMConnector",
 ]

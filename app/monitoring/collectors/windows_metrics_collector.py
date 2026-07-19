@@ -1,20 +1,23 @@
 from datetime import datetime
 
-from app.monitoring.collectors.base import BaseMetricsCollector
 from app.dto.monitoring_result import MonitoringResult
-from app.connections.ssh.ssh_connection import SSHService
+from app.monitoring.collectors.base import BaseMetricsCollector
 
 
 class WindowsMetricsCollector(BaseMetricsCollector):
 
-    def __init__(self, ssh: SSHService, commands):
-        self.ssh = ssh
+    def __init__(
+        self,
+        connector,
+        commands,
+    ):
+        self.connector = connector
         self.commands = commands
 
-    def collect(self):
+    def collect(self) -> MonitoringResult:
 
         # TODO:
-        # Parse Windows command outputs properly.
+        # Parse actual Windows outputs.
 
         return MonitoringResult(
             cpu_usage=0,
@@ -25,5 +28,5 @@ class WindowsMetricsCollector(BaseMetricsCollector):
             uptime=0,
             load_average=0,
             process_count=0,
-            collected_at=datetime.utcnow().isoformat(),
+            collected_at=datetime.utcnow(),
         )

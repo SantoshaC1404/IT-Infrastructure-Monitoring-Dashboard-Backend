@@ -1,3 +1,3 @@
-from .ssh_connection_copy import SSHConnection
+from .ssh_connector import SSHConnector
 
-__all__ = ["SSHConnection"]
+__all__ = ["SSHConnector"]

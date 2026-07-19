@@ -5,20 +5,33 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.monitoring.collectors.collector_factory import CollectorFactory
-from app.core.exceptions import SSHConnectionException
+from app.connectors.connector_factory import ConnectorFactory
+from app.core.encryption import encryption_service
+from app.core.exceptions import ConnectionException
 from app.models.monitoring_snapshot import MonitoringSnapshot
+from app.monitoring.collectors.collector_factory import CollectorFactory
+from app.repositories.device_repository import DeviceRepository
 from app.repositories.monitoring_snapshot_repository import (
     MonitoringSnapshotRepository,
 )
-from app.repositories.device_repository import DeviceRepository
-from app.services.connection_service import ConnectionService
 from app.utils.enums import DeviceStatus
 
 logger = logging.getLogger(__name__)
 
 
 class MonitoringService:
+    """
+    Responsible for collecting monitoring metrics from devices.
+
+    Workflow:
+        Device
+            ↓
+        ConnectorFactory
+            ↓
+        CollectorFactory
+            ↓
+        MonitoringSnapshot
+    """
 
     def __init__(self, db: Session):
 
@@ -28,7 +41,10 @@ class MonitoringService:
 
         self.snapshot_repository = MonitoringSnapshotRepository(db)
 
-    # Monitor All Device
+    # ---------------------------------------------------------
+    # Monitor all enabled devices
+    # ---------------------------------------------------------
+
     def monitor_all_devices(self):
 
         devices = self.device_repository.get_monitoring_enabled()
@@ -51,24 +67,39 @@ class MonitoringService:
                     device.ip_address,
                 )
 
-    # Monitor Single Device
-    def monitor_device(self, device_id: int):
+    # ---------------------------------------------------------
+    # Monitor single device
+    # ---------------------------------------------------------
+
+    def monitor_device(
+        self,
+        device_id: int,
+    ):
 
         device = self.device_repository.get_by_id(device_id)
 
         if device is None:
             return
 
+        password = encryption_service.decrypt(
+            device.encrypted_password,
+        )
+
+        connector = ConnectorFactory.create(
+            device_type=device.device_type,
+            hostname=device.ip_address,
+            username=device.username,
+            password=password,
+            port=device.ssh_port,
+        )
+
         try:
 
-            with ConnectionService.connect(device) as ssh:
+            with connector:
 
-                # SQLAlchemy relationship
-                inventory = device.inventory
-
-                collector = CollectorFactory.get(
-                    device_type=inventory.device_type,
-                    ssh=ssh,
+                collector = CollectorFactory.create(
+                    device_type=device.device_type,
+                    connector=connector,
                 )
 
                 metrics = collector.collect()
@@ -91,7 +122,6 @@ class MonitoringService:
             )
 
             device.status = DeviceStatus.ONLINE
-
             device.last_seen = datetime.utcnow()
 
             self.db.commit()
@@ -101,7 +131,7 @@ class MonitoringService:
                 device.ip_address,
             )
 
-        except SSHConnectionException:
+        except ConnectionException:
 
             self._mark_offline(device)
 
@@ -114,7 +144,10 @@ class MonitoringService:
 
             self._mark_offline(device)
 
-    # Mark Device Offline
+    # ---------------------------------------------------------
+    # Mark device offline
+    # ---------------------------------------------------------
+
     def _mark_offline(self, device):
 
         device.status = DeviceStatus.OFFLINE

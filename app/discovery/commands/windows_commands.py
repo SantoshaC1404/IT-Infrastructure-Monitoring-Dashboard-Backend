@@ -1,4 +1,4 @@
-from app.discovery.commands.discovery.base import BaseDiscoveryCommandSet
+from app.discovery.commands.base import BaseDiscoveryCommandSet
 
 
 class WindowsDiscoveryCommands(BaseDiscoveryCommandSet):

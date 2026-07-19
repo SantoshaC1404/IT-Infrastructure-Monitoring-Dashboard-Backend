@@ -28,7 +28,7 @@ class MonitoringService:
 
         self.snapshot_repository = MonitoringSnapshotRepository(db)
 
-    # Monitor All Devices
+    # Monitor All Device
     def monitor_all_devices(self):
 
         devices = self.device_repository.get_monitoring_enabled()

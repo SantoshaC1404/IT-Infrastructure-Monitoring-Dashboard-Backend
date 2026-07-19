@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app.core.encryption import encryption_service
-from app.models.device import Devices
+from app.models.device import Device
 from app.schemas.device import DeviceCreate
 from app.utils.enums import DeviceStatus
 
@@ -9,9 +9,9 @@ from app.utils.enums import DeviceStatus
 class DeviceFactory:
 
     @staticmethod
-    def build(request: DeviceCreate) -> Devices:
+    def build(request: DeviceCreate) -> Device:
 
-        return Devices(
+        return Device(
             name=request.name,
             ip_address=request.ip_address,
             ssh_port=request.ssh_port,

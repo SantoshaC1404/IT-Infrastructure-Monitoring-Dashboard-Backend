@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.device import Devices
+from app.models.device import Device
 from app.schemas.device import DeviceCreate, DeviceUpdate
 from app.services.device.create_device_service import CreateDeviceService
 from app.services.device.delete_device_service import DeleteDeviceService
@@ -25,26 +25,26 @@ class DeviceService:
     def create_device(
         self,
         request: DeviceCreate,
-    ) -> Devices:
+    ) -> Device:
 
         return self.create_service.create_device(request)
 
     # READ
-    def get_all_devices(self) -> list[Devices]:
+    def get_all_devices(self) -> list[Device]:
 
         return self.query_service.get_all_devices()
 
     def get_device_by_id(
         self,
         device_id: int,
-    ) -> Devices:
+    ) -> Device:
 
         return self.query_service.get_device_by_id(device_id)
 
     def get_device_by_ip(
         self,
         ip_address: str,
-    ) -> Devices:
+    ) -> Device:
 
         return self.query_service.get_device_by_ip(ip_address)
 
@@ -53,7 +53,7 @@ class DeviceService:
         self,
         device_id: int,
         request: DeviceUpdate,
-    ) -> Devices:
+    ) -> Device:
 
         return self.update_service.update_device(
             device_id,
@@ -80,13 +80,13 @@ class DeviceService:
     def enable_monitoring(
         self,
         device_id: int,
-    ) -> Devices:
+    ) -> Device:
 
         return self.monitoring_service.enable_monitoring(device_id)
 
     def disable_monitoring(
         self,
         device_id: int,
-    ) -> Devices:
+    ) -> Device:
 
         return self.monitoring_service.disable_monitoring(device_id)

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.encryption import encryption_service
-from app.models.device import Devices
+from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
 from app.schemas.device import DeviceUpdate
 from app.services.device.validation_service import DeviceValidationService
@@ -19,7 +19,7 @@ class UpdateDeviceService:
         self,
         device_id: int,
         request: DeviceUpdate,
-    ) -> Devices:
+    ) -> Device:
 
         device = self.validation_service.get_device_by_id(device_id)
 

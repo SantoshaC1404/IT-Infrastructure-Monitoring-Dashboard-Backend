@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ResourceNotFoundException
-from app.models.device import Devices
+from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
 from app.core.logger import logger
 
@@ -12,12 +12,12 @@ class QueryDeviceService:
         self.device_repository = DeviceRepository(db)
 
     # GET ALL DEVICES
-    def get_all_devices(self) -> list[Devices]:
+    def get_all_devices(self) -> list[Device]:
 
         return self.device_repository.get_all()
 
     # GET BY ID
-    def get_device_by_id(self, device_id: int) -> Devices:
+    def get_device_by_id(self, device_id: int) -> Device:
 
         device = self.device_repository.get_by_id(device_id)
         # logger.info(f"Device by ip: ${device}")
@@ -32,7 +32,7 @@ class QueryDeviceService:
         return device
 
     # GET BY IP
-    def get_device_by_ip(self, ip_address: str) -> Devices:
+    def get_device_by_ip(self, ip_address: str) -> Device:
 
         device = self.device_repository.get_by_ip(ip_address)
 

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core import logger
 from app.core.exceptions import DatabaseException
-from app.models.device import Devices
+from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
 from app.schemas.device import DeviceCreate
 from app.services.disk.disk_service import DiskService
@@ -27,7 +27,7 @@ class CreateDeviceService:
         self.disk_service = DiskService(db)
         self.network_service = NetworkInterfaceService(db)
 
-    def create_device(self, request: DeviceCreate) -> Devices:
+    def create_device(self, request: DeviceCreate) -> Device:
 
         self.validation_service.validate_duplicate_ip(
             request.ip_address,

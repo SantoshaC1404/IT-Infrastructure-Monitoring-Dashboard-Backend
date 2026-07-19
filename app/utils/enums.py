@@ -30,7 +30,7 @@ class DeviceType(str, Enum):
     KUBERNETES_NODE = "KUBERNETES_NODE"
 
 
-class ConnectionType(Enum):
+class ConnectionProtocol(Enum):
     SSH = "SSH"
     WINRM = "WINRM"
     SNMP = "SNMP"

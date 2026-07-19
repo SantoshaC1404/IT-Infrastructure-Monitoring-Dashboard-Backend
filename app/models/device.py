@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, DateTime, Enum as SQLEnum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.utils.enums import DeviceStatus
+from app.utils.enums import ConnectionProtocol, DeviceStatus
 
 
 class Device(Base):
@@ -41,6 +41,11 @@ class Device(Base):
 
     encrypted_password: Mapped[str] = mapped_column(
         String(255),
+        nullable=False,
+    )
+
+    connection_protocol = mapped_column(
+        SQLEnum(ConnectionProtocol),
         nullable=False,
     )
 

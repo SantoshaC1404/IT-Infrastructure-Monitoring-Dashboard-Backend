@@ -34,3 +34,5 @@ loguru
 orjson
 
 email-validator
+
+pywinrm

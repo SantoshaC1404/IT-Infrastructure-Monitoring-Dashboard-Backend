@@ -1,6 +1,6 @@
 from sqlalchemy import func, select
 
-from app.models.device import Devices
+from app.models.device import Device
 from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import DeviceStatus
 
@@ -12,22 +12,20 @@ class DashboardRepository:
 
     def total_devices(self):
 
-        stmt = select(func.count(Devices.id))
+        stmt = select(func.count(Device.id))
 
         return self.db.scalar(stmt)
 
     def online_devices(self):
 
-        stmt = select(func.count(Devices.id)).where(
-            Devices.status == DeviceStatus.ONLINE
-        )
+        stmt = select(func.count(Device.id)).where(Device.status == DeviceStatus.ONLINE)
 
         return self.db.scalar(stmt)
 
     def offline_devices(self):
 
-        stmt = select(func.count(Devices.id)).where(
-            Devices.status == DeviceStatus.OFFLINE
+        stmt = select(func.count(Device.id)).where(
+            Device.status == DeviceStatus.OFFLINE
         )
 
         return self.db.scalar(stmt)

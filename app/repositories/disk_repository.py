@@ -40,7 +40,7 @@ class DiskRepository:
 
         return self.db.get(Disk, disk_id)
 
-    # GET ALL DISKS OF A Devices
+    # GET ALL DISKS OF A Device
     def get_by_device_id(self, device_id: int) -> list[Disk]:
 
         stmt = (

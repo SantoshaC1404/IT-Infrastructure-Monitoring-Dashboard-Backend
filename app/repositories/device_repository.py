@@ -1,11 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
-from app.models.device import Devices
+from app.models.device import Device
 from app.repositories.base_repository import BaseRepository
 
 
-class DeviceRepository(BaseRepository[Devices]):
+class DeviceRepository(BaseRepository[Device]):
 
     def __init__(self, db: Session):
         super().__init__(db)
@@ -13,9 +13,7 @@ class DeviceRepository(BaseRepository[Devices]):
     # GET ALL
     def get_all(self):
         stmt = (
-            select(Devices)
-            .options(joinedload(Devices.inventory))
-            .order_by(Devices.name)
+            select(Device).options(joinedload(Device.inventory)).order_by(Device.name)
         )
 
         return list(self.db.scalars(stmt).unique())
@@ -23,9 +21,9 @@ class DeviceRepository(BaseRepository[Devices]):
     # GET BY ID
     def get_by_id(self, device_id: int):
         stmt = (
-            select(Devices)
-            .options(joinedload(Devices.inventory))
-            .where(Devices.id == device_id)
+            select(Device)
+            .options(joinedload(Device.inventory))
+            .where(Device.id == device_id)
         )
 
         return self.db.scalar(stmt)
@@ -33,14 +31,14 @@ class DeviceRepository(BaseRepository[Devices]):
     # GET BY IP
     def get_by_ip(self, ip_address: str):
 
-        stmt = select(Devices).where(Devices.ip_address == ip_address)
+        stmt = select(Device).where(Device.ip_address == ip_address)
 
         return self.db.scalar(stmt)
 
     # CREATE
     def create(
         self,
-        device: Devices,
+        device: Device,
         commit: bool = True,
     ):
         self.db.add(device)
@@ -50,14 +48,14 @@ class DeviceRepository(BaseRepository[Devices]):
         return device
 
     # UPDATE
-    def update(self, device: Devices):
+    def update(self, device: Device):
         self.db.flush()
         return device
 
     # DELETE
     def delete(
         self,
-        device: Devices,
+        device: Device,
         commit: bool = True,
     ):
         self.db.delete(device)
@@ -67,6 +65,6 @@ class DeviceRepository(BaseRepository[Devices]):
     # GET MONITORING STATUS
     def get_monitoring_enabled(self):
 
-        stmt = select(Devices).where(Devices.monitoring_enabled.is_(True))
+        stmt = select(Device).where(Device.monitoring_enabled.is_(True))
 
         return list(self.db.scalars(stmt).all())

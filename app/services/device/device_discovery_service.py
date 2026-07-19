@@ -1,6 +1,6 @@
 from app.connectors.connector_factory import ConnectorFactory
 from app.core import logger
-from app.discovery.factory import DiscoveryFactory
+from app.discovery.discovery_factory import DiscoveryFactory
 from app.dto.discovery_result import DiscoveryResult
 from app.models.device import Device
 from app.schemas.device import DeviceCreate

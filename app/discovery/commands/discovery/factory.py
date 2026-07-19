@@ -1,14 +1,14 @@
-from app.monitoring.commands.discovery.base import BaseDiscoveryCommandSet
-from app.monitoring.commands.discovery.linux_commands import (
+from app.discovery.commands.discovery.base import BaseDiscoveryCommandSet
+from app.discovery.commands.discovery.linux_commands import (
     LinuxDiscoveryCommands,
 )
-from app.monitoring.commands.discovery.windows_commands import (
+from app.discovery.commands.discovery.windows_commands import (
     WindowsDiscoveryCommands,
 )
 from app.utils.enums import DeviceType
 
 
-class DiscoveryCommandFactory:
+class DiscoveryCommandsFactory:
 
     @staticmethod
     def get(

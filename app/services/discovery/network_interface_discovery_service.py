@@ -1,4 +1,4 @@
-from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
+from app.discovery.commands.discovery.factory import DiscoveryCommandFactory
 from app.schemas.network_interface import NetworkInterfaceBase
 from app.connections.ssh.ssh_connection import SSHService
 from app.utils.enums import DeviceType

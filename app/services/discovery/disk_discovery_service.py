@@ -1,4 +1,4 @@
-from app.monitoring.commands.discovery.factory import DiscoveryCommandFactory
+from app.discovery.commands.discovery.factory import DiscoveryCommandsFactory
 from app.schemas.disk import DiskBase
 from app.connections.ssh.ssh_connection import SSHService
 from app.utils.enums import DeviceType
@@ -12,7 +12,7 @@ class DiskDiscoveryService:
         device_type: DeviceType,
     ):
         self.ssh = ssh
-        self.commands = DiscoveryCommandFactory.get(device_type)
+        self.commands = DiscoveryCommandsFactory.get(device_type)
         self.device_type = device_type
 
     def discover(self) -> list[DiskBase]:

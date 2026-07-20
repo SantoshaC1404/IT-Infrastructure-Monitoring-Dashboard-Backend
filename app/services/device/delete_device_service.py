@@ -12,7 +12,7 @@ class DeleteDeviceService:
         self.validation_service = DeviceValidationService(db)
 
     # Delete by ID
-    def delete_device_id(self, device_id: int):
+    def delete_device_by_id(self, device_id: int):
 
         device = self.validation_service.get_device_by_id(device_id)
 
@@ -24,7 +24,7 @@ class DeleteDeviceService:
         self.db.commit()
 
     # Delete by IP
-    def delete_device_ip(self, ip_address: str):
+    def delete_device_by_ip(self, ip_address: str):
 
         device = self.validation_service.get_device_by_ip(ip_address)
 

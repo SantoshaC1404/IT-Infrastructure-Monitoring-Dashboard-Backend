@@ -44,11 +44,8 @@ class NetworkInterfaceRepository:
         self,
         device_id: int,
     ) -> list[NetworkInterface]:
-        stmt = (
-            select(NetworkInterface)
-            .where(NetworkInterface.device_id == device_id)
-            .order_by(NetworkInterface.mount_point)
-        )
+
+        stmt = select(NetworkInterface).where(NetworkInterface.device_id == device_id)
 
         return self.db.scalars(stmt).all()
 

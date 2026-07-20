@@ -11,7 +11,7 @@ class ConnectorFactory:
         hostname: str,
         username: str,
         password: str,
-        port: int,
+        port: int = 22,
     ):
 
         if device_type == DeviceType.LINUX:

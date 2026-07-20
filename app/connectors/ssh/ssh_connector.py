@@ -46,14 +46,6 @@ class SSHConnector(BaseConnector):
 
         self.client: Optional[paramiko.SSHClient] = None
 
-    # Context Manager
-    def __enter__(self):
-        self.connect()
-        return self
-
-    def __exit__(self, exc_type, exc, tb):
-        self.close()
-
     # Connection
     def connect(self):
         if self.client:
@@ -154,9 +146,13 @@ class SSHConnector(BaseConnector):
         sftp.close()
 
     # Close
-    def close(self):
+    def disconnect(self):
 
         if self.client:
             self.client.close()
             self.client = None
-            logger.info(f"SSH Closed -> {self.hostname}")
+
+            logger.info(
+                "SSH Closed -> %s",
+                self.hostname,
+            )

@@ -5,11 +5,14 @@ from app.dto.discovered_inventory import DiscoveredInventory
 from app.dto.discovered_network import (
     DiscoveredNetworkInterface,
 )
+from app.utils.enums import DeviceType
 
 
 @dataclass(slots=True)
 class DiscoveryResult:
 
+    device_type: DeviceType
+    
     inventory: DiscoveredInventory
 
     disks: list[DiscoveredDisk]

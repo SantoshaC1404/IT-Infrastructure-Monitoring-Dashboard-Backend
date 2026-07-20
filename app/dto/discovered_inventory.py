@@ -1,49 +1,35 @@
 from dataclasses import dataclass
 
-from app.utils.enums import DeviceType
-
 
 @dataclass(slots=True)
 class DiscoveredInventory:
-
+    # Device Identity
     hostname: str
 
-    device_type: DeviceType
-
-    operating_system: str | None
-
-    os_version: str | None
-
-    kernel_version: str | None
-
-    architecture: str | None
+    # Operating System
+    operating_system: str
+    os_version: str
+    kernel_version: str
+    architecture: str
 
     # CPU
-    cpu_vendor: str | None
+    cpu_vendor: str | None = None
+    cpu_model: str | None = None
+    cpu_architecture: str | None = None
 
-    cpu_model: str | None
-
-    cpu_architecture: str | None
-
-    physical_cores: int | None
-
-    logical_cores: int | None
+    physical_cores: int | None = None
+    logical_cores: int | None = None
 
     # Memory
-    total_memory_bytes: int | None
+    total_memory_bytes: int | None = None
+    available_memory_bytes: int | None = None
+    used_memory_bytes: int | None = None
 
-    available_memory_bytes: int | None
-
-    used_memory_bytes: int | None
-
-    # Disk
-    total_disk_bytes: int | None
+    # Storage
+    total_disk_bytes: int | None = None
 
     # Hardware
-    virtualization: str | None
-
-    manufacturer: str | None
-
-    model: str | None
-
-    serial_number: str | None
+    virtualization: str | None = None
+    manufacturer: str | None = None
+    model: str | None = None
+    serial_number: str | None = None

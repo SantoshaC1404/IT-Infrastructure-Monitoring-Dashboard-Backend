@@ -1,7 +1,7 @@
 import logging
 
 from app.db.session import SessionLocal
-from app.services.monitoring_service import MonitoringService
+from app.services.monitoring.monitoring_service import MonitoringService
 
 logger = logging.getLogger(__name__)
 

@@ -1,32 +1,17 @@
-from datetime import datetime
+from app.monitoring.collectors.metrics_collector_service import (
+    MetricsCollectorService,
+)
 
-from app.dto.monitoring_result import MonitoringResult
-from app.monitoring.collectors.base import BaseMetricsCollector
+from app.monitoring.parsers.windows_metrics_parser import (
+    WindowsMetricsParser,
+)
 
 
-class WindowsMetricsCollector(BaseMetricsCollector):
+class WindowsMetricsCollector(MetricsCollectorService):
 
-    def __init__(
-        self,
-        connector,
-        commands,
-    ):
-        self.connector = connector
-        self.commands = commands
-
-    def collect(self) -> MonitoringResult:
-
-        # TODO:
-        # Parse actual Windows outputs.
-
-        return MonitoringResult(
-            cpu_usage=0,
-            memory_usage=0,
-            disk_usage=0,
-            network_rx=0,
-            network_tx=0,
-            uptime=0,
-            load_average=0,
-            process_count=0,
-            collected_at=datetime.utcnow(),
+    def __init__(self, connector, commands):
+        super().__init__(
+            connector,
+            commands,
+            WindowsMetricsParser(),
         )

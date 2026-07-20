@@ -1,3 +1,5 @@
+import traceback
+
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -44,12 +46,18 @@ class CreateDeviceService:
             request.ip_address,
         )
 
-        discovery = DeviceDiscoveryService.discover_device(
-            request,
-        )
+        # discovery = DeviceDiscoveryService.discover_device(
+        #     request,
+        # )
+
+        # device = DeviceFactory.build(
+        #     request,
+        # )
+        discovery = DeviceDiscoveryService.discover_device(request)
 
         device = DeviceFactory.build(
-            request,
+            request=request,
+            device_type=discovery.device_type,
         )
 
         try:
@@ -66,17 +74,15 @@ class CreateDeviceService:
 
             return device
 
-        except IntegrityError:
-
+        except IntegrityError as e:
             self.db.rollback()
+            traceback.print_exc()
+            raise
 
-            raise DatabaseException("Database integrity error.")
-
-        except SQLAlchemyError:
-
+        except SQLAlchemyError as e:
             self.db.rollback()
-
-            raise DatabaseException("Database transaction failed.")
+            traceback.print_exc()
+            raise
 
         except Exception:
 

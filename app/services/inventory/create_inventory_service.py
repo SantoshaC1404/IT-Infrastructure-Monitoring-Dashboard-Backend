@@ -15,14 +15,12 @@ class CreateInventoryService:
         self,
         device_id: int,
         inventory,
+        device_type,
     ):
-        # return self.repository.create(
-        #     device_id=device_id,
-        #     inventory=inventory,
-        # )
         db_inventory = InventoryFactory.build(
             device_id=device_id,
             inventory=inventory,
+            device_type=device_type,
         )
 
         return self.repository.create(db_inventory)

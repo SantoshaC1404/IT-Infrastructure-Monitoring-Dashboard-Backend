@@ -3,13 +3,16 @@ from datetime import datetime
 from app.core.encryption import encryption_service
 from app.models.device import Device
 from app.schemas.device import DeviceCreate
-from app.utils.enums import DeviceStatus
+from app.utils.enums import DeviceStatus, DeviceType
 
 
 class DeviceFactory:
 
     @staticmethod
-    def build(request: DeviceCreate) -> Device:
+    def build(
+        request: DeviceCreate,
+        device_type: DeviceType,
+    ) -> Device:
 
         return Device(
             name=request.name,
@@ -19,6 +22,7 @@ class DeviceFactory:
             encrypted_password=encryption_service.encrypt(
                 request.password,
             ),
+            device_type=device_type,
             monitoring_enabled=True,
             status=DeviceStatus.ONLINE,
             last_seen=datetime.utcnow(),

@@ -25,9 +25,9 @@ class SaveSnapshotService:
             disk_usage=metrics.disk_usage,
             network_rx=metrics.network_rx,
             network_tx=metrics.network_tx,
-            uptime=metrics.uptime,
+            # uptime=metrics.uptime,
             load_average=metrics.load_average,
-            process_count=metrics.process_count,
+            # process_count=metrics.process_count,
         )
 
         self.repository.create(

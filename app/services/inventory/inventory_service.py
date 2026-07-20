@@ -29,10 +29,12 @@ class InventoryService:
         self,
         device_id: int,
         inventory,
+        device_type,
     ):
         return self.create_service.create_inventory(
             device_id,
             inventory,
+            device_type,
         )
 
     # -----------------------------------------

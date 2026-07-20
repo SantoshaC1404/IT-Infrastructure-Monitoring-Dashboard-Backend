@@ -59,9 +59,16 @@ class CollectMetricsService:
         if device is None:
             return
 
+        # connector = ConnectorFactory.create(
+        #     device=device,
+        #     password=encryption_service.decrypt(device.encrypted_password),
+        # )
         connector = ConnectorFactory.create(
-            device=device,
+            device_type=device.device_type,
+            hostname=device.ip_address,
+            username=device.username,
             password=encryption_service.decrypt(device.encrypted_password),
+            port=device.ssh_port,
         )
 
         try:

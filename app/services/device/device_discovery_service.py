@@ -1,26 +1,15 @@
 from app.connectors.connector_factory import ConnectorFactory
 from app.core import logger
-from app.discovery.discovery_factory import DiscoveryFactory
-from app.dto.discovery_result import DiscoveryResult
-from app.models.device import Device
-from app.schemas.device import DeviceCreate
-
 from app.core.exceptions import (
     AppException,
     DeviceConnectionException,
 )
+from app.discovery.discovery_factory import DiscoveryFactory
+from app.dto.discovery_result import DiscoveryResult
+from app.schemas.device import DeviceCreate
 
 
 class DeviceDiscoveryService:
-    """
-    Orchestrates device discovery.
-
-    Responsibilities
-    ----------------
-    - Create the correct connector
-    - Create the correct discovery implementation
-    - Execute discovery
-    """
 
     @staticmethod
     def discover_device(
@@ -29,13 +18,19 @@ class DeviceDiscoveryService:
 
         try:
 
-            connection = ConnectorFactory.create(request)
+            connector = ConnectorFactory.create(
+                device_type=request.device_type,
+                hostname=request.ip_address,
+                username=request.username,
+                password=request.password,
+                port=request.ssh_port,
+            )
 
-            with connection:
+            with connector:
 
                 discovery = DiscoveryFactory.create(
-                    request,
-                    connection,
+                    device_type=request.device_type,
+                    connector=connector,
                 )
 
                 return discovery.discover()
@@ -43,7 +38,8 @@ class DeviceDiscoveryService:
         except AppException:
             raise
 
-        except Exception:
-            logger.exception("Unexpected discovery error")
-
+        except Exception as e:
+            # logger.exception("Unexpected discovery error")
+            print("Exception: ", type(e))
+            print(e)
             raise DeviceConnectionException("Failed to discover device.")

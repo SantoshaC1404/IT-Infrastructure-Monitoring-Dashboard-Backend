@@ -37,21 +37,36 @@ class DevicePersistenceService:
     ):
 
         self.db.flush()
+        print("Device flushed")
 
+        # self.inventory_service.save_inventory(
+        #     device.id,
+        #     discovery.inventory,
+        # )
         self.inventory_service.save_inventory(
             device.id,
             discovery.inventory,
+            device.device_type,
         )
+
+        self.db.flush()
+        print("Inventory saved")
 
         self.disk_service.create_disks(
             device.id,
             discovery.disks,
         )
 
+        self.db.flush()
+        print("Disks saved")
+
         self.network_service.create_interfaces(
             device.id,
             discovery.interfaces,
         )
+
+        self.db.flush()
+        print("Interfaces saved")
 
         self.db.commit()
 

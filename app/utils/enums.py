@@ -9,8 +9,8 @@ class UserRole(str, Enum):
 
 
 class DeviceType(str, Enum):
-    LINUX_SERVER = "LINUX_SERVER"
-    WINDOWS_SERVER = "WINDOWS_SERVER"
+    LINUX = "LINUX"
+    WINDOWS = "WINDOWS"
 
     ROUTER = "ROUTER"
     SWITCH = "SWITCH"

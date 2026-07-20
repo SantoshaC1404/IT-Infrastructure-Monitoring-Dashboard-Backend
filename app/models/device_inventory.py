@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Enum as SQLEnum
+from sqlalchemy import (
+    BigInteger,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Enum as SQLEnum,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
@@ -27,6 +34,10 @@ class DeviceInventory(Base):
         nullable=False,
     )
 
+    # device_type: Mapped[DeviceType] = mapped_column(
+    #     SQLEnum(DeviceType),
+    #     nullable=False,
+    # )
     device_type: Mapped[DeviceType] = mapped_column(
         SQLEnum(DeviceType),
         nullable=False,
@@ -68,8 +79,6 @@ class DeviceInventory(Base):
         Integer,
     )
 
-    # logical_cores: Mapped[int | None]
-
     # total_memory: Mapped[int | None]
     # total_memory_bytes: Mapped[int | None]
     available_memory_bytes: Mapped[int | None] = mapped_column(
@@ -109,6 +118,10 @@ class DeviceInventory(Base):
         "Device",
         back_populates="inventory",
     )
+
+    logical_cores: Mapped[int | None] = mapped_column(Integer)
+
+    total_memory_bytes: Mapped[int | None] = mapped_column(BigInteger)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,

@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, DateTime, Enum as SQLEnum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
-from app.utils.enums import ConnectionProtocol, DeviceStatus
+from app.utils.enums import DeviceType, DeviceStatus
 
 
 class Device(Base):
@@ -44,8 +44,8 @@ class Device(Base):
         nullable=False,
     )
 
-    device_type = mapped_column(
-        SQLEnum(ConnectionProtocol),
+    device_type: Mapped[DeviceType] = mapped_column(
+        SQLEnum(DeviceType),
         nullable=False,
     )
 

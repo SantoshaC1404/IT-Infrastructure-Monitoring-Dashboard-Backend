@@ -108,7 +108,7 @@ class DatabaseException(AppException):
     def __init__(self, message: str = "A database error occurred."):
         super().__init__(
             message=message,
-            status_code=status.HTTP_500_INTERNAL_DEVICE_ERROR,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             error_code="DATABASE_ERROR",
         )
 

@@ -1,12 +1,12 @@
 from app.discovery.commands.factory import DiscoveryCommandFactory
 from app.core.exceptions import InventoryDiscoveryException
-from app.connections.ssh.ssh_connection import SSHService
+from app.connectors.ssh.ssh_connector import SSHConnector
 from app.utils.enums import DeviceType
 
 
 class DeviceTypeDetector:
 
-    def __init__(self, ssh: SSHService):
+    def __init__(self, ssh: SSHConnector):
         self.ssh = ssh
 
     def detect(self) -> DeviceType:

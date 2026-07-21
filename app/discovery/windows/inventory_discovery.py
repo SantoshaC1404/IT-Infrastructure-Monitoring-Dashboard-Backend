@@ -14,13 +14,13 @@ class WindowsInventoryDiscovery:
 
         hostname = self.connector.execute(self.commands.hostname())
 
-        operating_system = self.connector.execute(self.commands.os_name())
+        operating_system = self.connector.execute(self.commands.hostname())
 
         os_version = self.connector.execute(self.commands.os_version())
 
         architecture = self.connector.execute(self.commands.architecture())
 
-        cpu_vendor = self.connector.execute(self.commands.cpu_vendor())
+        # cpu_vendor = self.connector.execute(self.commands.cpu_vendor())
 
         cpu_model = self.connector.execute(self.commands.cpu_model())
 
@@ -32,7 +32,7 @@ class WindowsInventoryDiscovery:
 
         total_memory = int(self.connector.execute(self.commands.total_memory()) or 0)
 
-        manufacturer = self.connector.execute(self.commands.manufacturer())
+        # manufacturer = self.connector.execute(self.commands.manufacturer())
 
         model = self.connector.execute(self.commands.model())
 
@@ -45,14 +45,14 @@ class WindowsInventoryDiscovery:
             os_version=os_version,
             kernel_version=None,
             architecture=architecture,
-            cpu_vendor=cpu_vendor,
+            # cpu_vendor=cpu_vendor,
             cpu_model=cpu_model,
             physical_cores=physical_cores,
             logical_cores=logical_cores,
             total_memory_bytes=total_memory,
             total_disk_bytes=None,
             virtualization=None,
-            manufacturer=manufacturer,
+            # manufacturer=manufacturer,
             model=model,
             serial_number=serial_number,
         )

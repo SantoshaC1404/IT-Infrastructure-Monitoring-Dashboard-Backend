@@ -3,8 +3,11 @@ from contextlib import asynccontextmanager
 
 from app.api.v1.api import api_router
 from app.core.config import settings
-from app.core.logger import logger, setup_logging
-from app.core.exception_handlers import register_exception_handlers
+
+# from app.core.logger import logger, setup_logging
+from app.core.exceptions.handlers import register_exception_handlers
+
+from app.core.logging_config import LOGGING
 
 from app.scheduler.scheduler import (
     start_scheduler,
@@ -44,6 +47,6 @@ app.include_router(
 #     logger.info("Application started")
 
 
-@app.on_event("shutdown")
-async def shutdown():
-    logger.info("Application stopped")
+# @app.on_event("shutdown")
+# async def shutdown():
+#     logger.info("Application stopped")

@@ -1,3 +1,4 @@
+"""
 import logging
 
 from app.core.config import settings
@@ -11,3 +12,10 @@ def setup_logging():
 
 
 logger = logging.getLogger("it-monitoring")
+"""
+
+import logging
+
+from app.core.logging_config import LOGGING
+
+logger = logging.getLogger("it_monitoring")

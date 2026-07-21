@@ -1,4 +1,4 @@
-from app.core.security import hash_password
+from app.core.security.security import hash_password
 
 password = "Admin@123"
 

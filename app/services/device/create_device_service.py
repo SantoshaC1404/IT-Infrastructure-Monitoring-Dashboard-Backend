@@ -3,7 +3,6 @@ import traceback
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import DatabaseException
 from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
 from app.schemas.device import DeviceCreate
@@ -46,13 +45,6 @@ class CreateDeviceService:
             request.ip_address,
         )
 
-        # discovery = DeviceDiscoveryService.discover_device(
-        #     request,
-        # )
-
-        # device = DeviceFactory.build(
-        #     request,
-        # )
         discovery = DeviceDiscoveryService.discover_device(request)
 
         device = DeviceFactory.build(
@@ -76,15 +68,15 @@ class CreateDeviceService:
 
         except IntegrityError as e:
             self.db.rollback()
-            traceback.print_exc()
+            # traceback.print_exc()
             raise
 
         except SQLAlchemyError as e:
             self.db.rollback()
-            traceback.print_exc()
+            # traceback.print_exc()
             raise
 
-        except Exception:
+        # except Exception:
 
-            self.db.rollback()
-            raise
+        #     self.db.rollback()
+        #     raise

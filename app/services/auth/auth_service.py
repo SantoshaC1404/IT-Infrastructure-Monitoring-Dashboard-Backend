@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.core.security import (
+from app.core.security.security import (
     create_access_token,
     hash_password,
     verify_password,

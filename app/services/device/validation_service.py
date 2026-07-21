@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import ResourceNotFoundException, DeviceAlreadyExistsException
+from app.core.exceptions.resources import ResourceNotFoundException
+from app.core.exceptions.validation import DeviceAlreadyExistsException
 from app.repositories.device_repository import DeviceRepository
+from app.core.logger import logger
 
 
 class DeviceValidationService:
@@ -12,6 +14,7 @@ class DeviceValidationService:
     def validate_duplicate_ip(self, ip_address: str):
 
         if self.device_repository.get_by_ip(ip_address):
+            logger.exception(f"Device with IP: ${ip_address} exist.")
             raise DeviceAlreadyExistsException(ip_address)
 
     # Get By ID
@@ -20,6 +23,7 @@ class DeviceValidationService:
         device = self.device_repository.get_by_id(device_id)
 
         if device is None:
+            logger.exception(f"Device with IP: ${device_id} exist.")
             raise ResourceNotFoundException(
                 "Device",
                 device_id,

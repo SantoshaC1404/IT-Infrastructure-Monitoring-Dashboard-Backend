@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import ResourceNotFoundException
+from app.core.exceptions.resources import ResourceNotFoundException
 from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
 from app.core.logger import logger
@@ -21,9 +21,9 @@ class QueryDeviceService:
 
         device = self.device_repository.get_by_id(device_id)
         # logger.info(f"Device by ip: ${device}")
-        logger.info(device)
 
         if device is None:
+            logger.exception(f"Device with ${device_id} not found.")
             raise ResourceNotFoundException(
                 "Device",
                 device_id,
@@ -37,6 +37,7 @@ class QueryDeviceService:
         device = self.device_repository.get_by_ip(ip_address)
 
         if device is None:
+            logger.exception(f"Device with ${ip_address} not found.")
             raise ResourceNotFoundException(
                 "Device",
                 ip_address,

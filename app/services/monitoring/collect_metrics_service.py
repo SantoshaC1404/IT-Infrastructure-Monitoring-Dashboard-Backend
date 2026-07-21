@@ -3,8 +3,8 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.connectors.connector_factory import ConnectorFactory
-from app.core.encryption import encryption_service
-from app.core.exceptions import ConnectionException
+from app.core.security.encryption import encryption_service
+from app.core.exceptions.connection import ConnectionException
 from app.monitoring.collectors.collector_factory import CollectorFactory
 from app.repositories.device_repository import DeviceRepository
 from app.services.monitoring.save_snapshot_service import (
@@ -47,8 +47,6 @@ class CollectMetricsService:
                     device.ip_address,
                 )
 
-    # -----------------------------------------------------
-
     def monitor_device(
         self,
         device_id: int,
@@ -59,10 +57,6 @@ class CollectMetricsService:
         if device is None:
             return
 
-        # connector = ConnectorFactory.create(
-        #     device=device,
-        #     password=encryption_service.decrypt(device.encrypted_password),
-        # )
         connector = ConnectorFactory.create(
             device_type=device.device_type,
             hostname=device.ip_address,
@@ -92,7 +86,7 @@ class CollectMetricsService:
             )
 
         except ConnectionException:
-
+            # logger.exception("Connection exception.")
             self.device_service.mark_offline(
                 device,
             )

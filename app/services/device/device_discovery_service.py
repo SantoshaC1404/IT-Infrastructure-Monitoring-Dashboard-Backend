@@ -1,12 +1,10 @@
 from app.connectors.connector_factory import ConnectorFactory
-from app.core import logger
-from app.core.exceptions import (
-    AppException,
-    DeviceConnectionException,
-)
+
+from app.core.exceptions.discovery import DiscoveryException
 from app.discovery.discovery_factory import DiscoveryFactory
 from app.dto.discovery_result import DiscoveryResult
 from app.schemas.device import DeviceCreate
+from app.core.logger import logger
 
 
 class DeviceDiscoveryService:
@@ -35,11 +33,6 @@ class DeviceDiscoveryService:
 
                 return discovery.discover()
 
-        except AppException:
-            raise
-
-        except Exception as e:
+        except DiscoveryException:
             # logger.exception("Unexpected discovery error")
-            print("Exception: ", type(e))
-            print(e)
-            raise DeviceConnectionException("Failed to discover device.")
+            raise

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.utils.enums import DeviceStatus
+from app.utils.enums import DeviceStatus, DeviceType
 
 
 class DeviceBase(BaseModel):
@@ -39,6 +39,7 @@ class DeviceCreate(DeviceBase):
         min_length=6,
         max_length=255,
     )
+    device_type: DeviceType
 
 
 class DeviceUpdate(BaseModel):

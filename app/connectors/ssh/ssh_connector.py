@@ -11,10 +11,12 @@ from paramiko.ssh_exception import (
 
 from app.connectors.base.base_connector import BaseConnector
 from app.core.logger import logger
+
 from app.core.exceptions import (
+    AuthenticationException,
+    ConnectionTimeoutException,
     HostUnreachableException,
-    SSHConnectionException,
-    SSHTimeoutException,
+    ConnectionException,
 )
 
 
@@ -66,37 +68,38 @@ class SSHConnector(BaseConnector):
             )
 
             self.client = client
-            logger.info(f"SSH Connected -> {self.hostname}")
+
+            logger.info("Connected to %s", self.hostname)
 
         except AuthenticationException:
-            logger.warning("SSH authentication failed.")
-            raise SSHConnectionException("Invalid SSH username or password.")
+            # logger.warning("SSH authentication failed.")
+            raise ConnectionException("Invalid SSH username or password.")
 
         except socket.timeout:
-            logger.warning("SSH connection timed out.")
-            raise SSHTimeoutException()
+            # logger.warning("SSH connection timed out.")
+            raise ConnectionTimeoutException()
 
         except NoValidConnectionsError:
-            logger.warning("Unable to connect to SSH port.")
-            raise SSHConnectionException(
+            # logger.warning("Unable to connect to SSH port.")
+            raise ConnectionException(
                 "Unable to connect to the device. Verify the IP address, SSH port, and ensure the SSH service is running."
             )
 
         except OSError:
-            logger.warning("Host unreachable.")
+            # logger.warning("Host unreachable.")
             raise HostUnreachableException()
 
         except SSHException:
-            logger.warning("SSH protocol error.")
-            raise SSHConnectionException("SSH protocol error.")
+            # logger.warning("SSH protocol error.")
+            raise ConnectionException("SSH protocol error.")
 
         except BadHostKeyException:
-            logger.warning("SSH host-key error.")
-            raise SSHConnectionException("SSH host key verification failed.")
+            # logger.warning("SSH host-key error.")
+            raise ConnectionException("SSH host key verification failed.")
 
         except Exception:
-            logger.exception("Unexpected SSH error")
-            raise SSHConnectionException()
+            # logger.exception("Unexpected SSH error")
+            raise ConnectionException()
 
     # Command Execution
     def execute(self, command: str) -> str:
@@ -152,7 +155,4 @@ class SSHConnector(BaseConnector):
             self.client.close()
             self.client = None
 
-            logger.info(
-                "SSH Closed -> %s",
-                self.hostname,
-            )
+            logger.info("SSH Closed -> %s", self.hostname)

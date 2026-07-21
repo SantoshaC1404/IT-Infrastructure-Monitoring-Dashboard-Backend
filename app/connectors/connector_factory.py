@@ -27,6 +27,7 @@ class ConnectorFactory:
                 hostname=hostname,
                 username=username,
                 password=password,
+                port=port,
             )
 
         raise ValueError(f"Unsupported device type: {device_type}")

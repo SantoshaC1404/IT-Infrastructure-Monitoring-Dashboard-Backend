@@ -4,7 +4,7 @@ from collections.abc import Generator
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from app.db.session import SessionLocal
-from app.core.security import decode_access_token
+from app.core.security.security import decode_access_token
 from app.repositories.user_repository import UserRepository
 
 security = HTTPBearer()

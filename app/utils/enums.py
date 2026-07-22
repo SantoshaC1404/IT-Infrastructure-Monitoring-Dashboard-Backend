@@ -47,6 +47,12 @@ class DeviceStatus(str, Enum):
     OFFLINE = "OFFLINE"
 
 
+class CommandShell(str, Enum):
+    SHELL = "shell"  # Linux shell
+    CMD = "cmd"  # Windows CMD
+    POWERSHELL = "powershell"
+
+
 class AlertSeverity(str, Enum):
     INFO = "INFO"
     WARNING = "WARNING"

@@ -1,18 +1,18 @@
-from app.commands.monitoring.base import BaseCommandSet
-from app.commands.monitoring.linux_commands import LinuxCommandSet
-from app.commands.monitoring.windows_commands import WindowsCommands
-from app.utils.enums import ServerType
+from app.commands.monitoring.base import BaseMonitoringCommandSet
+from app.commands.monitoring.linux_commands import LinuxMonitoringCommandSet
+from app.commands.monitoring.windows_commands import WindowsMonitoringCommandSet
+from app.utils.enums import DeviceType
 
 
-class CommandFactory:
+class MonitoringCommandsFactory:
 
     @staticmethod
-    def get(server_type: ServerType) -> BaseCommandSet:
+    def get(device_type: DeviceType) -> BaseMonitoringCommandSet:
 
-        if server_type == ServerType.LINUX:
-            return LinuxCommandSet()
+        if device_type == DeviceType.LINUX:
+            return LinuxMonitoringCommandSet()
 
-        if server_type == ServerType.WINDOWS:
-            return WindowsCommands()
+        if device_type == DeviceType.WINDOWS:
+            return WindowsMonitoringCommandSet()
 
-        raise ValueError(f"Unsupported server type: {server_type}")
+        raise ValueError(f"Unsupported device type: {device_type}")

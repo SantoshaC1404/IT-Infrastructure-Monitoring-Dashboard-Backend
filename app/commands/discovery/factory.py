@@ -5,20 +5,20 @@ from app.commands.discovery.linux_commands import (
 from app.commands.discovery.windows_commands import (
     WindowsDiscoveryCommands,
 )
-from app.utils.enums import ServerType
+from app.utils.enums import DeviceType
 
 
-class DiscoveryCommandFactory:
+class DiscoveryCommandsFactory:
 
     @staticmethod
     def get(
-        server_type: ServerType,
+        server_type: DeviceType,
     ) -> BaseDiscoveryCommandSet:
 
-        if server_type == ServerType.LINUX:
+        if server_type == DeviceType.LINUX:
             return LinuxDiscoveryCommands()
 
-        if server_type == ServerType.WINDOWS:
+        if server_type == DeviceType.WINDOWS:
             return WindowsDiscoveryCommands()
 
         raise ValueError(f"Unsupported server type: {server_type}")

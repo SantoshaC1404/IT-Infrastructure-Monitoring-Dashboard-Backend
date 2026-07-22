@@ -12,6 +12,8 @@ from app.core.exceptions import (
     HostUnreachableException,
     ConnectionException,
 )
+from app.dto.command_dto import Command
+from app.utils.enums import CommandShell
 
 
 class WinRMConnector(BaseConnector):
@@ -100,28 +102,46 @@ class WinRMConnector(BaseConnector):
             logger.exception("Unexpected WinRM error")
             raise ConnectionException(str(e))
 
-    # Execute Command
-    def execute(
-        self,
-        command: str,
-    ) -> str:
+    # Execute
+    from app.utils.enums import CommandShell
+
+    def execute(self, command: Command) -> str:
+
+        print("=" * 60)
+        print("TYPE:", type(command))
+        print("VALUE:", command)
+        print("=" * 60)
 
         if self.session is None:
             self.connect()
 
-        result = self.session.run_cmd(command)
+        if command.shell == CommandShell.POWERSHELL:
+            result = self.session.run_ps(command.command)
+
+        else:
+            result = self.session.run_cmd(command.command)
 
         output = result.std_out.decode().strip()
-
         error = result.std_err.decode().strip()
 
         if result.status_code != 0:
-
-            logger.warning(error)
-
             raise ConnectionException(error or "Command execution failed.")
 
         return output
+
+    """
+    def execute_powershell(self, script: str):
+
+        if self.session is None:
+            self.connect()
+
+        result = self.session.run_ps(script)
+
+        if result.status_code != 0:
+            raise ConnectionException(result.std_err.decode())
+
+        return result.std_out.decode().strip()
+    """
 
     # Execute With Exit Code
     def execute_with_status(
@@ -143,13 +163,13 @@ class WinRMConnector(BaseConnector):
     # PowerShell
     def execute_powershell(
         self,
-        script: str,
+        command: str,
     ) -> str:
 
         if self.session is None:
             self.connect()
 
-        result = self.session.run_ps(script)
+        result = self.session.run_ps(command)
 
         output = result.std_out.decode().strip()
 

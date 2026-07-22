@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from app.dto.command_dto import Command
+
 
 class BaseConnector(ABC):
     """
@@ -20,9 +22,15 @@ class BaseConnector(ABC):
         pass
 
     @abstractmethod
-    def execute(self, command: str) -> str:
+    def execute(self, command: Command) -> str:
         """Execute a command and return stdout."""
         pass
+
+    # Optional feature
+    def execute_powershell(self, command):
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support PowerShell."
+        )
 
     @abstractmethod
     def execute_with_status(self, command: str) -> tuple[int, str, str]:

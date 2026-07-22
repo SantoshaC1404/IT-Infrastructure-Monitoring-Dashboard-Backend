@@ -18,6 +18,7 @@ from app.core.exceptions import (
     HostUnreachableException,
     ConnectionException,
 )
+from app.dto.command_dto import Command
 
 
 class SSHConnector(BaseConnector):
@@ -102,12 +103,13 @@ class SSHConnector(BaseConnector):
             raise ConnectionException()
 
     # Command Execution
-    def execute(self, command: str) -> str:
+    def execute(self, command: Command) -> str:
 
         if self.client is None:
             self.connect()
 
-        stdin, stdout, stderr = self.client.exec_command(command)
+        stdin, stdout, stderr = self.client.exec_command(command.command)
+
         output = stdout.read().decode().strip()
         error = stderr.read().decode().strip()
 

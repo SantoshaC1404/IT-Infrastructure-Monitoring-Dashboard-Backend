@@ -1,4 +1,3 @@
-from app.discovery.commands.factory import DiscoveryCommandFactory
 from app.core.exceptions import InventoryDiscoveryException
 from app.connectors.ssh.ssh_connector import SSHConnector
 from app.utils.enums import DeviceType

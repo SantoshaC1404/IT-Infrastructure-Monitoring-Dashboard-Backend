@@ -1,8 +1,5 @@
-from app.discovery.commands.windows_commands import WindowsDiscoveryCommands
-
-from app.dto.discovered_network import (
-    DiscoveredNetworkInterface,
-)
+from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
+from app.dto.discovered_network import DiscoveredNetworkInterface
 
 
 class WindowsNetworkDiscovery:
@@ -12,23 +9,31 @@ class WindowsNetworkDiscovery:
         self.connector = connector
         self.commands = WindowsDiscoveryCommands()
 
-    def discover(self) -> list[DiscoveredNetworkInterface]:
+    def discover(self):
+        # print("=" * 80)
+        # print("WindowsNetworkDiscovery.discover() CALLED")
+        # print(__file__)
+        # print("=" * 80)
 
-        output = self.connector.execute(self.commands.network_interfaces())
+        output = self.connector.execute(
+            self.commands.network_interfaces(),
+        )
 
         interfaces = []
 
-        for line in output.splitlines():
+        lines = output.splitlines()
 
-            values = line.split(",")
+        for line in lines[2:]:
 
-            if len(values) < 2:
+            cols = line.split()
+
+            if len(cols) < 3:
                 continue
 
             interfaces.append(
                 DiscoveredNetworkInterface(
-                    interface_name=values[0],
-                    ipv4_address=values[1],
+                    interface_name=cols[1],
+                    ipv4_address=cols[0],
                     ipv6_address=None,
                     mac_address=None,
                     speed_mbps=None,

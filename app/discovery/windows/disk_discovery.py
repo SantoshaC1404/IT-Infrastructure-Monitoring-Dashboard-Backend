@@ -1,5 +1,5 @@
-from app.discovery.commands.windows_commands import WindowsDiscoveryCommands
-
+# from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
+from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
 from app.dto.discovered_disk import DiscoveredDisk
 
 
@@ -10,30 +10,43 @@ class WindowsDiskDiscovery:
         self.connector = connector
         self.commands = WindowsDiscoveryCommands()
 
-    def discover(self) -> list[DiscoveredDisk]:
+    def discover(self):
 
-        output = self.connector.execute(self.commands.disks())
+        output = self.connector.execute(
+            self.commands.disk_inventory(),
+        )
 
         disks = []
 
-        for line in output.splitlines():
+        lines = output.splitlines()
 
-            values = line.split(",")
+        #
+        # Skip header
+        #
 
-            if len(values) < 4:
+        for line in lines[2:]:
+
+            cols = line.split()
+
+            if len(cols) < 4:
                 continue
 
-            total = int(values[1]) if values[1] else 0
-            free = int(values[2]) if values[2] else 0
+            device = cols[0]
+
+            filesystem = cols[1]
+
+            size = int(cols[2])
+
+            free = int(cols[3])
 
             disks.append(
                 DiscoveredDisk(
-                    device_name=values[0],
-                    filesystem=values[3],
-                    mount_point=values[0],
-                    total_bytes=total,
+                    device_name=device,
+                    filesystem=filesystem,
+                    mount_point=device,
+                    total_bytes=size,
                     free_bytes=free,
-                    used_bytes=total - free,
+                    used_bytes=size - free,
                 )
             )
 

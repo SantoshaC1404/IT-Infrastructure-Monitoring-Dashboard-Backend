@@ -1,6 +1,5 @@
-from app.discovery.commands.windows_commands import WindowsDiscoveryCommands
+from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
 from app.dto.discovered_inventory import DiscoveredInventory
-from app.utils.enums import DeviceType
 
 
 class WindowsInventoryDiscovery:
@@ -10,49 +9,70 @@ class WindowsInventoryDiscovery:
         self.connector = connector
         self.commands = WindowsDiscoveryCommands()
 
-    def discover(self) -> DiscoveredInventory:
+    def discover(self):
 
-        hostname = self.connector.execute(self.commands.hostname())
-
-        operating_system = self.connector.execute(self.commands.hostname())
-
-        os_version = self.connector.execute(self.commands.os_version())
-
-        architecture = self.connector.execute(self.commands.architecture())
-
-        # cpu_vendor = self.connector.execute(self.commands.cpu_vendor())
-
-        cpu_model = self.connector.execute(self.commands.cpu_model())
-
-        physical_cores = int(
-            self.connector.execute(self.commands.physical_cores()) or 0
+        hostname = self.connector.execute(
+            self.commands.hostname(),
         )
 
-        logical_cores = int(self.connector.execute(self.commands.logical_cores()) or 0)
+        operating_system = self.connector.execute(
+            self.commands.operating_system(),
+        )
 
-        total_memory = int(self.connector.execute(self.commands.total_memory()) or 0)
+        os_version = self.connector.execute(
+            self.commands.os_version(),
+        )
 
-        # manufacturer = self.connector.execute(self.commands.manufacturer())
+        architecture = self.connector.execute(
+            self.commands.architecture(),
+        )
 
-        model = self.connector.execute(self.commands.model())
+        cpu_model = self.connector.execute(
+            self.commands.cpu_model(),
+        )
 
-        serial_number = self.connector.execute(self.commands.serial_number())
+        physical_cores = int(
+            self.connector.execute(
+                self.commands.physical_cores(),
+            )
+            or 0
+        )
+
+        logical_cores = int(
+            self.connector.execute(
+                self.commands.logical_cores(),
+            )
+            or 0
+        )
+
+        total_memory = int(
+            self.connector.execute(
+                self.commands.total_memory(),
+            )
+            or 0
+        )
+
+        model = self.connector.execute(
+            self.commands.model(),
+        )
+
+        serial_number = self.connector.execute(
+            self.commands.serial_number(),
+        )
 
         return DiscoveredInventory(
             hostname=hostname,
-            device_type=DeviceType.WINDOWS,
+            # device_type=DeviceType.WINDOWS,
             operating_system=operating_system,
             os_version=os_version,
             kernel_version=None,
             architecture=architecture,
-            # cpu_vendor=cpu_vendor,
             cpu_model=cpu_model,
             physical_cores=physical_cores,
             logical_cores=logical_cores,
             total_memory_bytes=total_memory,
             total_disk_bytes=None,
             virtualization=None,
-            # manufacturer=manufacturer,
             model=model,
             serial_number=serial_number,
         )

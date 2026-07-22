@@ -1,4 +1,4 @@
-from app.discovery.commands.factory import DiscoveryCommandsFactory
+from app.commands.discovery.factory import DiscoveryCommandsFactory
 from app.dto.discovered_network import (
     DiscoveredNetworkInterface,
 )
@@ -13,7 +13,9 @@ class LinuxNetworkDiscovery:
 
     def discover(self) -> list[DiscoveredNetworkInterface]:
 
-        output = self.connector.execute(self.commands.network_interfaces())
+        output = self.connector.execute(
+            self.commands.network_interfaces(),
+        )
 
         interfaces = []
 

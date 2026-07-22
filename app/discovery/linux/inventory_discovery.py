@@ -1,4 +1,4 @@
-from app.discovery.commands.factory import DiscoveryCommandsFactory
+from app.commands.discovery.factory import DiscoveryCommandsFactory
 from app.dto.discovered_inventory import DiscoveredInventory
 from app.utils.enums import DeviceType
 
@@ -11,29 +11,54 @@ class LinuxInventoryDiscovery:
 
     def discover(self) -> DiscoveredInventory:
 
-        hostname = self.connector.execute(self.commands.hostname())
+        hostname = self.connector.execute(
+            self.commands.hostname(),
+        )
 
-        operating_system = self.connector.execute(self.commands.operating_system())
+        operating_system = self.connector.execute(
+            self.commands.operating_system(),
+        )
 
-        os_version = self.connector.execute(self.commands.os_version())
+        os_version = self.connector.execute(
+            self.commands.os_version(),
+        )
 
-        kernel_version = self.connector.execute(self.commands.kernel_version())
+        kernel_version = self.connector.execute(
+            self.commands.kernel_version(),
+        )
 
-        architecture = self.connector.execute(self.commands.architecture())
+        architecture = self.connector.execute(
+            self.commands.architecture(),
+        )
 
-        cpu_model = self.connector.execute(self.commands.cpu_model()).strip()
+        cpu_model = self.connector.execute(
+            self.commands.cpu_model(),
+        ).strip()
 
         physical_cores = int(
             self.connector.execute(self.commands.physical_cores()) or 0
         )
 
-        logical_cores = int(self.connector.execute(self.commands.logical_cores()) or 0)
-
-        total_memory = (
-            int(self.connector.execute(self.commands.total_memory()) or 0) * 1024
+        logical_cores = int(
+            self.connector.execute(
+                self.commands.logical_cores(),
+            )
+            or 0
         )
 
-        virtualization = self.connector.execute(self.commands.virtualization())
+        total_memory = (
+            int(
+                self.connector.execute(
+                    self.commands.total_memory(),
+                )
+                or 0
+            )
+            * 1024
+        )
+
+        virtualization = self.connector.execute(
+            self.commands.virtualization(),
+        )
 
         return DiscoveredInventory(
             hostname=hostname,

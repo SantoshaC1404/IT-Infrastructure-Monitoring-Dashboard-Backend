@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "INFO"
 
-    REACT_URL = str
+    REACT_URL: str
 
     @property
     def DATABASE_URL(self) -> URL:

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.api.v1.api import api_router
@@ -8,6 +9,7 @@ from app.core.config import settings
 from app.core.exceptions.handlers import register_exception_handlers
 
 from app.core.logging_config import LOGGING
+from app.core.config import S
 
 from app.scheduler.scheduler import (
     start_scheduler,
@@ -35,6 +37,16 @@ app = FastAPI(
 )
 
 register_exception_handlers(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        settings.REACT_URL,
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(
     api_router,

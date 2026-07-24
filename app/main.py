@@ -9,7 +9,6 @@ from app.core.config import settings
 from app.core.exceptions.handlers import register_exception_handlers
 
 from app.core.logging_config import LOGGING
-from app.core.config import S
 
 from app.scheduler.scheduler import (
     start_scheduler,

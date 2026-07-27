@@ -6,7 +6,9 @@ from app.schemas.device import (
     DeviceCreate,
     DeviceResponse,
 )
+from app.schemas.test_connection import TestConnectionRequest, TestConnectionResponse
 from app.services.device.device_service import DeviceService
+from app.services.device.test_connection_service import TestConnectionService
 
 router = APIRouter(
     prefix="/devices",
@@ -83,3 +85,13 @@ def delete_device_by_ip(
     return {
         "message": "Device deleted successfully",
     }
+
+
+@router.post(
+    "/test-connection",
+    response_model=TestConnectionResponse,
+)
+def test_connection(
+    request: TestConnectionRequest,
+):
+    return TestConnectionService().test(request)

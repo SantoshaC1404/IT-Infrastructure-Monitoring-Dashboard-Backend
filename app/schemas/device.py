@@ -56,6 +56,8 @@ class DeviceUpdate(BaseModel):
 
     monitoring_enabled: bool | None = None
 
+    device_type: DeviceType | None = None
+
 
 class DeviceResponse(DeviceBase):
 

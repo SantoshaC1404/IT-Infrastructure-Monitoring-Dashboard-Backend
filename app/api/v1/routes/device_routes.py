@@ -5,6 +5,7 @@ from app.api.deps import get_db
 from app.schemas.device import (
     DeviceCreate,
     DeviceResponse,
+    DeviceUpdate,
 )
 from app.schemas.test_connection import TestConnectionRequest, TestConnectionResponse
 from app.services.device.device_service import DeviceService
@@ -57,6 +58,30 @@ def get_device_by_ip(
     db: Session = Depends(get_db),
 ):
     return DeviceService(db).get_device_by_ip(ip_address)
+
+
+@router.patch(
+    "/{device_id}",
+    response_model=DeviceResponse,
+)
+def update_device(
+    device_id: int,
+    request: DeviceUpdate,
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).update_device(device_id, request)
+
+
+@router.put(
+    "/{device_id}",
+    response_model=DeviceResponse,
+)
+def update_device_put(
+    device_id: int,
+    request: DeviceUpdate,
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).update_device(device_id, request)
 
 
 @router.delete(

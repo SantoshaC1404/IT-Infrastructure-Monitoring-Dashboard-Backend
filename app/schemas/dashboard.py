@@ -1,5 +1,13 @@
 from pydantic import BaseModel
-from typing import Dict
+
+
+class DeviceTypeSummary(BaseModel):
+
+    LINUX: int = 0
+
+    WINDOWS: int = 0
+
+    NETWORK: int = 0
 
 
 class DashboardSummaryResponse(BaseModel):
@@ -14,4 +22,4 @@ class DashboardSummaryResponse(BaseModel):
 
     monitoring_disabled: int
 
-    device_types: Dict[str, int]
+    device_types: DeviceTypeSummary

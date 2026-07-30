@@ -21,11 +21,11 @@ from app.scheduler.scheduler import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    start_scheduler()
+    # start_scheduler()
 
     yield
 
-    stop_scheduler()
+    # stop_scheduler()
 
 
 app = FastAPI(

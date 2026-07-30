@@ -2,7 +2,7 @@ from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from app.models.device import Device
-from app.utils.enums import DeviceStatus
+from app.utils.enums import DeviceStatus, DeviceType
 from app.dto.dashboard_summary_dto import DashboardSummaryDTO
 
 
@@ -34,6 +34,35 @@ class DashboardRepository:
                     else_=0,
                 )
             ).label("monitoring_enabled"),
+            func.sum(
+                case(
+                    (Device.monitoring_enabled.is_(False), 1),
+                    else_=0,
+                )
+            ).label("monitoring_disabled"),
+            func.sum(
+                case(
+                    (Device.device_type == DeviceType.LINUX, 1),
+                    else_=0,
+                )
+            ).label("linux_devices"),
+            func.sum(
+                case(
+                    (Device.device_type == DeviceType.WINDOWS, 1),
+                    else_=0,
+                )
+            ).label("windows_devices"),
+            func.sum(
+                case(
+                    (
+                        Device.device_type.notin_(
+                            [DeviceType.LINUX, DeviceType.WINDOWS]
+                        ),
+                        1,
+                    ),
+                    else_=0,
+                )
+            ).label("network_devices"),
         ).one()
 
         return DashboardSummaryDTO(

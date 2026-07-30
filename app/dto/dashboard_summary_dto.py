@@ -11,3 +11,7 @@ class DashboardSummaryDTO:
     offline_devices: int
 
     monitoring_enabled: int
+
+    monitoring_disabled: int
+
+    device_types: dict[str, int]

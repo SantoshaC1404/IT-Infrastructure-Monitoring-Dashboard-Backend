@@ -1,49 +1,68 @@
-from sqlalchemy import func, select
+from sqlalchemy import case, func
+from sqlalchemy.orm import Session
 
 from app.models.device import Device
-from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import DeviceStatus
+from app.dto.dashboard_summary_dto import DashboardSummaryDTO
 
 
 class DashboardRepository:
 
-    def __init__(self, db):
+    def __init__(self, db: Session):
+
         self.db = db
 
-    def total_devices(self):
+    def get_summary(self):
 
-        stmt = select(func.count(Device.id))
+        summary = self.db.query(
+            func.count(Device.id).label("total_devices"),
+            func.sum(
+                case(
+                    (Device.status == DeviceStatus.ONLINE, 1),
+                    else_=0,
+                )
+            ).label("online_devices"),
+            func.sum(
+                case(
+                    (Device.status == DeviceStatus.OFFLINE, 1),
+                    else_=0,
+                )
+            ).label("offline_devices"),
+            func.sum(
+                case(
+                    (Device.monitoring_enabled.is_(True), 1),
+                    else_=0,
+                )
+            ).label("monitoring_enabled"),
+        ).one()
 
-        return self.db.scalar(stmt)
-
-    def online_devices(self):
-
-        stmt = select(func.count(Device.id)).where(Device.status == DeviceStatus.ONLINE)
-
-        return self.db.scalar(stmt)
-
-    def offline_devices(self):
-
-        stmt = select(func.count(Device.id)).where(
-            Device.status == DeviceStatus.OFFLINE
+        return DashboardSummaryDTO(
+            total_devices=summary.total_devices or 0,
+            online_devices=summary.online_devices or 0,
+            offline_devices=summary.offline_devices or 0,
+            monitoring_enabled=summary.monitoring_enabled or 0,
         )
 
-        return self.db.scalar(stmt)
-
+    """
     def average_cpu(self):
 
         stmt = select(func.avg(MonitoringSnapshot.cpu_usage))
 
         return self.db.scalar(stmt)
+    """
 
+    """
     def average_memory(self):
 
         stmt = select(func.avg(MonitoringSnapshot.memory_usage))
 
         return self.db.scalar(stmt)
+    """
 
+    """
     def average_disk(self):
 
         stmt = select(func.avg(MonitoringSnapshot.disk_usage))
 
         return self.db.scalar(stmt)
+    """

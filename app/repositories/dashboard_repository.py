@@ -41,6 +41,12 @@ class DashboardRepository:
             online_devices=summary.online_devices or 0,
             offline_devices=summary.offline_devices or 0,
             monitoring_enabled=summary.monitoring_enabled or 0,
+            monitoring_disabled=summary.monitoring_disabled or 0,
+            device_types={
+                "LINUX": summary.linux_devices or 0,
+                "WINDOWS": summary.windows_devices or 0,
+                "NETWORK": summary.network_devices or 0,
+            },
         )
 
     """

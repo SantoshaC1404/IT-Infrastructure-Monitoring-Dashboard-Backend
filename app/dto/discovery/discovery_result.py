@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from app.dto.discovered_disk import DiscoveredDisk
-from app.dto.discovered_inventory import DiscoveredInventory
-from app.dto.discovered_network import (
+from app.dto.discovery.discovered_disk import DiscoveredDisk
+from app.dto.discovery.discovered_inventory import DiscoveredInventory
+from app.dto.discovery.discovered_network import (
     DiscoveredNetworkInterface,
 )
 from app.utils.enums import DeviceType

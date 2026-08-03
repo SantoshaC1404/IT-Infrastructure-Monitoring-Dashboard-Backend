@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass(slots=True)
@@ -21,3 +22,7 @@ class MonitoringResult:
     process_count: int
 
     collected_at: str
+
+    login_source: str | None = None
+
+    last_login_time: datetime | None = None

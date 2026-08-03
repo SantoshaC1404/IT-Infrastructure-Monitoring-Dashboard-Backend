@@ -15,3 +15,9 @@ class DashboardSummaryDTO:
     monitoring_disabled: int
 
     device_types: dict[str, int]
+    
+    cpu_usage: float = 0.0
+
+    memory_usage: float = 0.0
+
+    disk_usage: float = 0.0

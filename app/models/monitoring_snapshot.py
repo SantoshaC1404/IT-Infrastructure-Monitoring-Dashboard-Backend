@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, BigInteger
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
@@ -64,4 +64,15 @@ class MonitoringSnapshot(Base):
     device = relationship(
         "Device",
         back_populates="snapshots",
+    )
+
+    login_source: Mapped[str | None] = mapped_column(
+        "current_logged_in_user",
+        String(100),
+        nullable=True,
+    )
+
+    last_login_time: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
     )

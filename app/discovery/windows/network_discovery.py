@@ -1,5 +1,5 @@
 from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
-from app.dto.discovered_network import DiscoveredNetworkInterface
+from app.dto.discovery.discovered_network import DiscoveredNetworkInterface
 
 
 class WindowsNetworkDiscovery:

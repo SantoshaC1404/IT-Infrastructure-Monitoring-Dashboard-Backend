@@ -1,5 +1,5 @@
 from app.commands.discovery.factory import DiscoveryCommandsFactory
-from app.dto.discovered_network import (
+from app.dto.discovery.discovered_network import (
     DiscoveredNetworkInterface,
 )
 from app.utils.enums import DeviceType

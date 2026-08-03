@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dto.discovery_result import DiscoveryResult
+from app.dto.discovery.discovery_result import DiscoveryResult
 
 
 class BaseDiscovery(ABC):

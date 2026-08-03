@@ -2,7 +2,7 @@ from app.discovery.base import BaseDiscovery
 from app.discovery.windows.disk_discovery import WindowsDiskDiscovery
 from app.discovery.windows.inventory_discovery import WindowsInventoryDiscovery
 from app.discovery.windows.network_discovery import WindowsNetworkDiscovery
-from app.dto.discovery_result import DiscoveryResult
+from app.dto.discovery.discovery_result import DiscoveryResult
 from app.utils.enums import DeviceType
 
 

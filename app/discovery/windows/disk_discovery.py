@@ -1,6 +1,6 @@
 # from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
 from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
-from app.dto.discovered_disk import DiscoveredDisk
+from app.dto.discovery.discovered_disk import DiscoveredDisk
 
 
 class WindowsDiskDiscovery:

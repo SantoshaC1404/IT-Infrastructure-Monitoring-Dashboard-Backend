@@ -2,7 +2,7 @@ from app.discovery.base import BaseDiscovery
 from app.discovery.linux.disk_discovery import LinuxDiskDiscovery
 from app.discovery.linux.inventory_discovery import LinuxInventoryDiscovery
 from app.discovery.linux.network_discovery import LinuxNetworkDiscovery
-from app.dto.discovery_result import DiscoveryResult
+from app.dto.discovery.discovery_result import DiscoveryResult
 from app.utils.enums import DeviceType
 
 

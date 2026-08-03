@@ -1,5 +1,5 @@
 from app.commands.discovery.factory import DiscoveryCommandsFactory
-from app.dto.discovered_inventory import DiscoveredInventory
+from app.dto.discovery.discovered_inventory import DiscoveredInventory
 from app.utils.enums import DeviceType
 
 

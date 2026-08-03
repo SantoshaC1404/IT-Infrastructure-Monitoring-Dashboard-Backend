@@ -46,3 +46,10 @@ class WindowsMetricsParser(BaseMetricsParser):
 
     def process_count(self, output: str) -> int:
         return int(output.strip())
+
+    def current_logged_in_user(self, output: str):
+
+        return output.strip()
+
+    def last_login(self, output: str):
+        return output.strip()

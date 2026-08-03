@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dto.monitoring_result import MonitoringResult
+from app.dto.monitoring.monitoring_result import MonitoringResult
 
 
 class BaseMetricsCollector(ABC):

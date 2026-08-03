@@ -29,3 +29,11 @@ class BaseMetricsParser(ABC):
 
     @abstractmethod
     def process_count(self, output: str) -> int: ...
+
+    @abstractmethod
+    def current_logged_in_user(self, output: str):
+        pass
+
+    @abstractmethod
+    def last_login(self, output: str):
+        pass

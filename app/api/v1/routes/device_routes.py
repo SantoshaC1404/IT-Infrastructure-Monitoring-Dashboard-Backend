@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
-from app.schemas.device import (
+from app.schemas.device.device import (
     DeviceCreate,
     DeviceResponse,
     DeviceUpdate,
 )
-from app.schemas.test_connection import TestConnectionRequest, TestConnectionResponse
+from app.schemas.test.test_connection import TestConnectionRequest, TestConnectionResponse
 from app.services.device.device_service import DeviceService
 from app.services.device.test_connection_service import TestConnectionService
 

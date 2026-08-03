@@ -12,7 +12,7 @@ from app.core.exceptions import (
     HostUnreachableException,
     ConnectionException,
 )
-from app.dto.command_dto import Command
+from app.dto.command.command_dto import Command
 from app.utils.enums import CommandShell
 
 

@@ -1,9 +1,11 @@
-from sqlalchemy import case, func
+from sqlalchemy import and_, case, func, select
 from sqlalchemy.orm import Session
 
+from app.dto.dashboard.dashboard_device_dto import DashboardDeviceDTO
 from app.models.device import Device
+from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import DeviceStatus, DeviceType
-from app.dto.dashboard_summary_dto import DashboardSummaryDTO
+from app.dto.dashboard.dashboard_summary_dto import DashboardSummaryDTO
 
 
 class DashboardRepository:
@@ -79,25 +81,110 @@ class DashboardRepository:
         )
 
     """
-    def average_cpu(self):
+    def get_dashboard_devices(self):
 
-        stmt = select(func.avg(MonitoringSnapshot.cpu_usage))
+        latest = (
+            select(
+                MonitoringSnapshot.device_id,
+                MonitoringSnapshot.cpu_usage,
+                MonitoringSnapshot.memory_usage,
+                MonitoringSnapshot.disk_usage,
+                MonitoringSnapshot.collected_at,
+            )
+            .distinct(MonitoringSnapshot.device_id)
+            .order_by(
+                MonitoringSnapshot.device_id,
+                MonitoringSnapshot.collected_at.desc(),
+            )
+            .subquery()
+        )
 
-        return self.db.scalar(stmt)
+        stmt = (
+            select(
+                Device.id,
+                Device.name,
+                Device.ip_address,
+                Device.status,
+                Device.monitoring_enabled,
+
+                latest.c.cpu_usage,
+                latest.c.memory_usage,
+                latest.c.disk_usage,
+            )
+            .outerjoin(
+                latest,
+                latest.c.device_id == Device.id,
+            )
+            .order_by(Device.name)
+        )
+
+        rows = self.db.execute(stmt).all()
+
+        return [
+            DashboardDeviceDTO(
+                id=row.id,
+                name=row.name,
+                ip_address=row.ip_address,
+                status=row.status.name,
+                monitoring_enabled=row.monitoring_enabled,
+
+                cpu_usage=row.cpu_usage or 0,
+                memory_usage=row.memory_usage or 0,
+                disk_usage=row.disk_usage or 0,
+            )
+            for row in rows
+        ]
     """
+    
+    def get_dashboard_devices(self):
 
-    """
-    def average_memory(self):
+        latest_snapshot = (
+            select(
+                MonitoringSnapshot.device_id,
+                func.max(MonitoringSnapshot.collected_at).label("latest"),
+            )
+            .group_by(MonitoringSnapshot.device_id)
+            .subquery()
+        )
 
-        stmt = select(func.avg(MonitoringSnapshot.memory_usage))
+        stmt = (
+            select(
+                Device.id,
+                Device.name,
+                Device.ip_address,
+                Device.status,
+                Device.monitoring_enabled,
 
-        return self.db.scalar(stmt)
-    """
+                MonitoringSnapshot.cpu_usage,
+                MonitoringSnapshot.memory_usage,
+                MonitoringSnapshot.disk_usage,
+            )
+            .outerjoin(
+                latest_snapshot,
+                latest_snapshot.c.device_id == Device.id,
+            )
+            .outerjoin(
+                MonitoringSnapshot,
+                and_(
+                    MonitoringSnapshot.device_id == latest_snapshot.c.device_id,
+                    MonitoringSnapshot.collected_at == latest_snapshot.c.latest,
+                ),
+            )
+            .order_by(Device.name)
+        )
 
-    """
-    def average_disk(self):
+        rows = self.db.execute(stmt).all()
 
-        stmt = select(func.avg(MonitoringSnapshot.disk_usage))
-
-        return self.db.scalar(stmt)
-    """
+        return [
+            DashboardDeviceDTO(
+                id=row.id,
+                name=row.name,
+                ip_address=row.ip_address,
+                status=row.status.name,
+                monitoring_enabled=row.monitoring_enabled,
+                cpu_usage=row.cpu_usage or 0,
+                memory_usage=row.memory_usage or 0,
+                disk_usage=row.disk_usage or 0,
+            )
+            for row in rows
+        ]

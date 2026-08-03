@@ -141,3 +141,27 @@ class MonitoringSnapshotRepository:
         )
 
         return self.db.scalar(stmt)
+
+    def latest_metrics_for_dashboard(self):
+
+        latest = (
+            select(
+                MonitoringSnapshot.device_id,
+                func.max(MonitoringSnapshot.collected_at).label("latest"),
+            )
+            .group_by(MonitoringSnapshot.device_id)
+            .subquery()
+        )
+
+        stmt = select(
+            MonitoringSnapshot.device_id,
+            MonitoringSnapshot.cpu_usage,
+            MonitoringSnapshot.memory_usage,
+            MonitoringSnapshot.disk_usage,
+        ).join(
+            latest,
+            (MonitoringSnapshot.device_id == latest.c.device_id)
+            & (MonitoringSnapshot.collected_at == latest.c.latest),
+        )
+
+        return self.db.execute(stmt).all()

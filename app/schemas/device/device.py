@@ -69,8 +69,19 @@ class DeviceResponse(DeviceBase):
 
     last_seen: datetime | None
 
+    cpu_usage: float | None = 0.0
+
+    memory_usage: float | None = 0.0
+
+    disk_usage: float | None = 0.0
+
+    login_source: str | None = None
+
+    last_login_time: datetime | None = None
+
     created_at: datetime
 
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+    

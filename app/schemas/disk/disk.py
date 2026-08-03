@@ -2,8 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from app.schemas.network_interface import NetworkInterfaceBase
-from app.schemas.device_inventory import DeviceInventoryBase
+from app.schemas.monitoring.network_interface import NetworkInterfaceBase
+from app.schemas.device.device_inventory import DeviceInventoryBase
 
 
 class DiskBase(BaseModel):

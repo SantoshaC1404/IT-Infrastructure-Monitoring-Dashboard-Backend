@@ -1,4 +1,4 @@
-from app.dto.command_dto import Command
+from app.dto.command.command_dto import Command
 from app.commands.monitoring.base import BaseMonitoringCommandSet
 from app.utils.enums import CommandShell
 
@@ -51,4 +51,18 @@ class LinuxMonitoringCommandSet(BaseMonitoringCommandSet):
         return Command(
             "ps -e --no-headers | wc -l",
             CommandShell.SHELL,
+        )
+
+    def current_logged_in_user(self):
+
+        return Command(
+            command="last -F | head -1",
+            shell=CommandShell.SHELL,
+        )
+
+    def last_login(self):
+
+        return Command(
+            command="last -F | head -1",
+            shell=CommandShell.SHELL,
         )

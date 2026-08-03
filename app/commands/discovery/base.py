@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dto.command_dto import Command
+from app.dto.command.command_dto import Command
 
 
 class BaseDiscoveryCommandSet(ABC):

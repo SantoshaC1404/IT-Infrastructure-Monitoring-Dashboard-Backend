@@ -1,5 +1,5 @@
 from app.commands.discovery.base import BaseDiscoveryCommandSet
-from app.dto.command_dto import Command
+from app.dto.command.command_dto import Command
 from app.utils.enums import CommandShell
 
 

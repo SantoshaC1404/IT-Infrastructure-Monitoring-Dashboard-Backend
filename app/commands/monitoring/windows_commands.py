@@ -1,4 +1,4 @@
-from app.dto.command_dto import Command
+from app.dto.command.command_dto import Command
 from app.commands.monitoring.base import BaseMonitoringCommandSet
 from app.utils.enums import CommandShell
 
@@ -69,4 +69,37 @@ class WindowsMonitoringCommandSet(BaseMonitoringCommandSet):
             "powershell "
             '"(Get-CimInstance Win32_ComputerSystem).NumberOfLoggedOnUsers"',
             CommandShell.POWERSHELL,
+        )
+
+    """
+    def last_logged_in_user(self):
+        return Command(
+            command="powershell "
+            '"(Get-CimInstance Win32_ComputerSystem).UserName"',
+            shell=CommandShell.POWERSHELL,
+        )
+        # Get-CimInstance Win32_LogonSession
+        
+    def last_login_time(self):
+        return Command(
+            command="powershell "
+            '"(Get-CimInstance Win32_ComputerSystem).LastBootUpTime"',
+            shell=CommandShell.POWERSHELL,
+        )
+    """
+
+    def current_logged_in_user(self):
+        return Command(
+            command="(Get-CimInstance Win32_ComputerSystem).UserName",
+            shell=CommandShell.POWERSHELL,
+        )
+
+    def last_login(self):
+        return Command(
+            command="""
+                Get-WinEvent -LogName Security -MaxEvents 1 `
+                | Where-Object {$_.Id -eq 4624} `
+                | Select-Object -ExpandProperty TimeCreated
+                """,
+            shell=CommandShell.POWERSHELL,
         )

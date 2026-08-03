@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
-from app.schemas.device import DeviceCreate
+from app.schemas.device.device import DeviceCreate
 
 from app.services.device.device_discovery_service import DeviceDiscoveryService
 from app.services.device.device_factory import DeviceFactory

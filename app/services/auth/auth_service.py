@@ -7,7 +7,7 @@ from app.core.security.security import (
 )
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserCreate
+from app.schemas.auth.user import UserCreate
 
 
 class AuthService:

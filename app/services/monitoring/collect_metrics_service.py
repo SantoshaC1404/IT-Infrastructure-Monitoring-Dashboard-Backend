@@ -75,6 +75,8 @@ class CollectMetricsService:
                 )
 
                 metrics = collector.collect()
+                if metrics.login_source is None:
+                    metrics.login_source = device.ip_address
 
             self.snapshot_service.save_snapshot(
                 device.id,

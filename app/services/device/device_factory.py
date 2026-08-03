@@ -2,7 +2,7 @@ from datetime import datetime
 
 from app.core.security.encryption import encryption_service
 from app.models.device import Device
-from app.schemas.device import DeviceCreate
+from app.schemas.device.device import DeviceCreate
 from app.utils.enums import DeviceStatus, DeviceType
 
 

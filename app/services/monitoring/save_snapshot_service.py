@@ -28,6 +28,9 @@ class SaveSnapshotService:
             # uptime=metrics.uptime,
             load_average=metrics.load_average,
             # process_count=metrics.process_count,
+            collected_at=metrics.collected_at,
+            login_source=metrics.login_source,
+            last_login_time=metrics.last_login_time,
         )
 
         self.repository.create(

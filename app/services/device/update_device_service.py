@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.security.encryption import encryption_service
 from app.models.device import Device
 from app.repositories.device_repository import DeviceRepository
-from app.schemas.device import DeviceUpdate
+from app.schemas.device.device import DeviceUpdate
 from app.services.device.validation_service import DeviceValidationService
 
 

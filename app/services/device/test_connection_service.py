@@ -6,7 +6,7 @@ from app.core.exceptions import (
     HostUnreachableException,
     ConnectionException,
 )
-from app.schemas.test_connection import (
+from app.schemas.test.test_connection import (
     TestConnectionRequest,
     TestConnectionResponse,
 )

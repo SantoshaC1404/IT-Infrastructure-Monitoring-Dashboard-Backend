@@ -15,13 +15,13 @@ class MonitoringResult:
 
     network_tx: int
 
-    uptime: int
-
     load_average: float
 
     process_count: int
 
     collected_at: str
+
+    uptime: int | None = None
 
     login_source: str | None = None
 

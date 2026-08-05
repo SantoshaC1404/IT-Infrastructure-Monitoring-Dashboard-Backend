@@ -1,0 +1,29 @@
+from app.collectors.linux_metrics_collector import LinuxMetricsCollector
+from app.collectors.windows_metrics_collector import WindowsMetricsCollector
+from app.commands.monitoring.factory import MonitoringCommandsFactory
+from app.utils.enums import DeviceType
+
+
+class CollectorFactory:
+
+    @staticmethod
+    def create(
+        device_type: DeviceType,
+        connector,
+    ):
+
+        commands = MonitoringCommandsFactory.get(device_type)
+
+        if device_type == DeviceType.LINUX:
+            return LinuxMetricsCollector(
+                connector,
+                commands,
+            )
+
+        if device_type == DeviceType.WINDOWS:
+            return WindowsMetricsCollector(
+                connector,
+                commands,
+            )
+
+        raise ValueError(f"Unsupported device type: {device_type}")

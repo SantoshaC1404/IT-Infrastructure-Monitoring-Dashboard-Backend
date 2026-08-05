@@ -1,0 +1,20 @@
+from app.collectors.metrics_collector_service import (
+    MetricsCollectorService,
+)
+from app.parsers.windows_metric_parser import (
+    WindowsMetricsParser,
+)
+
+
+class WindowsMetricsCollector(MetricsCollectorService):
+
+    def __init__(
+        self,
+        connector,
+        commands,
+    ):
+        super().__init__(
+            connector,
+            commands,
+            WindowsMetricsParser(),
+        )

@@ -107,10 +107,10 @@ class WinRMConnector(BaseConnector):
 
     def execute(self, command: Command) -> str:
 
-        print("=" * 60)
-        print("TYPE:", type(command))
-        print("VALUE:", command)
-        print("=" * 60)
+        # print("=" * 60)
+        # print("TYPE:", type(command))
+        # print("VALUE:", command)
+        # print("=" * 60)
 
         if self.session is None:
             self.connect()
@@ -128,20 +128,6 @@ class WinRMConnector(BaseConnector):
             raise ConnectionException(error or "Command execution failed.")
 
         return output
-
-    """
-    def execute_powershell(self, script: str):
-
-        if self.session is None:
-            self.connect()
-
-        result = self.session.run_ps(script)
-
-        if result.status_code != 0:
-            raise ConnectionException(result.std_err.decode())
-
-        return result.std_out.decode().strip()
-    """
 
     # Execute With Exit Code
     def execute_with_status(

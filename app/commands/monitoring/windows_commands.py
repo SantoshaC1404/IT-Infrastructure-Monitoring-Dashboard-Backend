@@ -5,95 +5,77 @@ from app.utils.enums import CommandShell
 
 class WindowsMonitoringCommandSet(BaseMonitoringCommandSet):
 
+    # CPU Usage
     def cpu_usage(self):
         return Command(
-            command="powershell "
-            '"Get-CimInstance Win32_Processor | '
-            'Select-Object -ExpandProperty LoadPercentage"',
+            command="Get-CimInstance Win32_Processor | Select-Object -ExpandProperty LoadPercentage",
             shell=CommandShell.POWERSHELL,
         )
 
+    # Memory Usage
     def memory_usage(self):
         return Command(
-            "powershell "
-            '"Get-CimInstance Win32_OperatingSystem | '
-            'Select FreePhysicalMemory,TotalVisibleMemorySize"',
+            "$os = Get-CimInstance Win32_OperatingSystem; [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100, 4)",
             CommandShell.POWERSHELL,
         )
 
+    # Disk Usage
     def disk_usage(self):
         return Command(
-            "powershell " "\"Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3'\"",
+            "$disks = Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3'; $used = $disks | Measure-Object -Property Size -Sum | Select-Object -ExpandProperty Sum; $free = $disks | Measure-Object -Property FreeSpace -Sum | Select-Object -ExpandProperty Sum; [math]::Round((($used - $free) / $used) * 100, 4)",
             CommandShell.POWERSHELL,
         )
 
+    # Uptime
     def uptime(self):
         return Command(
-            "powershell "
-            '"(Get-Date) - '
-            '(gcim Win32_OperatingSystem).LastBootUpTime"',
+            "(Get-Date) - (Get-CimInstance Win32_OperatingSystem).LastBootUpTime | Select-Object -ExpandProperty TotalSeconds",
             CommandShell.POWERSHELL,
         )
 
+    # Network Usage
     def network_usage(self):
         return Command(
-            "powershell "
-            '"Get-CimInstance Win32_PerfFormattedData_Tcpip_NetworkInterface | '
-            'Select-Object Name,BytesReceivedPersec,BytesSentPersec"',
+            "Get-CimInstance Win32_PerfFormattedData_Tcpip_NetworkInterface | Select-Object Name,BytesReceivedPersec,BytesSentPersec",
             CommandShell.POWERSHELL,
         )
 
+    # Load Average
     def load_average(self):
         return Command(
-            "powershell "
-            '"(Get-CimInstance Win32_PerfFormattedData_PerfOS_System).ProcessorQueueLength"',
+            "(Get-CimInstance Win32_PerfFormattedData_PerfOS_System).ProcessorQueueLength",
             CommandShell.POWERSHELL,
         )
 
+    # Process Count
     def process_count(self):
         return Command(
-            "powershell " '"(Get-Process).Count"',
+            "(Get-Process).Count",
             CommandShell.POWERSHELL,
         )
 
+    # Disk I/O
     def disk_io(self):
         return Command(
-            "powershell "
-            '"Get-CimInstance Win32_PerfFormattedData_PerfDisk_LogicalDisk -Filter \\"Name=\'_Total\'\\" | '
-            'Select-Object DiskReadBytesPersec,DiskWriteBytesPersec"',
+            "Get-CimInstance Win32_PerfFormattedData_PerfDisk_LogicalDisk -Filter \"Name='_Total'\" | Select-Object DiskReadBytesPersec,DiskWriteBytesPersec",
             CommandShell.POWERSHELL,
         )
 
+    # Logged-in Users
     def logged_in_users(self):
         return Command(
-            "powershell "
-            '"(Get-CimInstance Win32_ComputerSystem).NumberOfLoggedOnUsers"',
+            "(Get-CimInstance Win32_ComputerSystem).NumberOfLoggedOnUsers",
             CommandShell.POWERSHELL,
         )
 
-    """
-    def last_logged_in_user(self):
-        return Command(
-            command="powershell "
-            '"(Get-CimInstance Win32_ComputerSystem).UserName"',
-            shell=CommandShell.POWERSHELL,
-        )
-        # Get-CimInstance Win32_LogonSession
-        
-    def last_login_time(self):
-        return Command(
-            command="powershell "
-            '"(Get-CimInstance Win32_ComputerSystem).LastBootUpTime"',
-            shell=CommandShell.POWERSHELL,
-        )
-    """
-
+    # Current Logged-in User
     def current_logged_in_user(self):
         return Command(
             command="(Get-CimInstance Win32_ComputerSystem).UserName",
             shell=CommandShell.POWERSHELL,
         )
 
+    # Last Login Time
     def last_login(self):
         return Command(
             command="""

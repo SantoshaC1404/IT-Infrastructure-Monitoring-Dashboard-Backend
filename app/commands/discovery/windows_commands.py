@@ -60,10 +60,6 @@ class WindowsDiscoveryCommands(BaseDiscoveryCommandSet):
         )
 
     def physical_cores(self):
-        # return Command(
-        #     "(Get-CimInstance Win32_Processor).NumberOfCores",
-        #     CommandShell.POWERSHELL,
-        # )
         return Command(
             "(Get-CimInstance Win32_Processor | Measure-Object NumberOfCores -Sum).Sum",
             CommandShell.POWERSHELL,
@@ -121,14 +117,6 @@ class WindowsDiscoveryCommands(BaseDiscoveryCommandSet):
             CommandShell.POWERSHELL,
         )
 
-    # def network_interfaces(self):
-    #     return Command(
-    #         """
-    #         Get-NetIPAddress -AddressFamily IPv4 |
-    #         Where-Object {$_.IPAddress -ne '127.0.0.1'}
-    #         """,
-    #         CommandShell.POWERSHELL,
-    #     )
     def network_interfaces(self):
         return Command(
             """

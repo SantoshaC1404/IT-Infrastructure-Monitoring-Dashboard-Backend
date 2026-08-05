@@ -14,6 +14,7 @@ class DashboardRepository:
 
         self.db = db
 
+    # Get summary of devices for dashboard
     def get_summary(self):
 
         summary = self.db.query(
@@ -80,62 +81,7 @@ class DashboardRepository:
             },
         )
 
-    """
-    def get_dashboard_devices(self):
-
-        latest = (
-            select(
-                MonitoringSnapshot.device_id,
-                MonitoringSnapshot.cpu_usage,
-                MonitoringSnapshot.memory_usage,
-                MonitoringSnapshot.disk_usage,
-                MonitoringSnapshot.collected_at,
-            )
-            .distinct(MonitoringSnapshot.device_id)
-            .order_by(
-                MonitoringSnapshot.device_id,
-                MonitoringSnapshot.collected_at.desc(),
-            )
-            .subquery()
-        )
-
-        stmt = (
-            select(
-                Device.id,
-                Device.name,
-                Device.ip_address,
-                Device.status,
-                Device.monitoring_enabled,
-
-                latest.c.cpu_usage,
-                latest.c.memory_usage,
-                latest.c.disk_usage,
-            )
-            .outerjoin(
-                latest,
-                latest.c.device_id == Device.id,
-            )
-            .order_by(Device.name)
-        )
-
-        rows = self.db.execute(stmt).all()
-
-        return [
-            DashboardDeviceDTO(
-                id=row.id,
-                name=row.name,
-                ip_address=row.ip_address,
-                status=row.status.name,
-                monitoring_enabled=row.monitoring_enabled,
-
-                cpu_usage=row.cpu_usage or 0,
-                memory_usage=row.memory_usage or 0,
-                disk_usage=row.disk_usage or 0,
-            )
-            for row in rows
-        ]
-    """
-    
+    # Get devices for dashboard with latest monitoring snapshot
     def get_dashboard_devices(self):
 
         latest_snapshot = (
@@ -154,7 +100,6 @@ class DashboardRepository:
                 Device.ip_address,
                 Device.status,
                 Device.monitoring_enabled,
-
                 MonitoringSnapshot.cpu_usage,
                 MonitoringSnapshot.memory_usage,
                 MonitoringSnapshot.disk_usage,

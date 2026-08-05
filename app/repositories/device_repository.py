@@ -29,6 +29,7 @@ class DeviceRepository(BaseRepository[Device]):
                 MonitoringSnapshot.cpu_usage,
                 MonitoringSnapshot.memory_usage,
                 MonitoringSnapshot.disk_usage,
+                MonitoringSnapshot.uptime,
                 MonitoringSnapshot.login_source,
                 MonitoringSnapshot.last_login_time,
             )
@@ -55,13 +56,14 @@ class DeviceRepository(BaseRepository[Device]):
             device.cpu_usage = row[1] or 0.0
             device.memory_usage = row[2] or 0.0
             device.disk_usage = row[3] or 0.0
-            raw_login = row[4]
+            device.uptime = row[4]
+            raw_login = row[5]
             if raw_login:
                 m = re.search(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", raw_login)
                 device.login_source = m.group(0) if m else device.ip_address
             else:
                 device.login_source = None
-            device.last_login_time = row[5]
+            device.last_login_time = row[6]
             devices.append(device)
 
         return devices
@@ -83,6 +85,7 @@ class DeviceRepository(BaseRepository[Device]):
                 MonitoringSnapshot.cpu_usage,
                 MonitoringSnapshot.memory_usage,
                 MonitoringSnapshot.disk_usage,
+                MonitoringSnapshot.uptime,
                 MonitoringSnapshot.login_source,
                 MonitoringSnapshot.last_login_time,
             )
@@ -106,13 +109,14 @@ class DeviceRepository(BaseRepository[Device]):
         device.cpu_usage = row[1] or 0.0
         device.memory_usage = row[2] or 0.0
         device.disk_usage = row[3] or 0.0
-        raw_login = row[4]
+        device.uptime = row[4]
+        raw_login = row[5]
         if raw_login:
             m = re.search(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", raw_login)
             device.login_source = m.group(0) if m else device.ip_address
         else:
             device.login_source = None
-        device.last_login_time = row[5]
+        device.last_login_time = row[6]
         return device
 
     # GET BY IP
@@ -132,6 +136,7 @@ class DeviceRepository(BaseRepository[Device]):
                 MonitoringSnapshot.cpu_usage,
                 MonitoringSnapshot.memory_usage,
                 MonitoringSnapshot.disk_usage,
+                MonitoringSnapshot.uptime,
                 MonitoringSnapshot.login_source,
                 MonitoringSnapshot.last_login_time,
             )
@@ -154,13 +159,14 @@ class DeviceRepository(BaseRepository[Device]):
         device.cpu_usage = row[1] or 0.0
         device.memory_usage = row[2] or 0.0
         device.disk_usage = row[3] or 0.0
-        raw_login = row[4]
+        device.uptime = row[4]
+        raw_login = row[5]
         if raw_login:
             m = re.search(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b", raw_login)
             device.login_source = m.group(0) if m else device.ip_address
         else:
             device.login_source = None
-        device.last_login_time = row[5]
+        device.last_login_time = row[6]
         return device
 
     # CREATE

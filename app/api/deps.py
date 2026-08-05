@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, Header, HTTPException, Depends
+from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from collections.abc import Generator
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -21,48 +21,6 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
-
-
-"""
-def get_current_user(
-    authorization: str = Header(None),
-    db: Session = Depends(get_db),
-):
-    if authorization is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization header missing",
-        )
-
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authorization header",
-        )
-
-    token = authorization.replace("Bearer ", "")
-    payload = decode_access_token(token=token)
-
-    if payload is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid token",
-        )
-
-    username = payload.get("sub")
-
-    repo = UserRepository(db)
-
-    user = repo.get_user_by_name(username)
-
-    if user is None:
-        raise HTTPException(
-            status_code=401,
-            detail="User not found",
-        )
-
-    return user
-"""
 
 
 def get_current_user(

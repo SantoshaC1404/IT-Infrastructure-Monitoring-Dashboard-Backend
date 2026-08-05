@@ -5,15 +5,8 @@ from contextlib import asynccontextmanager
 from app.api.v1.api import api_router
 from app.core.config import settings
 
-# from app.core.logger import logger, setup_logging
 from app.core.exceptions.handlers import register_exception_handlers
-
-from app.core.logging_config import LOGGING
-
-from app.scheduler.scheduler import (
-    start_scheduler,
-    stop_scheduler,
-)
+from app.scheduler.monitoring_scheduler import start_monitoring_scheduler
 
 # setup_logging()
 
@@ -22,6 +15,8 @@ from app.scheduler.scheduler import (
 async def lifespan(app: FastAPI):
 
     # start_scheduler()
+
+    start_monitoring_scheduler()
 
     yield
 
@@ -36,6 +31,7 @@ app = FastAPI(
 )
 
 register_exception_handlers(app)
+
 
 app.add_middleware(
     CORSMiddleware,

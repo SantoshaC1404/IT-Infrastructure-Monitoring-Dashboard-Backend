@@ -33,11 +33,7 @@ class DeviceInventory(Base):
         String(255),
         nullable=False,
     )
-
-    # device_type: Mapped[DeviceType] = mapped_column(
-    #     SQLEnum(DeviceType),
-    #     nullable=False,
-    # )
+    
     device_type: Mapped[DeviceType] = mapped_column(
         SQLEnum(DeviceType),
         nullable=False,
@@ -63,9 +59,6 @@ class DeviceInventory(Base):
         String(255),
     )
 
-    # cpu_cores: Mapped[int | None]
-
-    # logical_processors: Mapped[int | None]
 
     cpu_vendor: Mapped[str | None] = mapped_column(
         String(100),

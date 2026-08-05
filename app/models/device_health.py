@@ -43,18 +43,3 @@ class DeviceHealth(Base):
         DateTime,
         default=datetime.utcnow,
     )
-
-    # status: Mapped[ServerStatus] = mapped_column(
-    #     SQLEnum(ServerStatus),
-    #     default=ServerStatus.UNKNOWN,
-    # )
-
-    # monitoring_enabled: Mapped[bool] = mapped_column(
-    #     Boolean,
-    #     default=True,
-    # )
-
-    # created_at: Mapped[datetime] = mapped_column(
-    #     DateTime,
-    #     default=datetime.utcnow,
-    # )

@@ -50,9 +50,10 @@ class MonitoringSnapshot(Base):
         default=0,
     )
 
-    uptime_seconds: Mapped[int] = mapped_column(
+    uptime: Mapped[int | None] = mapped_column(
+        "uptime_seconds",
         BigInteger,
-        default=0,
+        # nullable=True,
     )
 
     collected_at: Mapped[datetime] = mapped_column(
@@ -74,5 +75,10 @@ class MonitoringSnapshot(Base):
 
     last_login_time: Mapped[datetime | None] = mapped_column(
         DateTime,
+        nullable=True,
+    )
+
+    uptime: Mapped[int | None] = mapped_column(
+        BigInteger,
         nullable=True,
     )

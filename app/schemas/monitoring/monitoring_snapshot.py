@@ -17,7 +17,7 @@ class MonitoringSnapshotResponse(BaseModel):
 
     network_tx: float
 
-    uptime: int
+    uptime: int | None
 
     load_average: float | None
 

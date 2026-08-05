@@ -75,6 +75,8 @@ class DeviceResponse(DeviceBase):
 
     disk_usage: float | None = 0.0
 
+    uptime: int | None = None
+
     login_source: str | None = None
 
     last_login_time: datetime | None = None

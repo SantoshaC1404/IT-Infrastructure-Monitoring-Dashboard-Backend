@@ -21,10 +21,7 @@ class InventoryService:
 
         self.query_service = QueryInventoryService(db)
 
-    # -----------------------------------------
     # Create
-    # -----------------------------------------
-
     def save_inventory(
         self,
         device_id: int,
@@ -37,10 +34,7 @@ class InventoryService:
             device_type,
         )
 
-    # -----------------------------------------
     # Update
-    # -----------------------------------------
-
     def update_inventory(
         self,
         device_id: int,
@@ -51,10 +45,7 @@ class InventoryService:
             inventory,
         )
 
-    # -----------------------------------------
     # Query
-    # -----------------------------------------
-
     def get_by_device(
         self,
         device_id: int,

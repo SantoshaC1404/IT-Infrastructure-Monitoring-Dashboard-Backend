@@ -4,7 +4,6 @@ from app.core.exceptions.discovery import DiscoveryException
 from app.discovery.discovery_factory import DiscoveryFactory
 from app.dto.discovery.discovery_result import DiscoveryResult
 from app.schemas.device.device import DeviceCreate
-from app.core.logger import logger
 
 
 class DeviceDiscoveryService:
@@ -34,5 +33,4 @@ class DeviceDiscoveryService:
                 return discovery.discover()
 
         except DiscoveryException:
-            # logger.exception("Unexpected discovery error")
             raise

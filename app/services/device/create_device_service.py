@@ -1,4 +1,3 @@
-import traceback
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -14,17 +13,6 @@ from app.services.device.validation_service import DeviceValidationService
 
 
 class CreateDeviceService:
-    """
-    Handles complete device onboarding.
-
-    Steps
-
-    1. Validate
-    2. Discover device
-    3. Build Device model
-    4. Save device
-    5. Save inventory/disks/interfaces
-    """
 
     def __init__(self, db: Session):
 
@@ -36,6 +24,7 @@ class CreateDeviceService:
 
         self.persistence = DevicePersistenceService(db)
 
+    # Create a new device with discovery and persistence
     def create_device(
         self,
         request: DeviceCreate,
@@ -75,8 +64,3 @@ class CreateDeviceService:
             self.db.rollback()
             # traceback.print_exc()
             raise
-
-        # except Exception:
-
-        #     self.db.rollback()
-        #     raise

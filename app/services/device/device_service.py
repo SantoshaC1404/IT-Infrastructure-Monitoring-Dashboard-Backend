@@ -29,10 +29,7 @@ class DeviceService:
         self.monitoring_service = MonitoringDeviceService(db)
         self.collect_metrics_service = CollectMetricsService(db)
 
-    # -------------------------
     # CREATE
-    # -------------------------
-
     def create_device(
         self,
         request: DeviceCreate,
@@ -40,21 +37,14 @@ class DeviceService:
 
         return self.create_service.create_device(request)
 
-    # -------------------------
     # READ
-    # -------------------------
-
     def get_all_devices(self):
 
         devices = self.query_service.get_all_devices()
 
         for device in devices:
-            if (
-                device.monitoring_enabled
-                and (
-                    device.login_source is None
-                    or device.last_login_time is None
-                )
+            if device.monitoring_enabled and (
+                device.login_source is None or device.last_login_time is None
             ):
                 try:
                     self.collect_metrics_service.monitor_device(device.id)
@@ -66,6 +56,7 @@ class DeviceService:
 
         return self.query_service.get_all_devices()
 
+    # Get Device by ID
     def get_device_by_id(
         self,
         device_id: int,
@@ -73,12 +64,8 @@ class DeviceService:
 
         device = self.query_service.get_device_by_id(device_id)
 
-        if (
-            device.monitoring_enabled
-            and (
-                device.login_source is None
-                or device.last_login_time is None
-            )
+        if device.monitoring_enabled and (
+            device.login_source is None or device.last_login_time is None
         ):
             try:
                 self.collect_metrics_service.monitor_device(device.id)
@@ -92,6 +79,7 @@ class DeviceService:
 
         return device
 
+    # Get Device by IP
     def get_device_by_ip(
         self,
         ip_address: str,
@@ -99,12 +87,8 @@ class DeviceService:
 
         device = self.query_service.get_device_by_ip(ip_address)
 
-        if (
-            device.monitoring_enabled
-            and (
-                device.login_source is None
-                or device.last_login_time is None
-            )
+        if device.monitoring_enabled and (
+            device.login_source is None or device.last_login_time is None
         ):
             try:
                 self.collect_metrics_service.monitor_device(device.id)
@@ -118,10 +102,7 @@ class DeviceService:
 
         return device
 
-    # -------------------------
     # UPDATE
-    # -------------------------
-
     def update_device(
         self,
         device_id: int,
@@ -133,10 +114,7 @@ class DeviceService:
             request,
         )
 
-    # -------------------------
     # DELETE
-    # -------------------------
-
     def delete_device_by_id(
         self,
         device_id: int,
@@ -151,10 +129,7 @@ class DeviceService:
 
         self.delete_service.delete_device_by_ip(ip_address)
 
-    # -------------------------
     # MONITORING
-    # -------------------------
-
     def enable_monitoring(
         self,
         device_id: int,

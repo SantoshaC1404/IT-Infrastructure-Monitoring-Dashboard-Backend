@@ -11,8 +11,6 @@ class MonitoringDeviceService:
 
         self.db = db
 
-    # -----------------------------------------------------
-
     def mark_online(
         self,
         device,
@@ -23,8 +21,6 @@ class MonitoringDeviceService:
         device.last_seen = datetime.utcnow()
 
         self.db.commit()
-
-    # -----------------------------------------------------
 
     def mark_offline(
         self,

@@ -37,7 +37,7 @@ class DevicePersistenceService:
     ):
 
         self.db.flush()
-        print("Device flushed")
+        # print("Device flushed")
 
         self.inventory_service.save_inventory(
             device.id,
@@ -56,10 +56,10 @@ class DevicePersistenceService:
         self.db.flush()
         # print("Disks saved")
 
-        print("=" * 80)
-        print("discovery.interfaces =", discovery.interfaces)
-        print("type =", type(discovery.interfaces))
-        print("=" * 80)
+        # print("=" * 80)
+        # print("discovery.interfaces =", discovery.interfaces)
+        # print("type =", type(discovery.interfaces))
+        # print("=" * 80)
 
         self.network_service.create_interfaces(
             device.id,

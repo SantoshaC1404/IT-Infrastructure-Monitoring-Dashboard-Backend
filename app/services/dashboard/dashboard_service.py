@@ -12,12 +12,12 @@ class DashboardService:
 
         self.devices_service = DashboardDevicesService(db)
 
+    # Get dashboard summary
     def get_dasgboard_summary(self):
 
         return self.summary_service.get_summary()
 
+    # Get dashboard devices with latest monitoring snapshot
     def get_dashboard_devices(self):
 
         return self.devices_service.get_devices()
-
-    

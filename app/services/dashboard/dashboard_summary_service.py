@@ -14,6 +14,6 @@ class DashboardSummaryService:
 
         summary = self.repository.get_summary()
 
-        logger.info("Summary: %s", summary)
+        # logger.info("Summary: %s", summary)
 
         return summary

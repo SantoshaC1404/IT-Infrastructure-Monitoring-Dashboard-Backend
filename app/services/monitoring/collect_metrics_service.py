@@ -1,11 +1,9 @@
-from datetime import datetime
-
 from sqlalchemy.orm import Session
 
 from app.connectors.connector_factory import ConnectorFactory
 from app.core.security.encryption import encryption_service
 from app.core.exceptions.connection import ConnectionException
-from app.monitoring.collectors.collector_factory import CollectorFactory
+from app.collectors.collector_factory import CollectorFactory
 from app.repositories.device_repository import DeviceRepository
 from app.services.monitoring.save_snapshot_service import (
     SaveSnapshotService,

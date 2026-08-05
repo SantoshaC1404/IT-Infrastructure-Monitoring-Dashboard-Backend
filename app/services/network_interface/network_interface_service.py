@@ -21,10 +21,7 @@ class NetworkInterfaceService:
 
         self.query_service = QueryNetworkInterfaceService(db)
 
-    # -----------------------------------
     # Create
-    # -----------------------------------
-
     def create_interfaces(
         self,
         device_id: int,
@@ -35,10 +32,7 @@ class NetworkInterfaceService:
             interfaces,
         )
 
-    # -----------------------------------
     # Replace
-    # -----------------------------------
-
     def replace_interfaces(
         self,
         device_id: int,
@@ -49,10 +43,7 @@ class NetworkInterfaceService:
             interfaces,
         )
 
-    # -----------------------------------
     # Query
-    # -----------------------------------
-
     def get_by_device_id(
         self,
         device_id: int,

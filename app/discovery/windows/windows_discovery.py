@@ -21,7 +21,7 @@ class WindowsDiscovery(BaseDiscovery):
         interfaces = WindowsNetworkDiscovery(
             self.connection,
         ).discover()
-        
+
         print("WindowsDiscovery interfaces:", interfaces)
 
         return DiscoveryResult(

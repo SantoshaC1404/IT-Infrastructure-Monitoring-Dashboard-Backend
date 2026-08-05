@@ -10,10 +10,6 @@ class WindowsNetworkDiscovery:
         self.commands = WindowsDiscoveryCommands()
 
     def discover(self):
-        # print("=" * 80)
-        # print("WindowsNetworkDiscovery.discover() CALLED")
-        # print(__file__)
-        # print("=" * 80)
 
         output = self.connector.execute(
             self.commands.network_interfaces(),

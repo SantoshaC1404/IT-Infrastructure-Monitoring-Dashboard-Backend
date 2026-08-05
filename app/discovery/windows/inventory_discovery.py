@@ -62,7 +62,6 @@ class WindowsInventoryDiscovery:
 
         return DiscoveredInventory(
             hostname=hostname,
-            # device_type=DeviceType.WINDOWS,
             operating_system=operating_system,
             os_version=os_version,
             kernel_version=None,

@@ -1,4 +1,3 @@
-# from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
 from app.commands.discovery.windows_commands import WindowsDiscoveryCommands
 from app.dto.discovery.discovered_disk import DiscoveredDisk
 
@@ -19,10 +18,6 @@ class WindowsDiskDiscovery:
         disks = []
 
         lines = output.splitlines()
-
-        #
-        # Skip header
-        #
 
         for line in lines[2:]:
 

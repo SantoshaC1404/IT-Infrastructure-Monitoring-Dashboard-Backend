@@ -1,5 +1,14 @@
 from .base import AppException
 
+from .auth import (
+    InactiveUserException,
+    InsufficientPermissionsException,
+    InvalidCredentialsException,
+    InvalidTokenException,
+    UserAlreadyExistsException,
+    UserNotFoundException,
+)
+
 from .connection import (
     AuthenticationException,
     CommandExecutionException,
@@ -29,6 +38,12 @@ from .validation import (
 
 __all__ = [
     "AppException",
+    "InvalidCredentialsException",
+    "InactiveUserException",
+    "InvalidTokenException",
+    "InsufficientPermissionsException",
+    "UserAlreadyExistsException",
+    "UserNotFoundException",
     "ConnectionException",
     "AuthenticationException",
     "ConnectionTimeoutException",

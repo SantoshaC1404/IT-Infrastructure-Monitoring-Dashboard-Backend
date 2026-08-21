@@ -202,3 +202,7 @@ class DeviceRepository(BaseRepository[Device]):
         stmt = select(Device).where(Device.monitoring_enabled.is_(True))
 
         return list(self.db.scalars(stmt).all())
+    
+
+
+    

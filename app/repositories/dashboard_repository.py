@@ -1,20 +1,46 @@
-from sqlalchemy import and_, case, func, select
+from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.orm import Session
 
+from app.dto.dashboard.critical_device_dto import CriticalDevicesDTO
 from app.dto.dashboard.dashboard_device_dto import DashboardDeviceDTO
+from app.dto.dashboard.dashboard_summary_dto import DashboardSummaryDTO
 from app.models.device import Device
 from app.models.monitoring_snapshot import MonitoringSnapshot
 from app.utils.enums import DeviceStatus, DeviceType
-from app.dto.dashboard.dashboard_summary_dto import DashboardSummaryDTO
+from app.utils.constants import (
+    CPU_THRESHOLD,
+    MEMORY_THRESHOLD,
+    DISK_THRESHOLD,
+)
 
 
 class DashboardRepository:
 
-    def __init__(self, db: Session):
+    # CPU_THRESHOLD = 90
+    # MEMORY_THRESHOLD = 90
+    # DISK_THRESHOLD = 90
 
+    def __init__(self, db: Session):
         self.db = db
 
-    # Get summary of devices for dashboard
+    def _latest_snapshot_subquery(self):
+        """
+        Latest monitoring snapshot for each device.
+        """
+
+        return (
+            select(
+                MonitoringSnapshot.device_id,
+                func.max(MonitoringSnapshot.collected_at).label("latest"),
+            )
+            .group_by(MonitoringSnapshot.device_id)
+            .subquery()
+        )
+
+    # ------------------------------------------------------------------
+    # Dashboard Summary
+    # ------------------------------------------------------------------
+
     def get_summary(self):
 
         summary = self.db.query(
@@ -59,7 +85,10 @@ class DashboardRepository:
                 case(
                     (
                         Device.device_type.notin_(
-                            [DeviceType.LINUX, DeviceType.WINDOWS]
+                            [
+                                DeviceType.LINUX,
+                                DeviceType.WINDOWS,
+                            ]
                         ),
                         1,
                     ),
@@ -81,17 +110,13 @@ class DashboardRepository:
             },
         )
 
-    # Get devices for dashboard with latest monitoring snapshot
+    # ------------------------------------------------------------------
+    # Dashboard Devices
+    # ------------------------------------------------------------------
+
     def get_dashboard_devices(self):
 
-        latest_snapshot = (
-            select(
-                MonitoringSnapshot.device_id,
-                func.max(MonitoringSnapshot.collected_at).label("latest"),
-            )
-            .group_by(MonitoringSnapshot.device_id)
-            .subquery()
-        )
+        latest = self._latest_snapshot_subquery()
 
         stmt = (
             select(
@@ -105,14 +130,14 @@ class DashboardRepository:
                 MonitoringSnapshot.disk_usage,
             )
             .outerjoin(
-                latest_snapshot,
-                latest_snapshot.c.device_id == Device.id,
+                latest,
+                latest.c.device_id == Device.id,
             )
             .outerjoin(
                 MonitoringSnapshot,
                 and_(
-                    MonitoringSnapshot.device_id == latest_snapshot.c.device_id,
-                    MonitoringSnapshot.collected_at == latest_snapshot.c.latest,
+                    MonitoringSnapshot.device_id == latest.c.device_id,
+                    MonitoringSnapshot.collected_at == latest.c.latest,
                 ),
             )
             .order_by(Device.name)
@@ -133,3 +158,79 @@ class DashboardRepository:
             )
             for row in rows
         ]
+
+    # ------------------------------------------------------------------
+    # Critical Devices
+    # ------------------------------------------------------------------
+
+    def get_critical_devices(self):
+
+        latest = self._latest_snapshot_subquery()
+
+        stmt = (
+            select(
+                Device.id,
+                Device.name,
+                Device.ip_address,
+                Device.status,
+                MonitoringSnapshot.cpu_usage,
+                MonitoringSnapshot.memory_usage,
+                MonitoringSnapshot.disk_usage,
+            )
+            .outerjoin(
+                latest,
+                latest.c.device_id == Device.id,
+            )
+            .outerjoin(
+                MonitoringSnapshot,
+                and_(
+                    MonitoringSnapshot.device_id == latest.c.device_id,
+                    MonitoringSnapshot.collected_at == latest.c.latest,
+                ),
+            )
+            .where(
+                or_(
+                    Device.status == DeviceStatus.OFFLINE,
+                    MonitoringSnapshot.cpu_usage >= CPU_THRESHOLD,
+                    MonitoringSnapshot.memory_usage >= MEMORY_THRESHOLD,
+                    MonitoringSnapshot.disk_usage >= DISK_THRESHOLD,
+                )
+            )
+            .order_by(Device.name)
+        )
+
+        rows = self.db.execute(stmt).all()
+
+        devices = []
+
+        for row in rows:
+
+            if row.status == DeviceStatus.OFFLINE:
+                reason = "Device Offline"
+
+            elif (row.cpu_usage or 0) >= CPU_THRESHOLD:
+                reason = "High CPU"
+
+            elif (row.memory_usage or 0) >= MEMORY_THRESHOLD:
+                reason = "High Memory"
+
+            elif (row.disk_usage or 0) >= DISK_THRESHOLD:
+                reason = "High Disk"
+
+            else:
+                reason = "Critical"
+
+            devices.append(
+                CriticalDevicesDTO(
+                    id=row.id,
+                    name=row.name,
+                    ip_address=row.ip_address,
+                    status=row.status.name,
+                    cpu_usage=row.cpu_usage or 0,
+                    memory_usage=row.memory_usage or 0,
+                    disk_usage=row.disk_usage or 0,
+                    critical_reason=reason,
+                )
+            )
+
+        return devices

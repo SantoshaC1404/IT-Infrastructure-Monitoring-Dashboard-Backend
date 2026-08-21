@@ -26,3 +26,16 @@ class MonitoringSnapshotResponse(BaseModel):
     collected_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class DeviceHistoryResponse(BaseModel):
+
+    time: str
+
+    cpu: int
+
+    memory: int
+
+    disk: int
+
+    model_config = ConfigDict(from_attributes=True)

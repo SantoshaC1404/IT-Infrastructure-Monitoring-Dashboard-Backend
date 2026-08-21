@@ -1,4 +1,5 @@
 from .user import User
+from .revoked_token import RevokedToken
 from .device import Device
 from .device_inventory import DeviceInventory
 from .monitoring_snapshot import MonitoringSnapshot
@@ -10,6 +11,7 @@ from .disk import Disk
 
 __all__ = [
     "User",
+    "RevokedToken",
     "Device",
     "DeviceInventory",
     "MonitoringSnapshot",

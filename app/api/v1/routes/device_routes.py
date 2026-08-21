@@ -15,13 +15,13 @@ from app.schemas.test.test_connection import (
 from app.services.device.device_service import DeviceService
 from app.services.device.test_connection_service import TestConnectionService
 
-
 router = APIRouter(
     prefix="/devices",
     tags=["devices"],
 )
 
 
+# CREATE DEVICE
 @router.post(
     "",
     response_model=DeviceResponse,
@@ -33,6 +33,7 @@ def create_device(
     return DeviceService(db).create_device(request)
 
 
+# GET ALL DEVICES
 @router.get(
     "",
     response_model=list[DeviceResponse],
@@ -43,17 +44,18 @@ def get_all_devices(
     return DeviceService(db).get_all_devices()
 
 
+# CRITICAL DEVICES
 @router.get(
-    "/{device_id}",
-    response_model=DeviceResponse,
+    "/critical-devices",
+    response_model=list[DeviceResponse],
 )
-def get_device_by_id(
-    device_id: int,
+def get_critical_devices(
     db: Session = Depends(get_db),
 ):
-    return DeviceService(db).get_device_by_id(device_id)
+    return DeviceService(db).get_critical_devices()
 
 
+# GET DEVICE BY IP
 @router.get(
     "/ip/{ip_address}",
     response_model=DeviceResponse,
@@ -65,67 +67,7 @@ def get_device_by_ip(
     return DeviceService(db).get_device_by_ip(ip_address)
 
 
-@router.get(
-    "/{device_id}/history",
-    response_model=list[DeviceHistoryResponse],
-)
-def get_device_history(
-    device_id: int,
-    hours: int | None = Query(default=None, ge=1),
-    days: int | None = Query(default=None, ge=1),
-    db: Session = Depends(get_db),
-):
-    return DeviceService(db).get_device_history(device_id, hours=hours, days=days)
-
-
-@router.patch(
-    "/{device_id}",
-    response_model=DeviceResponse,
-)
-def update_device(
-    device_id: int,
-    request: DeviceUpdate,
-    db: Session = Depends(get_db),
-):
-    return DeviceService(db).update_device(device_id, request)
-
-
-@router.put(
-    "/{device_id}",
-    response_model=DeviceResponse,
-)
-def update_device_put(
-    device_id: int,
-    request: DeviceUpdate,
-    db: Session = Depends(get_db),
-):
-    return DeviceService(db).update_device(device_id, request)
-
-
-@router.get(
-    "/critical-devices",
-    response_model=list[DeviceResponse],
-)
-def get_critical_devices(
-    db: Session = Depends(get_db),
-):
-    return DeviceService(db).get_critical_devices()
-
-
-@router.delete(
-    "/{device_id}",
-)
-def delete_device_by_id(
-    device_id: int,
-    db: Session = Depends(get_db),
-):
-    DeviceService(db).delete_device_by_id(device_id)
-
-    return {
-        "message": "Device deleted successfully",
-    }
-
-
+# DELETE DEVICE BY IP
 @router.delete(
     "/ip/{ip_address}",
 )
@@ -140,6 +82,7 @@ def delete_device_by_ip(
     }
 
 
+# TEST DEVICE CONNECTION
 @router.post(
     "/test-connection",
     response_model=TestConnectionResponse,
@@ -148,3 +91,70 @@ def test_connection(
     request: TestConnectionRequest,
 ):
     return TestConnectionService().test(request)
+
+
+# DEVICE HISTORY
+@router.get(
+    "/{device_id}/history",
+    response_model=list[DeviceHistoryResponse],
+)
+def get_device_history(
+    device_id: int,
+    hours: int | None = Query(default=None, ge=1),
+    days: int | None = Query(default=None, ge=1),
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).get_device_history(device_id, hours=hours, days=days)
+
+
+# UPDATE DEVICE - PATCH
+@router.patch(
+    "/{device_id}",
+    response_model=DeviceResponse,
+)
+def update_device(
+    device_id: int,
+    request: DeviceUpdate,
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).update_device(device_id, request)
+
+
+# UPDATE DEVICE - PUT
+@router.put(
+    "/{device_id}",
+    response_model=DeviceResponse,
+)
+def update_device_put(
+    device_id: int,
+    request: DeviceUpdate,
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).update_device(device_id, request)
+
+
+# DELETE DEVICE BY ID
+@router.delete(
+    "/{device_id}",
+)
+def delete_device_by_id(
+    device_id: int,
+    db: Session = Depends(get_db),
+):
+    DeviceService(db).delete_device_by_id(device_id)
+
+    return {
+        "message": "Device deleted successfully",
+    }
+
+
+# GET DEVICE BY ID
+@router.get(
+    "/{device_id}",
+    response_model=DeviceResponse,
+)
+def get_device_by_id(
+    device_id: int,
+    db: Session = Depends(get_db),
+):
+    return DeviceService(db).get_device_by_id(device_id)

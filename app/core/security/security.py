@@ -1,5 +1,7 @@
+import uuid
 from datetime import datetime, timedelta, timezone
-from jose import jwt, JWTError
+
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from app.core.config import settings
@@ -23,29 +25,45 @@ def verify_password(
     )
 
 
-def create_access_token(subject: str):
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+def create_access_token(subject: str) -> tuple[str, str, datetime]:
+    """
+    Creates a signed JWT.
+
+    Returns (token, jti, expires_at) - the caller gets the raw token to
+    hand back to the client, plus the jti/expiry needed elsewhere
+    (e.g. to revoke this exact token on logout).
+    """
+
+    jti = str(uuid.uuid4())
+
+    issued_at = datetime.now(timezone.utc)
+
+    expires_at = issued_at + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
 
     payload = {
         "sub": subject,
-        "exp": expire,
+        "jti": jti,
+        "iat": issued_at,
+        "exp": expires_at,
     }
-    return jwt.encode(
+
+    token = jwt.encode(
         payload,
         settings.SECRET_KEY,
         algorithm=ALGORITHM,
     )
 
+    return token, jti, expires_at
 
-def decode_access_token(token: str):
+
+def decode_access_token(token: str) -> dict | None:
     try:
-        payload = jwt.decode(
+        return jwt.decode(
             token=token,
             key=settings.SECRET_KEY,
             algorithms=[ALGORITHM],
         )
-        return payload
     except JWTError:
         return None

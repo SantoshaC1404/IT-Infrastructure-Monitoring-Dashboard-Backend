@@ -44,3 +44,7 @@ class QueryDeviceService:
             )
 
         return device
+
+    # Get Critical Devices
+    def get_critical_devices(self) -> list[Device]:
+        return self.device_repository.critical_devices()

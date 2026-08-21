@@ -8,6 +8,7 @@ from app.services.device.create_device_service import CreateDeviceService
 from app.services.device.delete_device_service import DeleteDeviceService
 from app.services.device.monitoring_device_service import MonitoringDeviceService
 from app.services.device.query_device_service import QueryDeviceService
+from app.repositories.monitoring_snapshot_repository import MonitoringSnapshotRepository
 from app.services.device.update_device_service import UpdateDeviceService
 from app.services.monitoring.collect_metrics_service import CollectMetricsService
 
@@ -39,21 +40,6 @@ class DeviceService:
 
     # READ
     def get_all_devices(self):
-
-        devices = self.query_service.get_all_devices()
-
-        for device in devices:
-            if device.monitoring_enabled and (
-                device.login_source is None or device.last_login_time is None
-            ):
-                try:
-                    self.collect_metrics_service.monitor_device(device.id)
-                except Exception:
-                    logger.exception(
-                        "Live metric collection failed for device %s",
-                        device.id,
-                    )
-
         return self.query_service.get_all_devices()
 
     # Get Device by ID
@@ -129,6 +115,35 @@ class DeviceService:
 
         self.delete_service.delete_device_by_ip(ip_address)
 
+    # HISTORY
+    def get_device_history(
+        self,
+        device_id: int,
+        hours: int | None = 24,
+        days: int | None = None,
+    ) -> list[dict]:
+
+        self.query_service.get_device_by_id(device_id)
+
+        resolved_hours = 24
+        if days is not None:
+            resolved_hours = days * 24
+        elif hours is not None:
+            resolved_hours = hours
+
+        repository = MonitoringSnapshotRepository(self.db)
+        snapshots = repository.history(device_id, resolved_hours)
+
+        return [
+            {
+                "time": snapshot.collected_at.strftime("%H:%M"),
+                "cpu": int(snapshot.cpu_usage),
+                "memory": int(snapshot.memory_usage),
+                "disk": int(snapshot.disk_usage),
+            }
+            for snapshot in snapshots
+        ]
+
     # MONITORING
     def enable_monitoring(
         self,
@@ -143,3 +158,8 @@ class DeviceService:
     ):
 
         return self.monitoring_service.disable_monitoring(device_id)
+
+    def critical_devices(self):
+        return self.query_service.get_critical_devices()
+    
+    

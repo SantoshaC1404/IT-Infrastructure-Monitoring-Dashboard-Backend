@@ -202,7 +202,79 @@ class DeviceRepository(BaseRepository[Device]):
         stmt = select(Device).where(Device.monitoring_enabled.is_(True))
 
         return list(self.db.scalars(stmt).all())
-    
 
+        # GET CRITICAL DEVICES
 
-    
+    def critical_devices(self):
+        latest_snapshot = (
+            select(
+                MonitoringSnapshot.device_id,
+                func.max(MonitoringSnapshot.collected_at).label("latest"),
+            )
+            .group_by(MonitoringSnapshot.device_id)
+            .subquery()
+        )
+
+        stmt = (
+            select(
+                Device,
+                MonitoringSnapshot.cpu_usage,
+                MonitoringSnapshot.memory_usage,
+                MonitoringSnapshot.disk_usage,
+                MonitoringSnapshot.uptime,
+                MonitoringSnapshot.login_source,
+                MonitoringSnapshot.last_login_time,
+            )
+            .outerjoin(
+                latest_snapshot,
+                latest_snapshot.c.device_id == Device.id,
+            )
+            .outerjoin(
+                MonitoringSnapshot,
+                and_(
+                    MonitoringSnapshot.device_id == latest_snapshot.c.device_id,
+                    MonitoringSnapshot.collected_at == latest_snapshot.c.latest,
+                ),
+            )
+            .options(joinedload(Device.inventory))
+            .where(
+                (
+                    (MonitoringSnapshot.cpu_usage >= 90)
+                    | (MonitoringSnapshot.memory_usage >= 90)
+                    | (MonitoringSnapshot.disk_usage >= 90)
+                    | (Device.status == "OFFLINE")
+                )
+            )
+            .order_by(Device.name)
+        )
+
+        rows = self.db.execute(stmt).all()
+
+        devices = []
+
+        for row in rows:
+            device = row[0]
+
+            device.cpu_usage = row[1] or 0.0
+            device.memory_usage = row[2] or 0.0
+            device.disk_usage = row[3] or 0.0
+
+            device.uptime = row[4]
+
+            raw_login = row[5]
+
+            if raw_login:
+                m = re.search(
+                    r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b",
+                    raw_login,
+                )
+
+                device.login_source = m.group(0) if m else device.ip_address
+            else:
+                device.login_source = None
+
+            device.last_login_time = row[6]
+
+            devices.append(device)
+
+        return devices

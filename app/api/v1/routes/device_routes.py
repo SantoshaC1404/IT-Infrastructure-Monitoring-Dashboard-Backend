@@ -52,7 +52,7 @@ def get_all_devices(
 def get_critical_devices(
     db: Session = Depends(get_db),
 ):
-    return DeviceService(db).get_critical_devices()
+    return DeviceService(db).critical_devices()
 
 
 # GET DEVICE BY IP

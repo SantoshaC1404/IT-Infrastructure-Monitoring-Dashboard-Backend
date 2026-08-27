@@ -16,10 +16,6 @@ from app.utils.constants import (
 
 class DashboardRepository:
 
-    # CPU_THRESHOLD = 90
-    # MEMORY_THRESHOLD = 90
-    # DISK_THRESHOLD = 90
-
     def __init__(self, db: Session):
         self.db = db
 
@@ -37,11 +33,35 @@ class DashboardRepository:
             .subquery()
         )
 
-    # ------------------------------------------------------------------
     # Dashboard Summary
-    # ------------------------------------------------------------------
-
     def get_summary(self):
+
+        latest = self._latest_snapshot_subquery()
+
+        critical_devices_count = (
+            self.db.query(func.count(Device.id))
+            .outerjoin(
+                latest,
+                latest.c.device_id == Device.id,
+            )
+            .outerjoin(
+                MonitoringSnapshot,
+                and_(
+                    MonitoringSnapshot.device_id == latest.c.device_id,
+                    MonitoringSnapshot.collected_at == latest.c.latest,
+                ),
+            )
+            .filter(
+                or_(
+                    Device.status == DeviceStatus.OFFLINE,
+                    MonitoringSnapshot.cpu_usage >= CPU_THRESHOLD,
+                    MonitoringSnapshot.memory_usage >= MEMORY_THRESHOLD,
+                    MonitoringSnapshot.disk_usage >= DISK_THRESHOLD,
+                )
+            )
+            .scalar()
+            or 0
+        )
 
         summary = self.db.query(
             func.count(Device.id).label("total_devices"),
@@ -71,13 +91,19 @@ class DashboardRepository:
             ).label("monitoring_disabled"),
             func.sum(
                 case(
-                    (Device.device_type == DeviceType.LINUX, 1),
+                    (
+                        Device.device_type == DeviceType.LINUX,
+                        1,
+                    ),
                     else_=0,
                 )
             ).label("linux_devices"),
             func.sum(
                 case(
-                    (Device.device_type == DeviceType.WINDOWS, 1),
+                    (
+                        Device.device_type == DeviceType.WINDOWS,
+                        1,
+                    ),
                     else_=0,
                 )
             ).label("windows_devices"),
@@ -103,6 +129,7 @@ class DashboardRepository:
             offline_devices=summary.offline_devices or 0,
             monitoring_enabled=summary.monitoring_enabled or 0,
             monitoring_disabled=summary.monitoring_disabled or 0,
+            critical_devices=critical_devices_count,
             device_types={
                 "LINUX": summary.linux_devices or 0,
                 "WINDOWS": summary.windows_devices or 0,
@@ -110,10 +137,7 @@ class DashboardRepository:
             },
         )
 
-    # ------------------------------------------------------------------
     # Dashboard Devices
-    # ------------------------------------------------------------------
-
     def get_dashboard_devices(self):
 
         latest = self._latest_snapshot_subquery()
@@ -159,10 +183,7 @@ class DashboardRepository:
             for row in rows
         ]
 
-    # ------------------------------------------------------------------
     # Critical Devices
-    # ------------------------------------------------------------------
-
     def get_critical_devices(self):
 
         latest = self._latest_snapshot_subquery()

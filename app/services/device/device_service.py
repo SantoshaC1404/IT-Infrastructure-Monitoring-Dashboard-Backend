@@ -161,5 +161,3 @@ class DeviceService:
 
     def critical_devices(self):
         return self.query_service.get_critical_devices()
-    
-    

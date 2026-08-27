@@ -39,6 +39,7 @@ class DeviceCreate(DeviceBase):
         min_length=6,
         max_length=255,
     )
+
     device_type: DeviceType
 
 
@@ -85,5 +86,7 @@ class DeviceResponse(DeviceBase):
 
     updated_at: datetime
 
+    # Critical device information
+    critical_reasons: list[str] = Field(default_factory=list)
+
     model_config = ConfigDict(from_attributes=True)
-    

@@ -14,4 +14,6 @@ class DashboardSummaryResponse(BaseModel):
 
     monitoring_disabled: int
 
+    critical_devices: int
+
     device_types: Dict[str, int]

@@ -29,9 +29,9 @@ class Settings(BaseSettings):
 
     REACT_URL: str
 
-    CPU_THRESHOLD: float = 25
-    MEMORY_THRESHOLD: float = 90
-    DISK_THRESHOLD: float = 90
+    CPU_THRESHOLD: float = 50
+    MEMORY_THRESHOLD: float = 50
+    DISK_THRESHOLD: float = 50
 
     @property
     def DATABASE_URL(self) -> URL:

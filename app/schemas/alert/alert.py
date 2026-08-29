@@ -9,6 +9,12 @@ class AlertResponse(BaseModel):
 
     id: int
 
+    device_id: int
+
+    device_name: str
+
+    device_ip: str
+
     severity: AlertSeverity
 
     title: str
@@ -17,9 +23,9 @@ class AlertResponse(BaseModel):
 
     metric: str
 
-    threshold: float
-
     current_value: float
+
+    threshold: float
 
     status: AlertStatus
 
@@ -29,4 +35,6 @@ class AlertResponse(BaseModel):
 
     resolved_at: datetime | None
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True,
+    )

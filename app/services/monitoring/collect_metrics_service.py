@@ -12,6 +12,7 @@ from app.services.monitoring.monitoring_device_service import (
     MonitoringDeviceService,
 )
 from app.core.logger import logger
+from app.services.alert.alert_service import AlertService
 
 
 class CollectMetricsService:
@@ -25,6 +26,8 @@ class CollectMetricsService:
         self.snapshot_service = SaveSnapshotService(db)
 
         self.device_service = MonitoringDeviceService(db)
+
+        self.alert_service = AlertService(db)
 
     # -----------------------------------------------------
 
@@ -77,8 +80,15 @@ class CollectMetricsService:
                     metrics.login_source = device.ip_address
 
             self.snapshot_service.save_snapshot(
-                device.id,
-                metrics,
+                device_id=device.id,
+                metrics=metrics,
+            )
+
+            self.alert_service.evaluate_device(
+                device=device,
+                cpu_usage=metrics.cpu_usage,
+                memory_usage=metrics.memory_usage,
+                disk_usage=metrics.disk_usage,
             )
 
             self.device_service.mark_online(

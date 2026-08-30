@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from typing import Dict
+
+from pydantic import BaseModel
 
 
 class DashboardSummaryResponse(BaseModel):
@@ -15,5 +16,7 @@ class DashboardSummaryResponse(BaseModel):
     monitoring_disabled: int
 
     critical_devices: int
+
+    alerts: int
 
     device_types: Dict[str, int]

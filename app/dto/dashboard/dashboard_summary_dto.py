@@ -23,3 +23,5 @@ class DashboardSummaryDTO:
     memory_usage: float = 0.0
 
     disk_usage: float = 0.0
+
+    alerts: int = 0

@@ -6,9 +6,9 @@ from app.schemas.dashboard.critical_devices_schema import (
     CriticalDeviceResponse,
     CriticalDevicesResponse,
 )
+from app.schemas.dashboard.dashboard import DashboardSummaryResponse
 from app.schemas.dashboard.dashboard_devices import DashboardDevicesResponse
 from app.services.dashboard.dashboard_service import DashboardService
-from app.schemas.dashboard.dashboard import DashboardSummaryResponse
 
 router = APIRouter(
     prefix="/dashboard",

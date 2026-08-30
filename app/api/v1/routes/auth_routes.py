@@ -9,7 +9,10 @@ from app.schemas.auth.user import UserCreate, UserResponse
 from app.schemas.common import MessageResponse
 from app.services.auth.auth_service import AuthService
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(
+    prefix="/auth", 
+    tags=["Authentication"],
+)
 
 
 @router.post(

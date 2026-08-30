@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
-from app.models.device_alert import Alert
+
 from app.schemas.alert.alert import AlertResponse
+
 from app.services.alert.alert_service import AlertService
+
+from app.services.alert.alert_mapper import alert_to_response
 
 router = APIRouter(
     prefix="/alerts",
@@ -12,29 +15,7 @@ router = APIRouter(
 )
 
 
-def serialize_alert(alert: Alert):
-
-    return AlertResponse(
-        id=alert.id,
-        device_id=alert.device_id,
-        device_name=alert.device.name,
-        device_ip=alert.device.ip_address,
-        severity=alert.severity,
-        title=alert.title,
-        message=alert.message,
-        metric=alert.metric,
-        current_value=alert.metric_value,
-        threshold=alert.threshold,
-        status=alert.status,
-        created_at=alert.created_at,
-        acknowledged_at=alert.acknowledged_at,
-        resolved_at=alert.resolved_at,
-    )
-
-
-# ---------------------------------------------------------
 # LATEST ALERTS
-# ---------------------------------------------------------
 
 
 @router.get(
@@ -43,21 +24,19 @@ def serialize_alert(alert: Alert):
 )
 def get_alerts(
     limit: int = Query(
-        default=50,
+        default=20,
         ge=1,
-        le=200,
+        le=100,
     ),
     db: Session = Depends(get_db),
 ):
 
     alerts = AlertService(db).get_latest(limit)
 
-    return [serialize_alert(alert) for alert in alerts]
+    return [alert_to_response(alert) for alert in alerts]
 
 
-# ---------------------------------------------------------
 # OPEN ALERTS
-# ---------------------------------------------------------
 
 
 @router.get(
@@ -70,12 +49,10 @@ def get_open_alerts(
 
     alerts = AlertService(db).get_open_alerts()
 
-    return [serialize_alert(alert) for alert in alerts]
+    return [alert_to_response(alert) for alert in alerts]
 
 
-# ---------------------------------------------------------
 # ACKNOWLEDGE
-# ---------------------------------------------------------
 
 
 @router.post(
@@ -87,9 +64,7 @@ def acknowledge_alert(
     db: Session = Depends(get_db),
 ):
 
-    service = AlertService(db)
-
-    alert = service.acknowledge(alert_id)
+    alert = AlertService(db).acknowledge(alert_id)
 
     if alert is None:
         raise HTTPException(
@@ -99,12 +74,10 @@ def acknowledge_alert(
 
     db.commit()
 
-    return serialize_alert(alert)
+    return alert_to_response(alert)
 
 
-# ---------------------------------------------------------
 # RESOLVE
-# ---------------------------------------------------------
 
 
 @router.post(
@@ -116,9 +89,7 @@ def resolve_alert(
     db: Session = Depends(get_db),
 ):
 
-    service = AlertService(db)
-
-    alert = service.resolve(alert_id)
+    alert = AlertService(db).resolve(alert_id)
 
     if alert is None:
         raise HTTPException(
@@ -128,4 +99,4 @@ def resolve_alert(
 
     db.commit()
 
-    return serialize_alert(alert)
+    return alert_to_response(alert)

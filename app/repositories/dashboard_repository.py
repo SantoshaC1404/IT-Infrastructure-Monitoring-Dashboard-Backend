@@ -5,13 +5,10 @@ from app.dto.dashboard.critical_device_dto import CriticalDevicesDTO
 from app.dto.dashboard.dashboard_device_dto import DashboardDeviceDTO
 from app.dto.dashboard.dashboard_summary_dto import DashboardSummaryDTO
 from app.models.device import Device
+from app.models.device_alert import Alert
 from app.models.monitoring_snapshot import MonitoringSnapshot
-from app.utils.enums import DeviceStatus, DeviceType
-from app.utils.constants import (
-    CPU_THRESHOLD,
-    MEMORY_THRESHOLD,
-    DISK_THRESHOLD,
-)
+from app.utils.constants import CPU_THRESHOLD, DISK_THRESHOLD, MEMORY_THRESHOLD
+from app.utils.enums import AlertStatus, DeviceStatus, DeviceType
 
 
 class DashboardRepository:
@@ -38,6 +35,7 @@ class DashboardRepository:
 
         latest = self._latest_snapshot_subquery()
 
+        # Critical devices count
         critical_devices_count = (
             self.db.query(func.count(Device.id))
             .outerjoin(
@@ -57,6 +55,21 @@ class DashboardRepository:
                     MonitoringSnapshot.cpu_usage >= CPU_THRESHOLD,
                     MonitoringSnapshot.memory_usage >= MEMORY_THRESHOLD,
                     MonitoringSnapshot.disk_usage >= DISK_THRESHOLD,
+                )
+            )
+            .scalar()
+            or 0
+        )
+
+        # Open + Acknowledged alerts count
+        alert_count = (
+            self.db.query(func.count(Alert.id))
+            .filter(
+                Alert.status.in_(
+                    [
+                        AlertStatus.OPEN,
+                        AlertStatus.ACKNOWLEDGED,
+                    ]
                 )
             )
             .scalar()
@@ -130,6 +143,7 @@ class DashboardRepository:
             monitoring_enabled=summary.monitoring_enabled or 0,
             monitoring_disabled=summary.monitoring_disabled or 0,
             critical_devices=critical_devices_count,
+            alerts=alert_count,
             device_types={
                 "LINUX": summary.linux_devices or 0,
                 "WINDOWS": summary.windows_devices or 0,

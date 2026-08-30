@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.device_alert import Alert
 from app.utils.enums import AlertStatus
@@ -20,14 +20,16 @@ class AlertRepository:
 
         return alert
 
-    # GET OPEN ALERT FOR DEVICE + METRIC
-    def get_open_alerts(
+    # GET OPEN / ACKNOWLEDGED ALERT
+    def get_open_alert(
         self,
         device_id: int,
         metric: str,
     ):
-        statement = (
+
+        stmt = (
             select(Alert)
+            .options(joinedload(Alert.device))
             .where(
                 Alert.device_id == device_id,
                 Alert.metric == metric,
@@ -41,19 +43,26 @@ class AlertRepository:
             .order_by(Alert.created_at.desc())
         )
 
-        return self.db.scalars(statement).first()
+        return self.db.scalars(stmt).first()
 
     # LATEST ALERTS
     def latest(self, limit: int = 20):
-        stmt = select(Alert).order_by(Alert.created_at.desc()).limit(limit)
+
+        stmt = (
+            select(Alert)
+            .options(joinedload(Alert.device))
+            .order_by(Alert.created_at.desc())
+            .limit(limit)
+        )
 
         return list(self.db.scalars(stmt).all())
 
-    # OPEN ALERTS
+    # OPEN / ACKNOWLEDGED ALERTS
     def unresolved(self):
 
         stmt = (
             select(Alert)
+            .options(joinedload(Alert.device))
             .where(
                 Alert.status.in_(
                     [
@@ -65,7 +74,16 @@ class AlertRepository:
             .order_by(Alert.created_at.desc())
         )
 
-        return list(self.db.scalars(statement=stmt).all())
+        return list(self.db.scalars(stmt).all())
+
+    # GET BY ID
+    def get_by_id(self, alert_id: int):
+
+        stmt = (
+            select(Alert).options(joinedload(Alert.device)).where(Alert.id == alert_id)
+        )
+
+        return self.db.scalars(stmt).first()
 
     # ACKNOWLEDGE
     def acknowledge(self, alert: Alert):
@@ -86,10 +104,3 @@ class AlertRepository:
         self.db.flush()
 
         return alert
-
-    # GET BY ID
-    def get_by_id(self, alert_id: int):
-
-        stmt = select(Alert).where(Alert.id == alert_id)
-
-        return self.db.scalars(stmt).first()

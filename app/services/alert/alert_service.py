@@ -2,22 +2,30 @@ from sqlalchemy.orm import Session
 
 from app.models.device import Device
 from app.models.device_alert import Alert
+
 from app.repositories.alert_repository import AlertRepository
+
 from app.utils.constants import (
     CPU_THRESHOLD,
     MEMORY_THRESHOLD,
     DISK_THRESHOLD,
 )
-from app.utils.enums import AlertSeverity
+
+from app.utils.enums import AlertSeverity, AlertStatus
 
 
 class AlertService:
 
     def __init__(self, db: Session):
+
         self.db = db
+
         self.alert_repository = AlertRepository(db)
 
-    # EVALUATE DEVICE METRICS
+    # ============================================================
+    # EVALUATE DEVICE
+    # ============================================================
+
     def evaluate_device(
         self,
         device: Device,
@@ -65,7 +73,10 @@ class AlertService:
                     metric=metric,
                 )
 
-    # CREATE OR UPDATE ALERT
+    # ============================================================
+    # CREATE OR UPDATE
+    # ============================================================
+
     def _create_or_update_alert(
         self,
         device: Device,
@@ -74,19 +85,34 @@ class AlertService:
         threshold: float,
     ):
 
-        existing = self.alert_repository.get_open_alerts(
+        existing = self.alert_repository.get_open_alert(
             device_id=device.id,
             metric=metric,
         )
+
+        # --------------------------------------------------------
+        # Existing alert
+        # --------------------------------------------------------
 
         if existing:
 
             existing.metric_value = value
             existing.threshold = threshold
 
+            existing.message = (
+                f"{device.name} {metric.lower()} usage "
+                f"is currently {value:.1f}%, "
+                f"which exceeds the configured threshold "
+                f"of {threshold:.1f}%."
+            )
+
             self.db.flush()
 
             return existing
+
+        # --------------------------------------------------------
+        # New alert
+        # --------------------------------------------------------
 
         alert = Alert(
             device_id=device.id,
@@ -94,8 +120,8 @@ class AlertService:
             title=f"High {metric} Usage",
             message=(
                 f"{device.name} {metric.lower()} usage "
-                f"has reached {value:.1f}%, "
-                f"exceeding the configured threshold "
+                f"is {value:.1f}%, "
+                f"which exceeds the configured threshold "
                 f"of {threshold:.1f}%."
             ),
             metric=metric,
@@ -105,23 +131,29 @@ class AlertService:
 
         return self.alert_repository.create(alert)
 
-    # RESOLVE ALERT
+    # ============================================================
+    # RESOLVE
+    # ============================================================
+
     def _resolve_alert(
         self,
         device_id: int,
         metric: str,
     ):
 
-        alert = self.alert_repository.get_open_alerts(
-            device_id,
-            metric,
+        alert = self.alert_repository.get_open_alert(
+            device_id=device_id,
+            metric=metric,
         )
 
         if alert:
 
             self.alert_repository.resolve(alert)
 
-    # GET LATEST ALERTS
+    # ============================================================
+    # LATEST
+    # ============================================================
+
     def get_latest(
         self,
         limit: int = 20,
@@ -129,12 +161,18 @@ class AlertService:
 
         return self.alert_repository.latest(limit)
 
-    # GET OPEN ALERTS
+    # ============================================================
+    # OPEN
+    # ============================================================
+
     def get_open_alerts(self):
 
         return self.alert_repository.unresolved()
 
+    # ============================================================
     # ACKNOWLEDGE
+    # ============================================================
+
     def acknowledge(
         self,
         alert_id: int,
@@ -145,9 +183,15 @@ class AlertService:
         if alert is None:
             return None
 
+        if alert.status == AlertStatus.RESOLVED:
+            return alert
+
         return self.alert_repository.acknowledge(alert)
 
+    # ============================================================
     # RESOLVE
+    # ============================================================
+
     def resolve(
         self,
         alert_id: int,
@@ -157,5 +201,8 @@ class AlertService:
 
         if alert is None:
             return None
+
+        if alert.status == AlertStatus.RESOLVED:
+            return alert
 
         return self.alert_repository.resolve(alert)

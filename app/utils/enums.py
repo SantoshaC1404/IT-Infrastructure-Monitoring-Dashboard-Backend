@@ -63,3 +63,16 @@ class AlertStatus(str, Enum):
     OPEN = "OPEN"
     ACKNOWLEDGED = "ACKNOWLEDGED"
     RESOLVED = "RESOLVED"
+
+
+class EventType(str, Enum):
+    METRIC_THRESHOLD = "METRIC_THRESHOLD"
+    DEVICE_OFFLINE = "DEVICE_OFFLINE"
+    DEVICE_ONLINE = "DEVICE_ONLINE"
+
+
+class EventSeverity(str, Enum):
+    INFO = "INFO"
+    WARNING = "WARNING"
+    MAJOR = "MAJOR"
+    CRITICAL = "CRITICAL"

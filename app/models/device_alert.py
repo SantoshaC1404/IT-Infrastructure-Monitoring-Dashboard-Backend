@@ -29,6 +29,13 @@ class Alert(Base):
         nullable=False,
     )
 
+    # event id
+    event_id = mapped_column(
+        ForeignKey("events.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+
     severity: Mapped[AlertSeverity] = mapped_column(
         SQLEnum(AlertSeverity),
         nullable=False,

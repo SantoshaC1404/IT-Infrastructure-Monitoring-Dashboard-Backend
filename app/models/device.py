@@ -97,6 +97,12 @@ class Device(Base):
         cascade="all, delete-orphan",
     )
 
+    events = relationship(
+        "Event",
+        back_populates="device",
+        cascade="all, delete-orphan",
+    )
+
     network_interfaces = relationship(
         "NetworkInterface",
         back_populates="device",

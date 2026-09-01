@@ -2,6 +2,7 @@ from .user import User
 from .revoked_token import RevokedToken
 from .device import Device
 from .device_inventory import DeviceInventory
+from .event import Event
 from .monitoring_snapshot import MonitoringSnapshot
 from .device_alert import Alert
 from .device_health import DeviceHealth
@@ -19,4 +20,5 @@ __all__ = [
     "NetworkInterface",
     "Disk",
     "DeviceHealth",
+    "Event",
 ]

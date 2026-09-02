@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app.db.session import get_db
+from app.api.deps import get_db
 from app.schemas.event.event_schema import EventResponse
 from app.services.event.event_service import EventService
 
